@@ -74,7 +74,7 @@ sequenceDiagram
 **Option A: run it on your own computer (free, private, 2 minutes)**
 
 ```bash
-git clone https://github.com/<you>/career-copilot-mcp.git
+git clone https://github.com/TusharSamantaray/career-copilot-mcp.git
 cd career-copilot-mcp
 uv sync
 claude mcp add career-copilot -- uv run --directory "$PWD" app.py --stdio
@@ -227,3 +227,13 @@ Every suite ends with `ALL PASSED`. CI runs them on every push.
 
 To run the hosted mode locally: `CAREER_COPILOT_API_KEY=dev-key uv run
 app.py`, then connect to `http://localhost:8080/mcp` with that key.
+
+## 12. Contributing, security and license
+
+- How to propose changes: [CONTRIBUTING.md](CONTRIBUTING.md)
+- How to report a security or privacy problem: [SECURITY.md](SECURITY.md)
+- All docs in one place: [docs/README.md](docs/README.md)
+
+Copyright © 2026 Tushar Samantaray. All rights reserved. The source is
+public so people can read and check it. Using it for your own hosted or
+paid service needs written permission.

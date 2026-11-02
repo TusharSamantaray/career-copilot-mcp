@@ -34,7 +34,7 @@ The script is safe to re-run. It:
 ## 2. Run locally
 
 ```powershell
-git clone https://github.com/<you>/career-copilot-mcp.git
+git clone https://github.com/TusharSamantaray/career-copilot-mcp.git
 cd career-copilot-mcp
 uv sync                                 # creates .venv and installs dependencies
 ```
@@ -56,7 +56,7 @@ The startup log shows the version, the MCP protocol version, the endpoints
 and the tool count. Check the server is up:
 
 ```powershell
-curl.exe http://localhost:8080/health   # {"status":"ok","version":"0.2.0"}
+curl.exe http://localhost:8080/health   # {"status":"ok","version":"0.3.0"}
 ```
 
 ## 3. Run the tests
@@ -65,10 +65,12 @@ curl.exe http://localhost:8080/health   # {"status":"ok","version":"0.2.0"}
 uv run tests/test_poc.py        # core tools, over stdio
 uv run tests/test_features.py   # finance, resumes, roles, prep, nudges, economy
 uv run tests/test_http.py       # health, key required, wrong key rejected,
-                      # data isolation, keys never logged
+                                # data isolation, keys never logged
+uv run tests/test_knowledge.py  # knowledge is valid, no personal data
+uv run tests/test_soul.py       # coach, safety, relocation, intake, dashboard
 ```
 
-Both should end with `ALL PASSED`.
+Each one should end with `ALL PASSED`.
 
 ## 4. Connect an AI client
 
