@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Runtime data and logs (user records never go in git)
+insights.json
+data/
+test_data/
+test_data_http/
+test_data_features/
+test_data_soul/
+logs/
+*.log
+*.db
+
+# Personal Claude Code settings
+.claude/settings.local.json
+
+# Tooling
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Career Copilot</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!--
+  CUSTOMIZE ME
+  - Colours: edit the variables in :root below (light) and the dark block.
+  - Tabs: edit SHOW_TABS near the bottom to hide or reorder sections.
+  - Data: this page is a snapshot. Ask your assistant to "refresh my
+    Career Copilot dashboard" for a new one. Nothing here is sent anywhere.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#F7F5EF; --surface:#FFFDF8; --surface2:#EFEBE1; --line:#E2DDD1;
+  --ink:#14231F; --ink2:#3F4D48; --muted:#6E7B76;
+  --calm:#1F6F5C; --calm-soft:#DDEDE6; --warm:#B7711B; --warm-soft:#F6E7CF;
+  --alert:#B5523A; --alert-soft:#F5E1DA;
+  --d:'Archivo',system-ui,sans-serif; --b:'IBM Plex Sans',system-ui,sans-serif;
+  --m:'IBM Plex Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0F1513; --surface:#17201D; --surface2:#1E2A26; --line:#2A3833;
+  --ink:#E9EEEB; --ink2:#BFCBC6; --muted:#8C9A95;
+  --calm:#4FBF9C; --calm-soft:#16302A; --warm:#E3A85C; --warm-soft:#2E2414;
+  --alert:#E58A72; --alert-soft:#33201A;}}
+:root[data-theme="dark"]{
+  --paper:#0F1513; --surface:#17201D; --surface2:#1E2A26; --line:#2A3833;
+  --ink:#E9EEEB; --ink2:#BFCBC6; --muted:#8C9A95;
+  --calm:#4FBF9C; --calm-soft:#16302A; --warm:#E3A85C; --warm-soft:#2E2414;
+  --alert:#E58A72; --alert-soft:#33201A;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--b);font-size:15px;line-height:1.5}
+h1,h2,h3{font-family:var(--d);margin:0;letter-spacing:-.01em}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--calm);outline-offset:2px;border-radius:4px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:11;background:var(--surface)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in,.tabs-in,main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top-in{max-width:1040px;margin:0 auto;padding-block:12px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.brand{margin-right:auto}
+.brand h1{font-size:19px;font-weight:800}
+.brand span{font-family:var(--m);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.kpis{display:flex;gap:18px;flex-wrap:wrap}
+.kpi{text-align:right}
+.kpi b{display:block;font-family:var(--m);font-size:18px;color:var(--calm);font-variant-numeric:tabular-nums}
+.kpi span{font-family:var(--m);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ghost{background:none;border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--ink2)}
+.tabs{background:var(--paper);border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs-in{max-width:1040px;margin:0 auto;display:flex;gap:2px;min-width:max-content}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:11px 12px;font-family:var(--d);font-weight:600;font-size:13.5px;color:var(--muted)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--calm)}
+main{max-width:1040px;margin:0 auto;padding-block:22px 64px}
+.label{font-family:var(--m);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:22px 0 8px}
+.label:first-child{margin-top:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.hero{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.hero h2{font-size:26px;line-height:1.2;max-width:28ch}
+.hero p{margin:6px 0 0;color:var(--ink2)}
+.ring{flex:none}
+.pill{display:inline-block;font-family:var(--m);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:var(--surface2);color:var(--ink2);margin:0 6px 6px 0}
+.pill.calm{background:var(--calm-soft);color:var(--calm)}
+.pill.warm{background:var(--warm-soft);color:var(--warm)}
+.pill.alert{background:var(--alert-soft);color:var(--alert)}
+.row{display:flex;gap:12px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .t{flex:1;min-width:0}
+.row .d{font-family:var(--m);font-size:11.5px;color:var(--muted);flex:none}
+.cols{display:grid;grid-template-columns:repeat(5,minmax(170px,1fr));gap:10px;overflow-x:auto}
+.col h3{font-size:13px;font-family:var(--m);font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.mini{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.mini b{font-family:var(--d);font-size:14.5px;display:block}
+.mini span{font-size:13px;color:var(--ink2)}
+.stat b{display:block;font-family:var(--d);font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}
+.stat span{font-family:var(--m);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.bar{height:8px;border-radius:99px;background:var(--surface2);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--calm);border-radius:99px}
+.empty{color:var(--ink2);background:var(--surface2);border-radius:10px;padding:14px 16px;font-size:14px}
+.empty code{font-family:var(--m);font-size:12.5px;background:var(--surface);padding:2px 6px;border-radius:4px}
+.ask{display:inline-flex;gap:6px;align-items:center;background:var(--calm);color:var(--surface);border:0;border-radius:99px;padding:7px 14px;font-size:13px;font-weight:600}
+.foot{margin-top:28px;font-size:12.5px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="top"><div class="top-in">
+  <div class="brand"><h1>Career Copilot</h1><span id="sub">your next move, one step at a time</span></div>
+  <div class="kpis" id="kpis"></div>
+  <button class="ghost" id="theme" type="button">Theme</button>
+</div></div>
+<nav class="tabs"><div class="tabs-in" id="tabs" role="tablist"></div></nav>
+<main id="view"></main>
+<script id="cc-data" type="application/json">__DATA__</script>
+<script>
+/* CUSTOMIZE: remove or reorder tabs here. */
+const SHOW_TABS = ["today", "pipeline", "prep", "money", "direction"];
+const TAB_NAMES = {today:"Today", pipeline:"Pipeline", prep:"Prep", money:"Money", direction:"Direction"};
+
+const D = JSON.parse(document.getElementById("cc-data").textContent || "{}");
+const $ = (tag, cls, text) => { const n = document.createElement(tag);
+  if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+const money = v => v == null ? "–" : "$" + Math.round(v).toLocaleString();
+const label = t => $("p", "label", t);
+function empty(text, ask) {
+  const e = $("div", "empty", text + " ");
+  if (ask) { e.appendChild(document.createTextNode("Try asking: ")); e.appendChild($("code", null, ask)); }
+  return e;
+}
+function store(k, v) { try { if (v === undefined) return localStorage.getItem(k);
+  localStorage.setItem(k, v); } catch (e) { return null; } }
+
+function ring(done, total) {
+  const r = 34, c = 2 * Math.PI * r, frac = Math.max(0, Math.min(1, done / total));
+  const ns = "http://www.w3.org/2000/svg", svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("width", "96"); svg.setAttribute("height", "96");
+  svg.setAttribute("viewBox", "0 0 96 96"); svg.setAttribute("class", "ring");
+  svg.setAttribute("role", "img"); svg.setAttribute("aria-label", done + " of " + total + " days active this week");
+  for (const [stroke, dash] of [["var(--surface2)", c], ["var(--calm)", c * frac]]) {
+    const ci = document.createElementNS(ns, "circle");
+    ci.setAttribute("cx", 48); ci.setAttribute("cy", 48); ci.setAttribute("r", r);
+    ci.setAttribute("fill", "none"); ci.setAttribute("stroke", stroke); ci.setAttribute("stroke-width", 10);
+    ci.setAttribute("stroke-linecap", "round"); ci.setAttribute("stroke-dasharray", dash + " " + c);
+    ci.setAttribute("transform", "rotate(-90 48 48)"); svg.appendChild(ci);
+  }
+  const t = document.createElementNS(ns, "text"); t.setAttribute("x", 48); t.setAttribute("y", 54);
+  t.setAttribute("text-anchor", "middle"); t.setAttribute("font-size", "20");
+  t.setAttribute("font-family", "Archivo, sans-serif"); t.setAttribute("font-weight", "800");
+  t.setAttribute("fill", "currentColor"); t.textContent = done + "/" + total; svg.appendChild(t);
+  return svg;
+}
+
+function kpis() {
+  const box = document.getElementById("kpis"); box.textContent = "";
+  const live = (D.pipeline || []).filter(c => c.key !== "closed").reduce((n, c) => n + c.items.length, 0);
+  const due = D.due ? D.due.overdue.length + D.due.due_today.length : 0;
+  const run = D.money && D.money.runway_months ? D.money.runway_months.all_accessible + " mo" : "–";
+  for (const [v, k] of [[(D.momentum || {}).streak_days || 0, "streak"], [live, "live apps"], [due, "due now"], [run, "runway"]]) {
+    const d = $("div", "kpi"); d.appendChild($("b", null, String(v))); d.appendChild($("span", null, k)); box.appendChild(d);
+  }
+}
+
+const VIEWS = {
+  today(v) {
+    const m = D.momentum || {}, step = (D.step || {}).one_step;
+    const hero = $("div", "card hero");
+    hero.appendChild(ring(m.active_days_this_week || 0, 7));
+    const txt = $("div");
+    txt.appendChild(label(m.done_today ? "Done for today" : "Today's one step"));
+    txt.appendChild($("h2", null, m.done_today ? "You moved today. Rest is part of the plan." :
+      (step ? step.step : "Ask for today's step")));
+    txt.appendChild($("p", null, step && !m.done_today ? (step.why || "") +
+      " Tell your assistant \"done\" when you finish." : "Momentum: " + (m.streak_days || 0) + " days. Never skip twice."));
+    hero.appendChild(txt); v.appendChild(hero);
+    v.appendChild(label("Coming up"));
+    const due = D.due || {overdue: [], due_today: [], upcoming: []};
+    const items = [...due.overdue.map(i => [i, "alert", "overdue"]), ...due.due_today.map(i => [i, "warm", "today"]),
+                   ...due.upcoming.map(i => [i, "calm", "soon"])];
+    if (!items.length) { v.appendChild(empty("Nothing due. A calm week.", "plan my prep for an interview")); return; }
+    const c = $("div", "card");
+    for (const [i, tone, word] of items) {
+      const r = $("div", "row"); const p = $("span", "pill " + tone, word); r.appendChild(p);
+      r.appendChild($("span", "t", i.title)); r.appendChild($("span", "d", i.due)); c.appendChild(r);
+    }
+    v.appendChild(c);
+  },
+  pipeline(v) {
+    const total = (D.pipeline || []).reduce((n, c) => n + c.items.length, 0);
+    if (!total) { v.appendChild(empty("No applications yet.", "here are my job emails, update my pipeline")); return; }
+    const cols = $("div", "cols");
+    for (const col of D.pipeline) {
+      const box = $("div", "col"); box.appendChild($("h3", null, col.label + " · " + col.items.length));
+      for (const it of col.items) {
+        const m = $("div", "mini"); m.appendChild($("b", null, it.company));
+        m.appendChild($("span", null, it.role + (it.due ? " · " + it.due : ""))); box.appendChild(m);
+      }
+      cols.appendChild(box);
+    }
+    v.appendChild(cols);
+  },
+  prep(v) {
+    const s = D.stories || {count: 0, missing: []};
+    const g = $("div", "grid");
+    const a = $("div", "card stat"); a.appendChild($("b", null, String(s.count))); a.appendChild($("span", null, "stories in your bank"));
+    g.appendChild(a); v.appendChild(g);
+    v.appendChild(label("Themes to cover next"));
+    const c = $("div", "card");
+    if (!s.missing.length) c.appendChild($("p", null, "Every theme is covered. Practise them out loud."));
+    for (const t of s.missing) c.appendChild($("span", "pill warm", t));
+    v.appendChild(c);
+    if (!s.count) v.appendChild(empty("Stories win behavioural interviews.", "help me write my first interview story"));
+  },
+  money(v) {
+    const m = D.money;
+    if (!m) { v.appendChild(empty("No accounts yet. Rounded balances are enough; never share logins.", "set up my money dashboard")); }
+    else {
+      const g = $("div", "grid");
+      for (const [val, k] of [[money(m.net_worth), "net worth"], [money(m.accessible), "accessible"],
+                              [money(m.locked), "locked (retirement)"], [m.runway_months ? m.runway_months.all_accessible + " months" : "–", "runway"]]) {
+        const c = $("div", "card stat"); c.appendChild($("b", null, val)); c.appendChild($("span", null, k)); g.appendChild(c);
+      }
+      v.appendChild(g);
+      for (const f of (m.portfolio_flags || []).concat((m.stale_balances || []).map(s => "Stale balance: " + s)))
+        if (!f.startsWith("No concentration")) v.appendChild($("div", "card", f));
+    }
+    v.appendChild(label("Goals"));
+    if (!(D.goals || []).length) { v.appendChild(empty("No goals yet.", "help me plan my future savings")); return; }
+    const c = $("div", "card");
+    for (const g of D.goals) {
+      const r = $("div"); r.style.padding = "8px 0";
+      r.appendChild($("b", null, g.name + " "));
+      r.appendChild($("span", "pill", money(g.monthly_needed) + "/mo · by " + g.target_date));
+      const bar = $("div", "bar"); const fill = $("i"); fill.style.width = Math.min(100, g.progress_pct) + "%";
+      bar.appendChild(fill); r.appendChild(bar); c.appendChild(r);
+    }
+    v.appendChild(c);
+  },
+  direction(v) {
+    const p = D.profile || {};
+    const c = $("div", "card");
+    if (!p.target_role) c.appendChild(empty("Tell Career Copilot where you want to go.", "get started"));
+    else {
+      c.appendChild($("h2", null, (p.current_role ? p.current_role + " → " : "") + p.target_role));
+      const meta = [p.level, p.industry, p.country || p.location].filter(Boolean).join(" · ");
+      if (meta) c.appendChild($("p", null, meta));
+      for (const g of (p.goals || "").split(",").map(s => s.trim()).filter(Boolean)) c.appendChild($("span", "pill calm", g.replace("_", " ")));
+    }
+    v.appendChild(c);
+    v.appendChild(label("Your next steps"));
+    const n = $("div", "card");
+    for (const s of D.next || []) { const r = $("div", "row"); r.appendChild($("span", "t", s.action));
+      r.appendChild($("span", "d", s.use)); n.appendChild(r); }
+    v.appendChild(n);
+  },
+};
+
+let active = store("cc-tab") || SHOW_TABS[0];
+if (!SHOW_TABS.includes(active)) active = SHOW_TABS[0];
+function render() {
+  const tabs = document.getElementById("tabs"); tabs.textContent = "";
+  for (const key of SHOW_TABS) {
+    const b = $("button", "tab", TAB_NAMES[key]); b.type = "button"; b.setAttribute("role", "tab");
+    b.setAttribute("aria-selected", key === active ? "true" : "false");
+    b.onclick = () => { active = key; store("cc-tab", key); render(); };
+    tabs.appendChild(b);
+  }
+  kpis();
+  const v = document.getElementById("view"); v.textContent = "";
+  VIEWS[active](v);
+  const f = $("div", "foot");
+  const tour = $("button", "ask", "Copy: give me the Career Copilot tour"); tour.type = "button";
+  tour.onclick = () => { try { navigator.clipboard.writeText("Give me the Career Copilot tour"); tour.textContent = "Copied. Paste it to your assistant."; } catch (e) {} };
+  f.appendChild(tour);
+  f.appendChild($("p", null, "Snapshot from " + (D.generated_at || "") + ". Ask your assistant to refresh it. Money and visa notes are education, not advice."));
+  v.appendChild(f);
+}
+document.getElementById("theme").onclick = () => {
+  const r = document.documentElement;
+  const dark = r.dataset.theme === "dark" || (!r.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+  r.dataset.theme = dark ? "light" : "dark"; store("cc-theme", r.dataset.theme);
+};
+const savedTheme = store("cc-theme"); if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+render();
+</script>
+</body>
+</html>
