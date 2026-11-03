@@ -6,6 +6,15 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Skill gaps from real postings (B-016). Every posting you analyze leaves
+  a short note (title, company, skills asked, never the full text). After
+  five or more, Career Copilot shows how often each skill is asked for,
+  whether your confirmed facts prove it, and which gap costs you most.
+  When you log which resume version you sent, it also shows each
+  version's reply rate once there are five applications for it.
+  **Try it:** analyze five postings, then say "what skill gap is costing
+  me most?". You should get one skill, how often it's asked, and one way
+  to prove it this week.
 - Round prep checks your calendar (B-024). When your calendar is
   connected, it confirms the next round is really booked before planning
   prep, and tells you to check with the recruiter if it isn't there.

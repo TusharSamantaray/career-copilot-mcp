@@ -10,7 +10,7 @@ from datetime import date
 from copilot import facts as fact_record
 from copilot import store
 
-TERMS_VERSION = "2026-11-03.3"
+TERMS_VERSION = "2026-11-03.4"
 DOCS = "https://github.com/TusharSamantaray/career-copilot-mcp/blob/main/docs"
 
 # How every reply sounds. People act on short, clear direction; long

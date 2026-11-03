@@ -5,6 +5,22 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Continue the backlog.
+**Did:** B-016: `jd_analyze` keeps a short "posting" record (title,
+company, required and preferred skills; no text). `skill_gap_evidence`
+ranks skills by demand x missing evidence, refuses below min_postings,
+and reports reply rate per resume version (new `resume_label` on
+`application_log`) once a version has 5 applications. Privacy notice
+updated (version 2026-11-03.4).
+**Files:** `copilot/evidence.py`, `copilot/jobs.py`, `copilot/store.py`,
+`app.py`, `copilot/conduct.py`, `docs/PRIVACY.md`, `docs/TERMS.md`,
+`tests/test_soul.py`.
+**Tests:** 6 suites passed, 0 failed.
+**Try it:** analyze five postings, then "what skill gap is costing me
+most?"
+**Open:** none.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Continue the backlog.
 **Did:** B-024: `loop_next_round_prep` takes calendar events from the
 person's own calendar connector and reports on_calendar (with the date),
 not_on_calendar (confirm with the recruiter first) or not_checked.

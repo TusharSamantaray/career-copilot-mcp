@@ -14,6 +14,7 @@ from datetime import date, datetime, timezone
 
 import httpx
 
+from copilot import evidence
 from copilot import facts
 from copilot import journey
 from copilot import store
@@ -220,7 +221,7 @@ def _has_skill(skill, text):
                      text) is not None
 
 
-def jd_analyze(user, text, title="", company=""):
+def jd_analyze(user, text, title="", company="", remember=True):
     low = (text or "").lower()
     head = (title or "").lower() + " " + low[:400]
     profile = journey.profile(user)
@@ -258,6 +259,8 @@ def jd_analyze(user, text, title="", company=""):
         verdict = "stretch: apply if the gaps are learnable fast"
     else:
         verdict = "unclear: tell me your skills to judge fit"
+    if remember and wanted:
+        evidence.remember_posting(user, title, company, text or "", wanted)
     return {"role": title or "untitled", "company": company,
             "level_read": level, "years_asked": years,
             "pay_read": pay or "not stated",

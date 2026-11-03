@@ -596,6 +596,36 @@ async def loop_checks(s):
     print("story_coverage: grid, strength, gaps, next story: OK")
 
 
+async def evidence_checks(s):
+    early = await call(s, "skill_gap_evidence", {})
+    assert early["skills"] == [] and "at least 5" in early["say"], early
+    for n in range(4):
+        await call(s, "jd_analyze", {
+            "title": f"Data Analyst {n}", "company": f"Co{n}",
+            "text": "Required: SQL and Airflow every day. Tableau is a "
+                    "plus. Python preferred."})
+    gaps = await call(s, "skill_gap_evidence", {})
+    by_skill = {r["skill"]: r for r in gaps["skills"]}
+    assert by_skill["airflow"]["evidence"] == "none"
+    assert by_skill["sql"]["evidence"] == "claimed"     # profile keyword
+    assert by_skill["tableau"]["required_share"] < by_skill["tableau"][
+        "demand"], "a plus is preferred, not required"
+    assert gaps["skills"][0]["gap_cost"] >= gaps["skills"][-1]["gap_cost"]
+    assert "not industry-wide" in gaps["caveats"][0]
+    assert gaps["outcome_signal"]["status"] == "not_enough_data"
+    for n in range(5):
+        await call(s, "application_log", {
+            "company": f"Outcome{n}", "role": "Analyst",
+            "status": "interviewing" if n < 2 else "applied",
+            "resume_label": "v2"})
+    gaps = await call(s, "skill_gap_evidence", {})
+    v2 = gaps["outcome_signal"]["by_resume_version"]["v2"]
+    assert v2 == {"sent": 5, "replies": 2, "reply_rate": 0.4}, v2
+    record = (await call(s, "data_export"))["posting"]
+    assert all("text" not in p for p in record), "full posting text kept"
+    print("skill_gap_evidence: demand, evidence, gap cost, outcome log: OK")
+
+
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     os.makedirs(TEST_DIR)
@@ -623,6 +653,7 @@ async def main():
             await fact_checks(s)
             await job_checks(s)
             await loop_checks(s)
+            await evidence_checks(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
               encoding="utf-8") as handle:
         log = handle.read()

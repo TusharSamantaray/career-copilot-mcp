@@ -14,12 +14,13 @@
 - B-012 [P2] Delete the old prototype server.py from the project
   folder (it's untracked). From: repo setup.
 
-- B-016 [P1] skill_gap_evidence from postings seen and the outcome log.
-  From: blueprint.
 - B-020 [P2] Watches and an outbox read at the next chat. From: blueprint.
 - B-021 [P2] Per-person data keys for hosted storage. From: blueprint.
 
 ## Done
+- B-016 skill_gap_evidence (analyzed postings, required vs preferred,
+  proven/claimed/none, gap cost) and the resume outcome log
+  (resume_label on applications). From: blueprint.
 - B-024 Next-round prep checks the round is on the calendar. From:
   B-017.
 - B-023 Rejections close only the application whose role or req id they

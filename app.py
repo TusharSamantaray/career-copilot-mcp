@@ -46,6 +46,7 @@ from copilot import coach
 from copilot import conduct
 from copilot import dashboard as dash
 from copilot import economy
+from copilot import evidence
 from copilot import facts as fact_record
 from copilot import finance
 from copilot import guide
@@ -580,20 +581,22 @@ def resume_build_draft() -> str:
 @mcp.tool
 def application_log(company: str, role: str, status: str = "applied",
                     next_action: str = "", due_date: str = "",
-                    req_id: str = "") -> dict:
+                    req_id: str = "", resume_label: str = "") -> dict:
     """Add a job application to the pipeline (write action).
 
     status: one of saved, applied, assessment, interviewing, offer,
     rejected, withdrawn. next_action: e.g. "Finish HackerRank".
     due_date: YYYY-MM-DD for the next action. req_id: the requisition or
     job id from the posting, so a later rejection closes the right one.
+    resume_label: which resume version was sent, for the outcome log.
     Returns the new id.
     """
     if status not in STATUSES:
         return {"error": f"status must be one of {STATUSES}"}
     body = {"company": company, "role": role, "status": status,
             "next_action": next_action, "due_date": due_date,
-            "req_id": req_id.strip().upper()}
+            "req_id": req_id.strip().upper(),
+            "resume_label": resume_label.strip()[:60]}
     user = current_user()
     app_id = store.put(user, "application", body)
     reminders = autopilot.on_application(user, app_id, body)
@@ -646,12 +649,29 @@ def job_search(companies: list[str] | None = None,
 
 
 @mcp.tool
-def jd_analyze(text: str, title: str = "", company: str = "") -> dict:
+def jd_analyze(text: str, title: str = "", company: str = "",
+               remember: bool = True) -> dict:
     """Read a job posting the person pasted: what the role is, level read,
     years asked, pay read (flagged if below their floor), sponsorship
     read, why bother, fit points and gap points from their confirmed
-    facts, dealbreakers it breaks, and a verdict."""
-    return jobs.jd_analyze(current_user(), text, title, company)
+    facts, dealbreakers it breaks, and a verdict. remember=true keeps a
+    short record (title, company, skills asked; never the full text) for
+    skill_gap_evidence."""
+    return jobs.jd_analyze(current_user(), text, title, company, remember)
+
+
+@mcp.tool
+def skill_gap_evidence(role_keyword: str = "", window_days: int = 90,
+                       min_postings: int = 5) -> dict:
+    """Skill gaps from evidence, not keyword guesses: across the postings
+    this person analyzed (optionally only titles containing
+    role_keyword), how often each skill is asked for (required or
+    preferred), how well their confirmed facts prove it (proven, claimed,
+    none), and the gap cost. Also the reply rate per resume version from
+    their own applications, once there's enough data. Refuses to conclude
+    from fewer than min_postings postings."""
+    return evidence.skill_gap_evidence(current_user(), role_keyword,
+                                       window_days, min_postings)
 
 
 @mcp.tool
