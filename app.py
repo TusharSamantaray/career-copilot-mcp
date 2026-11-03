@@ -50,6 +50,7 @@ from copilot import careers
 from copilot import coach
 from copilot import conduct
 from copilot import dashboard as dash
+from copilot import deadlines
 from copilot import economy
 from copilot import evidence
 from copilot import facts as fact_record
@@ -303,7 +304,10 @@ mcp = FastMCP("career-copilot", version=VERSION, auth=make_auth(),
     "ground_rules(accept=true); if they say no, keep helping but save "
     "nothing about them. Then call journey_state and follow its next: ask "
     "only its question, or offer its one step. If they have watches, call "
-    "digest_get too and mention only its most urgent item. A new person can come in "
+    "digest_get too and mention only its most urgent item. When "
+    "journey_state shows fast_track, say fast-track is on and why in one "
+    "line: runway first, shorter plans, freshest roles first. Save any "
+    "hard date with deadline_add (best case and conservative). A new person can come in "
     "two ways: say what's on their mind (pull out the facts, read them "
     "back with confirmed or unsure labels, and save only what they "
     "confirm with profile_save), or answer starter questions one at a "
@@ -838,6 +842,18 @@ def runway_calc(last_working_day: str, payroll_end: str,
                       f"{holiday_start:%b %d}; front-load applications.")
     result["disclaimer"] = "Confirm immigration timelines with an attorney."
     return result
+
+
+@mcp.tool
+def deadline_add(title: str, best_case: str, conservative: str,
+                 why: str = "") -> dict:
+    """Save a deadline with two dates (write action): best_case and
+    conservative (YYYY-MM-DD, the conservative one no later). Plans use
+    the conservative date. Within 60 days, journey_state turns fast-track
+    on. For visa dates, say it's education and to confirm with an
+    immigration attorney."""
+    return deadlines.deadline_add(current_user(), title, best_case,
+                                  conservative, why)
 
 
 @mcp.tool

@@ -6,6 +6,7 @@ effect, one answer at a time, and every field is confirmed or unsure.
 """
 from copilot import careers
 from copilot import conduct
+from copilot import deadlines
 from copilot import store
 from copilot.knowledge.coach import COMPASS, PRINCIPLES
 
@@ -165,6 +166,9 @@ def journey_state(user):
                                 "a question."}
         if open_questions:
             result["later_questions"] = [q["field"] for q in open_questions]
+    rush = deadlines.fast_track(user)
+    if rush["on"]:
+        result["fast_track"] = rush
     result["say"] = ("Reply in 2 to 4 short sentences and one question. "
                      "Never re-ask a known or skipped field. At most "
                      f"{MAX_QUESTIONS} questions before giving something "

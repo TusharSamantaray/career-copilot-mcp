@@ -6,6 +6,15 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Deadlines and fast-track mode (B-030). A hard date, like the end of a
+  grace period, is saved with a best case and a safer, earlier date, and
+  plans use the safer one. When it's under 60 days away, Career Copilot
+  says fast-track is on: money runway first, shorter plans, and the
+  freshest job postings first.
+  **Try it:** say "I was laid off; my last day is in 10 days and I have
+  a 60-day grace period after that". You should get the key dates, a
+  safer date to plan on, "fast-track is on", and a first step under an
+  hour.
 - A readable copy of your data (B-036). Ask for it and you get one
   plain page with everything stored about you, with confirmed and unsure
   facts labelled. On your own computer it's also saved as

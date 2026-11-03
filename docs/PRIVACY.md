@@ -1,6 +1,6 @@
 # Privacy notice
 
-Version 2026-11-03.7. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-03.8. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 Career Copilot is run by Tushar Samantaray ("we"). It's a connector that
@@ -14,7 +14,7 @@ Only what you or your assistant give it:
 |---|---|
 | Profile | Target role, level, location, goals |
 | Work history | Jobs, achievements, stories, resume text you paste |
-| Job search | Applications, statuses, reminders, interview dates, roles already shown to you (so you only see new ones), and for postings you analyze: title, company and the skills asked (never the full text), watches you set with what they found, and lessons you note |
+| Job search | Applications, statuses, reminders, interview dates, deadlines you set, roles already shown to you (so you only see new ones), and for postings you analyze: title, company and the skills asked (never the full text), watches you set with what they found, and lessons you note |
 | Money | Account names, types and balances you enter or import |
 | Coaching | Daily check-ins, energy level, steps done |
 | Agreement | The date you agreed to these terms |

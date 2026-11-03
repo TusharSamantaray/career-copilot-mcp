@@ -14,6 +14,7 @@ from datetime import date, datetime, timezone
 
 import httpx
 
+from copilot import deadlines
 from copilot import evidence
 from copilot import facts
 from copilot import journey
@@ -180,8 +181,11 @@ def job_search(user, companies=None, keywords=None, locations=None,
                       record_id=record_id)
         if first_time or include_seen:
             new.append(job)
-    new.sort(key=lambda j: (-j["rank"], j["age_days"]))
-    result = {"new": new[:20], "new_count": len(new),
+    rush = deadlines.fast_track(user, now)["on"]
+    # On a deadline, the freshest roles move fastest; otherwise wants rank.
+    new.sort(key=lambda j: (j["age_days"], -j["rank"]) if rush
+             else (-j["rank"], j["age_days"]))
+    result = {"new": new[:20], "new_count": len(new), "fast_track": rush,
               "already_seen": len(found) - len(new), "dropped": dropped,
               "searched": sources, "max_age_days": max_age_days}
     if not sources:

@@ -99,7 +99,7 @@ them, with the reason stated. Dealbreakers filter; preferences rank.
 | Round | Loop key (company + req id), format, panel by role, questions, stories told, feedback with source | Built |
 | Watch, outbox | What to watch, cadence, findings waiting to be read | Built |
 | Application | Status, next action, due date, req id, resume version sent (outcome log) | Built |
-| Deadline | Best case and conservative date | B-030 |
+| Deadline | Best case and conservative date; fast-track when near | Built |
 | Lesson | What the person learned from a loop | B-033 |
 
 Every person's file can be encrypted with their own key; deleting their
@@ -137,7 +137,7 @@ Scripted conversations with synthetic people, run in CI.
 | Test | What must happen | Status |
 |---|---|---|
 | A Lost | "I don't know what I want", no resume: within five questions, 2 to 3 directions with reasons, one picked, profile with every line confirmed or unsure | Covered (`tests/test_acceptance.py`) |
-| B On a clock | Laid off with a last day and a deadline: dated timeline first, conservative deadline, first step fits in an hour | Open, needs B-030 |
+| B On a clock | Laid off with a last day and a deadline: dated timeline first, conservative deadline, first step fits in an hour | Covered (`tests/test_acceptance.py`) |
 | C Three resumes | Versions disagree on a date and a number: both raised and resolved by the person; merged resume has no unsupported number | Covered (`fact_checks`) |
 | D Talks it out | Rambling free text: facts read back, edited, only then saved | Covered (`profile_from_text`) |
 | E Knows the target | Role, places, pay floor, sponsorship need: no result breaks a dealbreaker; each dated; a second run the same day returns nothing new | Covered (`job_checks`) |

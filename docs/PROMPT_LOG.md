@@ -5,6 +5,20 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Low-hanging backlog items.
+**Did:** B-030: `deadline_add` (refuses a conservative date later than
+the best case), `copilot/deadlines.py` fast-track (on within 60 days of
+the conservative date), shown in `journey_state`; `job_search` sorts
+freshest first when on. Server instructions say to announce fast-track.
+Acceptance test B added. Privacy notice lists deadlines (2026-11-03.8).
+**Files:** `copilot/deadlines.py`, `copilot/journey.py`, `copilot/jobs.py`,
+`copilot/store.py`, `app.py`, `tests/test_acceptance.py`,
+`copilot/conduct.py`, `docs/PRIVACY.md`, `docs/TERMS.md`, `docs/SPEC.md`.
+**Tests:** 8 suites passed, 0 failed.
+**Try it:** "I was laid off; last day in 10 days, 60-day grace period".
+**Open:** none.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Low-hanging backlog items.
 **Did:** B-038: `tests/test_acceptance.py` runs acceptance test A as one
 scripted conversation on a fresh server (consent, two doors, three
 answers, compass answer saved as a want, 2-3 directions, one picked,

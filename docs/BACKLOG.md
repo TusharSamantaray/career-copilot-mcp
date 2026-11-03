@@ -12,14 +12,14 @@
   honest-gap hits. From: spec v2 and blueprint.
 - B-029 [P1] sponsorship_verify: posting text plus public filing data,
   as education. From: spec v2.
-- B-030 [P1] deadline_add (best case and conservative date) and
-  fast_track mode; acceptance test B. From: spec v2.
 - B-034 [P2] Dashboard action strip. From: spec v2.
 - B-012 [P2] Delete the old prototype server.py from the project
   folder (it's untracked). From: repo setup.
 
 
 ## Done
+- B-030 deadline_add (best case, conservative), fast-track in
+  journey_state and job_search ordering; acceptance test B. From: spec v2.
 - B-038 Acceptance test A scripted in tests/test_acceptance.py, in CI.
   From: spec v2.
 - B-036 data_mirror: Markdown copy, saved locally in stdio mode.

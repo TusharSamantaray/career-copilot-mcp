@@ -1,10 +1,12 @@
 """Acceptance tests from Spec v2, as scripted conversations with a fresh
-synthetic person each. Here: A (Lost)."""
+synthetic person each. Here: A (Lost) and B (On a clock)."""
 import asyncio
 import json
 import os
+import re
 import shutil
 import sys
+from datetime import date, timedelta
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
@@ -77,6 +79,37 @@ async def lost(s):
           f"directions, picked {picked!r}, every line labelled: OK")
 
 
+async def on_a_clock(s):
+    """B: "I just got laid off" with a last day and a deadline. A dated
+    timeline in the first reply, the deadline holds a conservative date,
+    and the first step fits in an hour."""
+    today = date.today()
+    last_day = today + timedelta(days=10)
+    runway = await call(s, "runway_calc", {
+        "last_working_day": str(last_day), "payroll_end": str(last_day),
+        "grace_days": 60})
+    assert runway["grace_period_end"] and runway["hard_deadline"]
+    assert "attorney" in runway["disclaimer"]
+    best = date.fromisoformat(runway["hard_deadline"])
+    safe = best - timedelta(days=21)           # leave room for paperwork
+    bad = await call(s, "deadline_add", {
+        "title": "Grace period ends", "best_case": str(safe),
+        "conservative": str(best)})
+    assert "error" in bad, "conservative date later than best case"
+    saved = await call(s, "deadline_add", {
+        "title": "Grace period ends", "best_case": str(best),
+        "conservative": str(safe), "why": "transfer paperwork time"})
+    assert saved["plan_on"] == str(safe)
+    state = await call(s, "journey_state")
+    rush = state["fast_track"]
+    assert rush["on"] and rush["plan_on"] == str(safe), rush
+    step = await call(s, "daily_step", {"energy": "medium"})
+    minutes = re.search(r"\((\d+) min\)", step["one_step"]["step"])
+    assert minutes and int(minutes.group(1)) <= 60, step["one_step"]
+    print(f"B On a clock: dated timeline, plan on {safe} (best {best}), "
+          f"fast-track on, first step {minutes.group(1)} min: OK")
+
+
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     env = {**os.environ, "COPILOT_DATA_DIR": TEST_DIR,
@@ -88,6 +121,7 @@ async def main():
         async with ClientSession(read, write) as s:
             await s.initialize()
             await lost(s)
+            await on_a_clock(s)
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     print("ALL PASSED")
 
