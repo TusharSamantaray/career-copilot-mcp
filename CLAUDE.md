@@ -183,8 +183,8 @@ person may send or rely on passes response_check.
 
 ### What exists today (verified in code on 2026-11-03)
 
-63 tools, 8 resources, 16 prompts. Orient: journey_state, life_compass,
-career_move,
+65 tools, 8 resources, 16 prompts. Orient: journey_state, life_compass,
+direction_options, profile_from_text, career_move,
 where_to_move, role_match, skills_gap, next_steps. Foundation:
 profile_save, resume_import, resume_merge, resume_score,
 resume_build_draft, experience_add, contribution_check, story_add,

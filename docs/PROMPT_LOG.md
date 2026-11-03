@@ -5,6 +5,20 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Keep picking up backlog items.
+**Did:** B-004: `profile_from_text` returns a read-back first and saves
+only with apply=true; `direction_options` gives 2-3 directions with fit,
+distance, gaps, risk and a first test. journey_state now points
+"working, want a change" to direction_options.
+**Files:** `copilot/journey.py`, `app.py`, `tests/test_soul.py`,
+`CLAUDE.md`, `README.md`.
+**Tests:** 5 suites passed, 0 failed.
+**Try it:** "I'm good at SQL, Python and dashboards. What directions
+could I test?"
+**Open:** directions come from the built-in role list, so very niche
+roles won't show up.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Keep picking up backlog items.
 **Did:** B-007: `message_draft` returns a `check` with the response_check
 result; `resume_build_draft` ends with a check line.
 **Files:** `app.py`, `tests/test_soul.py`, `tests/test_poc.py`.

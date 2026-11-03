@@ -4,6 +4,7 @@ Two ways in: the person says what's on their mind in their own words, or
 answers a few starter questions. Either way the profile builds as a side
 effect, one answer at a time, and every field is confirmed or unsure.
 """
+from copilot import careers
 from copilot import conduct
 from copilot import store
 from copilot.knowledge.coach import COMPASS, PRINCIPLES
@@ -40,7 +41,7 @@ PATHS = {
     "between jobs": ("Steady the ground: dates first, then a 72-hour plan",
                      "prompt: i_just_got_laid_off"),
     "working, want a change": ("Compare 2 or 3 directions",
-                               "career_move"),
+                               "direction_options"),
     "interviewing": ("Prepare for the loop", "prompt: interview_coming_up"),
 }
 
@@ -139,9 +140,10 @@ def journey_state(user):
     elif not known and not skipped:
         result["next"] = {"question": DOORS,
                           "do": "First visit: offer the two ways in. If "
-                                "they talk, pull out facts, read them back "
-                                "and save only what they confirm "
-                                "(profile_save). If they want questions, "
+                                "they talk, pull out the facts and pass "
+                                "them to profile_from_text to read back; "
+                                "save only after they agree. If they want "
+                                "questions, "
                                 "ask the starter questions one at a time."}
     elif open_questions and answered < 3:
         q = open_questions[0]
@@ -170,6 +172,102 @@ def journey_state(user):
     return result
 
 
+def profile_from_text(user, facts, apply=False):
+    """Facts the assistant pulled from the person's own words. apply=False
+    returns the read-back; apply=True saves them, confirmed or unsure as
+    the person said. Experience facts need employer and title."""
+    read_back, profile_fields, unsure, experience, problems = [], {}, [], \
+        [], []
+    for fact in facts or []:
+        field = fact.get("field", "")
+        value = fact.get("value")
+        label = "confirmed" if fact.get("confirmed") else "unsure"
+        if field == "experience":
+            if not (fact.get("employer") and fact.get("title") and value):
+                problems.append(f"experience needs employer, title and "
+                                f"value: {value!r}")
+                continue
+            experience.append(fact)
+            read_back.append(f"{fact['title']}, {fact['employer']}: {value} "
+                             f"({label})")
+        elif field in TEXT_FIELDS or field in LIST_FIELDS:
+            if field in LIST_FIELDS:
+                value = value if isinstance(value, list) else [value]
+                profile_fields.setdefault(field, []).extend(value)
+            else:
+                profile_fields[field] = value
+            if label == "unsure":
+                unsure.append(field)
+            shown = ", ".join(value) if isinstance(value, list) else value
+            read_back.append(f"{field.replace('_', ' ')}: {shown} ({label})")
+        else:
+            problems.append(f"unknown field {field!r}")
+    result = {"read_back": read_back, "problems": problems}
+    if not apply:
+        result["say"] = ("Read these back in a few short lines and ask: "
+                         "anything to change? Save with apply=true only "
+                         "after they agree. Mark something confirmed only "
+                         "if they said it plainly.")
+        return result
+    if profile_fields:
+        save_profile(user, profile_fields, unsure)
+    for fact in experience:
+        store.put(user, "experience", {
+            "employer": fact["employer"], "title": fact["title"],
+            "start": fact.get("start", ""), "end": fact.get("end", ""),
+            "fact": fact["value"], "confirmed": bool(fact.get("confirmed")),
+            "role_in_work": fact.get("owned_or_contributed",
+                                     "contributed")})
+    result.update(saved=len(read_back),
+                  say="Saved. Call journey_state for the next step.")
+    return result
+
+
+def direction_options(user, skills=None, current_role="", years=0):
+    """Two or three directions to test, each with fit, distance, gaps,
+    risk and a first test small enough for this week."""
+    body = profile(user)
+    current_role = current_role or body.get("current_role", "")
+    years = years or body.get("years_experience", 0)
+    skills = list(skills or []) + body.get("domain_keywords", [])
+    if not skills and not careers.resolve_role(current_role):
+        return {"error": "Need a few skills or a current role.",
+                "ask": "What are 3 to 5 things you're good at or use "
+                       "every day at work?"}
+    ranked = careers.role_match(skills, years)["best_fits"]
+    current_key = careers.resolve_role(current_role)
+    options = []
+    for fit in ranked[:3]:
+        move = careers.career_move(current_role, fit["role"], skills, years)
+        distance = move["distance"] if current_key else "unknown"
+        if fit["role"] == current_key:
+            distance = "same role, next level"
+        risk = {"same role, next level": "Low: you can test it now.",
+                "adjacent": "Low to medium: similar work, new title.",
+                "same family": "Medium: some new skills to prove.",
+                "career change": "Higher: may mean a step back in level or "
+                                 "pay while you build proof."}.get(
+            distance, "Unknown until we know your current role.")
+        gaps = fit["missing_core"][:3]
+        first_test = (f"Do one small project using {gaps[0]} this week."
+                      if gaps else
+                      f"Apply to 3 {fit['title']} roles this week and see "
+                      "what comes back.")
+        options.append({"direction": fit["title"],
+                        "fit": f"{fit['fit_pct']}%: you have "
+                               f"{', '.join(fit['matched'][:3]) or 'little yet'}",
+                        "distance": distance, "gaps": gaps, "risk": risk,
+                        "first_test": first_test})
+    return {"options": options,
+            "wants": body.get("wants", []),
+            "level_note": "Level and positioning are choices to test, not "
+                          "labels: try one level up alongside your current "
+                          "one and see which gets replies.",
+            "say": "Give each option in one line (direction, why it fits, "
+                   "the first test), then ask which one to try. Rank by "
+                   "their wants; drop any that break a dealbreaker."}
+
+
 def life_compass(user, question=0, answer="", save_as=""):
     """Reflection questions, asked one at a time. With an answer, saves it
     (and, if save_as is want or dealbreaker, adds it to the profile)."""
@@ -194,6 +292,6 @@ def life_compass(user, question=0, answer="", save_as=""):
                          "want or hard no, pass save_as.")
     else:
         result["say"] = ("All done. Sum up what they want in two lines, then "
-                         "offer 2 or 3 directions to test (career_move or "
-                         "role_match).")
+                         "offer 2 or 3 directions to test "
+                         "(direction_options).")
     return result

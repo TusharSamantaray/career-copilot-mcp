@@ -1,8 +1,6 @@
 # Backlog
 
 ## Open
-- B-004 [P0] profile_from_text and direction_options.
-  From: spec v2.
 - B-005 [P0] job_search on public job-board endpoints, then
   jd_analyze. From: spec v2.
 - B-006 [P1] Move hosted key from URL to header or OAuth.
@@ -24,6 +22,9 @@
   tester. From: owner testing.
 
 ## Done
+- B-004 profile_from_text (read back, then save) and direction_options
+  (2-3 directions with fit, distance, gaps, risk, first test).
+  From: spec v2.
 - B-007 message_draft and resume_build_draft run response_check on
   their own output. From: code review.
 - B-001 journey_state: two ways in, one question at a time, read-back

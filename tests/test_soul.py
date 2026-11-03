@@ -287,7 +287,7 @@ async def journey_checks(s):
                                    "unsure": ["location"]})
     # After three answers it gives something back instead of asking more.
     state = await call(s, "journey_state")
-    assert state["next"]["use"] == "career_move", state
+    assert state["next"]["use"] == "direction_options", state
     assert state["unsure"] == ["location"]
     assert state["stage"] in ("orient", "prepare")
 
@@ -309,6 +309,34 @@ async def journey_checks(s):
     profile = await call(s, "profile_get")
     assert "Building things with a small team" in profile["wants"]
     print("journey_state, two ways in, merged profile, saved compass: OK")
+
+    # Talks it out: facts read back first, saved only after they agree.
+    facts = [{"field": "dealbreakers", "value": "fully on-site",
+              "confirmed": True},
+             {"field": "comp_floor", "value": "90k", "confirmed": False},
+             {"field": "experience", "employer": "Globex",
+              "title": "Analyst", "value": "Built the weekly sales report",
+              "confirmed": True},
+             {"field": "shoe_size", "value": "9", "confirmed": True}]
+    before = len(await call(s, "experience_list"))
+    preview = await call(s, "profile_from_text", {"facts": facts})
+    assert len(preview["read_back"]) == 3 and preview["problems"], preview
+    assert "comp floor: 90k (unsure)" in preview["read_back"]
+    assert "comp_floor" not in await call(s, "profile_get"), "saved early"
+    await call(s, "profile_from_text", {"facts": facts, "apply": True})
+    profile = await call(s, "profile_get")
+    assert "fully on-site" in profile["dealbreakers"]
+    assert profile["confidence"]["comp_floor"] == "unsure"
+    assert len(await call(s, "experience_list")) == before + 1
+    print("profile_from_text reads back before saving: OK")
+
+    options = await call(s, "direction_options", {
+        "skills": ["sql", "python", "statistics", "dashboards"]})
+    assert 2 <= len(options["options"]) <= 3, options
+    first = options["options"][0]
+    assert {"fit", "distance", "gaps", "risk", "first_test"} <= set(first)
+    assert "test" in options["level_note"]
+    print("direction_options gives 2-3 directions to test: OK")
 
 
 async def main():

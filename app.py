@@ -319,6 +319,31 @@ def journey_state() -> dict:
 
 
 @mcp.tool
+def profile_from_text(facts: list[dict], apply: bool = False) -> dict:
+    """Save facts pulled from what the person said in their own words.
+
+    facts: [{field, value, confirmed}], where field is a profile_save field
+    (e.g. current_role, wants, dealbreakers) or "experience" (then also
+    employer, title, optional start, end). confirmed: true only if they
+    said it plainly; otherwise it's saved as unsure. apply=false returns a
+    read_back to show them; call again with apply=true after they agree
+    (write action).
+    """
+    return journey.profile_from_text(current_user(), facts, apply)
+
+
+@mcp.tool
+def direction_options(skills: list[str] | None = None,
+                      current_role: str = "", years: int = 0) -> dict:
+    """Two or three career directions to test, each with fit, distance,
+    gaps, risk and a first test for this week. Uses the profile for
+    anything not passed. Offer them in one line each and let the person
+    pick."""
+    return journey.direction_options(current_user(), skills, current_role,
+                                     years)
+
+
+@mcp.tool
 def profile_save(target_role: str = "", situation: str = "",
                  current_role: str = "", level: str = "",
                  industry: str = "", years_experience: int = 0,

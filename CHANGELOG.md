@@ -6,6 +6,19 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Talk it out (B-004). Describe your work in your own words; Career
+  Copilot reads the facts back with confirmed or unsure labels and saves
+  them only after you agree.
+  **Try it:** say "Let me just describe my work: I was an analyst at a
+  retailer for three years, I built their weekly sales report, and I
+  never want a fully on-site job again". It should read back a short list
+  and ask if anything needs changing before saving.
+- Direction options (B-004). Not sure where to go? You get 2 or 3
+  directions, each with why it fits, how far it is, the gaps, the risk
+  and a small test you can do this week.
+  **Try it:** say "I'm good at SQL, Python and dashboards. What
+  directions could I test?". You should get 2 or 3 one-line options and
+  one question: which to try.
 - A guided start (B-001). Each session begins by checking where you are.
   A first-timer gets two ways in: say what's on your mind, or answer a
   few quick questions one at a time. After about three answers it reads
