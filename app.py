@@ -52,6 +52,7 @@ from copilot import guide
 from copilot import insights
 from copilot import jobs
 from copilot import journey
+from copilot import loops
 from copilot import nudges
 from copilot import places
 from copilot import prep
@@ -1094,6 +1095,39 @@ def prep_checklist() -> dict:
     """The interview prep checklist: story bank, resume defense, skills
     practice, company prep, mock loops."""
     return prep.prep_checklist()
+
+
+@mcp.tool
+def loop_round_log(company: str, round_n: int, round_format: str,
+                   req_id: str = "", role: str = "", round_date: str = "",
+                   panel: list[dict] | None = None,
+                   questions: list[dict] | None = None,
+                   feedback: list[dict] | None = None,
+                   apply: bool = False) -> dict:
+    """Log one interview round, so the next round builds on it.
+
+    round_format: recruiter, hiring_manager, coding, system_design,
+    behavioral, bar_raiser, take_home, panel or team_match. req_id: the
+    requisition number (ask for it). panel: [{role, focus_area}], never
+    names. questions: [{text, competency, story_id, self_rating 1-5,
+    follow_ups}]. feedback: [{text, source: recruiter_said,
+    interviewer_said or self_read}]. apply=false previews; apply=true
+    saves (write action).
+    """
+    return loops.round_log(current_user(), company, round_n, round_format,
+                           req_id, role, round_date, panel, questions,
+                           feedback, apply)
+
+
+@mcp.tool
+def loop_next_round_prep(loop_id: str, next_format: str = "",
+                         known_panel: list[dict] | None = None) -> dict:
+    """Prepare the next round of a loop: competencies already covered and
+    still open, which story to bring for each (and whether this panel may
+    have heard it), weak spots from low self-ratings or real feedback, and
+    one thing to do today. loop_id comes from loop_round_log."""
+    return loops.next_round_prep(current_user(), loop_id, next_format,
+                                 known_panel)
 
 
 @mcp.tool

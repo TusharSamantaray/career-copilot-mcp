@@ -506,6 +506,47 @@ async def job_checks(s):
     print("ats_profile_check: platform, parse risks, knock-outs, verdict: OK")
 
 
+async def loop_checks(s):
+    tense = await call(s, "story_add", {
+        "title": "Led a tense migration", "situation": "Two teams disagreed "
+        "on the cut-over plan", "task": "Agree a plan", "action": "I led "
+        "the team through the conflict and wrote the plan",
+        "result": "Moved 4 services with no outage before the deadline"})
+    assert {"conflict", "leadership", "speed"} <= set(tense["themes"]), tense
+    preview = await call(s, "loop_round_log", {
+        "company": "Acme Corp", "round_n": 1, "round_format": "behavioral",
+        "role": "Analyst"})
+    assert "requisition" in preview["note"] and "saved" not in preview
+    logged = await call(s, "loop_round_log", {
+        "company": "Acme Corp", "req_id": "R-104", "round_n": 1,
+        "round_format": "behavioral",
+        "panel": [{"role": "Hiring manager", "focus_area": "teamwork"}],
+        "questions": [{"text": "Tell me about a time you disagreed with a "
+                               "teammate", "story_id": tense["id"],
+                       "self_rating": 2}],
+        "feedback": [{"text": "Strong on ownership, go deeper on numbers",
+                      "source": "recruiter_said"}],
+        "apply": True})
+    loop_id = logged["loop_id"]
+    assert loop_id == "acme-corp#r-104", loop_id
+    plan = await call(s, "loop_next_round_prep", {
+        "loop_id": loop_id, "next_format": "panel",
+        "known_panel": [{"role": "Hiring manager"}]})
+    assert "conflict" in plan["covered_competencies"]
+    assert "conflict" not in plan["uncovered_competencies"]
+    by_theme = {p["competency"]: p for p in plan["story_plan"]}
+    # A story this panel hasn't heard wins when there is one...
+    assert by_theme["leadership"]["story_id"] != tense["id"]
+    assert by_theme["leadership"]["reuse_risk"] == "none"
+    # ...and a repeat is flagged when it's the only option.
+    assert by_theme["speed"]["story_id"] == tense["id"]
+    assert by_theme["speed"]["reuse_risk"] == "same_panelist"
+    assert len(plan["weak_spots"]) == 2, plan["weak_spots"]
+    assert plan["one_thing_today"].startswith("Rework")
+    print("interview rounds: logged by req id, next round builds on it, "
+          "repeat stories flagged: OK")
+
+
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     os.makedirs(TEST_DIR)
@@ -532,6 +573,7 @@ async def main():
             await journey_checks(s)
             await fact_checks(s)
             await job_checks(s)
+            await loop_checks(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
               encoding="utf-8") as handle:
         log = handle.read()

@@ -16,13 +16,13 @@
 
 - B-016 [P1] skill_gap_evidence from postings seen and the outcome log.
   From: blueprint.
-- B-017 [P1] Interview rounds: loop_round_log and loop_next_round_prep.
-  From: blueprint.
 - B-018 [P1] story_coverage grid across competencies. From: blueprint.
 - B-020 [P2] Watches and an outbox read at the next chat. From: blueprint.
 - B-021 [P2] Per-person data keys for hosted storage. From: blueprint.
 
 ## Done
+- B-017 loop_round_log and loop_next_round_prep (req-id loop key, panel
+  by role, feedback source ranking, reuse risk). From: blueprint.
 - B-019 ats_profile_check with platform rules in knowledge/ats.py
   (validated by test_knowledge). From: blueprint.
 - B-005 job_search (Greenhouse, Lever, Ashby; provable dates; filters;

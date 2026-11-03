@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 DATA_DIR = os.environ.get("COPILOT_DATA_DIR", "./data")
 KINDS = {"profile", "experience", "story", "application", "resume",
          "account", "holding", "budget", "nudge", "goal", "checkin",
-         "consent", "compass", "fact", "seen"}
+         "consent", "compass", "fact", "seen", "round"}
 
 
 @contextmanager

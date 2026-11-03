@@ -5,6 +5,20 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Continue the backlog.
+**Did:** B-017: `loop_round_log` (loop key = company + req id, panel by
+role and focus, questions with competency auto-tagged, feedback with
+source; preview then apply) and `loop_next_round_prep` (covered and
+open competencies, a story per gap preferring ones not yet told, reuse
+risk same_panelist or same_company, weak spots, one thing today).
+**Files:** `copilot/loops.py`, `app.py`, `copilot/store.py`,
+`tests/test_soul.py`, `README.md`, `CLAUDE.md`.
+**Tests:** 6 suites passed, 0 failed.
+**Try it:** describe round 1 and ask for round 2 prep.
+**Open:** rejection_triage (close a loop only on matching title and req
+id) and checking round dates against the calendar are still to do.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Continue the backlog.
 **Did:** B-019: `ats_profile_check` (platform from URL, parse risks,
 knock-outs vs answers on file, quirks, verdict). Platform rules live in
 `copilot/knowledge/ats.py` so the weekly bot can refresh them; a new

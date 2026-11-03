@@ -103,6 +103,7 @@ sequenceDiagram
 | "Here are my old resumes." | The best bullets merged, with questions on the weak ones |
 | "Draft a thank-you note to Acme." | A draft for you to edit and send, checked for promises and made-up numbers |
 | "Here are my job emails. Update my pipeline." | Applications, interviews and deadlines sorted, after you say yes |
+| "Round 1 at Acme went OK. Prep me for round 2." | What round 1 covered, which story to bring next (and whether that panel heard it already), and one thing to do today |
 | "I have an interview on the 20th." | A prep plan with reminders, and the one thing to do today |
 | "Show my dashboard." | Your progress as a visual page |
 
@@ -196,7 +197,7 @@ flowchart LR
 | Language | Python 3.11+ |
 | Framework | [FastMCP](https://gofastmcp.com) 2.x |
 | Protocol | Model Context Protocol: stdio (local) or streamable HTTP at `/mcp` |
-| Surface | 71 tools, 8 resources, 16 starter prompts |
+| Surface | 73 tools, 8 resources, 16 starter prompts |
 | Storage | SQLite, one file per person; Postgres planned |
 | Auth (hosted) | Sign in with GitHub (OAuth, `read:user` only, optional invite list), or API keys as a fallback. Local mode needs none |
 | Network calls out | GitHub (sign-in), public job boards (Greenhouse, Lever, Ashby; read-only, cached), World Bank API |
@@ -214,6 +215,7 @@ copilot/
   facts.py             The fact record: source, ownership, numbers, conflicts
   jobs.py              Job search on public boards, reading a posting
   ats.py               Pre-apply check: platform, parse risks, knock-outs
+  loops.py             Interview rounds and next-round prep
   coach.py             Daily step, momentum, crisis safety
   careers.py           Resumes, contributions, LinkedIn, roles, career moves
   places.py            Where to move for a role

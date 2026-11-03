@@ -6,6 +6,16 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Interview rounds that build on each other (B-017). Log what each round
+  asked, which story you told, who was on the panel (by role, never by
+  name) and any feedback. Prep for the next round then shows what's
+  still uncovered, which story to bring for each gap, a warning if this
+  panel may already have heard it, your weak spots, and one thing to do
+  today. Loops are tracked by company and requisition number.
+  **Try it:** say "Round 1 at Acme was behavioral; they asked about a
+  disagreement and I told my migration story. The recruiter said go
+  deeper on numbers. Prep me for round 2." It should log the round and
+  give you one thing to rework today.
 - A pre-apply check (B-019). Before you apply, it tells you which
   application system the company uses, what in your resume that system
   may scramble (tables, two columns, icons, mixed date styles, missing
