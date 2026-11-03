@@ -12,7 +12,7 @@ from copilot.knowledge.coach import COMPASS, PRINCIPLES
 TEXT_FIELDS = ("situation", "target_role", "current_role", "level",
                "industry", "location", "country", "goals",
                "hours_preference", "comp_floor", "work_authorization",
-               "schedule")
+               "schedule", "voice")
 LIST_FIELDS = ("wants", "dealbreakers", "locations", "target_companies",
                "excluded_companies", "domain_keywords", "honest_gaps")
 

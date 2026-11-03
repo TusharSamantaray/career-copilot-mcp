@@ -67,15 +67,34 @@ def interview_questions(round_="", likely_only=False):
             "loop_formats": LOOP_FORMATS if not round_ else None}
 
 
-def message_draft(kind, company="", role="", name="", detail="", me=""):
+VOICES = ("plain", "warm", "formal")
+CLOSINGS = re.compile(r"\n\n(Best|Thanks|Thank you|Regards|Kind regards),\n")
+
+
+def _voice(body, voice):
+    """Plain is the template as written; warm and formal adjust the
+    greeting, opening and sign-off only, never the facts."""
+    if voice == "formal":
+        body = re.sub(r"^Hi ", "Dear ", body)
+        body = CLOSINGS.sub("\n\nKind regards,\n", body)
+    elif voice == "warm":
+        body = re.sub(r"^(Hi [^\n]+\n\n)", r"\1I hope your week is going "
+                      "well. ", body)
+        body = CLOSINGS.sub("\n\nWarm wishes,\n", body)
+    return body
+
+
+def message_draft(kind, company="", role="", name="", detail="", me="",
+                  voice="plain"):
     if kind not in TEMPLATES:
         return {"error": f"kind must be one of {sorted(TEMPLATES)}"}
+    voice = voice if voice in VOICES else "plain"
     subject, body = TEMPLATES[kind]
     values = {"company": company or "[company]", "role": role or "[role]",
               "name": name or "there", "detail": detail or "[detail]",
               "me": me or "[your name]"}
     return {"subject": subject.format(**values),
-            "body": body.format(**values),
+            "body": _voice(body.format(**values), voice), "voice": voice,
             "note": "A draft for the user to edit and send themselves. "
                     "Career Copilot never sends messages on its own."}
 

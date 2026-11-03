@@ -131,6 +131,19 @@ async def interview_checks(s):
         "name": "Jordan", "detail": "the data platform", "me": "Sam"})
     assert "Jordan" in draft["body"] and "never sends" in draft["note"]
     assert draft["check"]["ok"], draft["check"]
+    assert draft["voice"] == "plain" and draft["body"].startswith("Hi ")
+    formal = await call(s, "message_draft", {
+        "kind": "thank_you", "company": "Acme", "role": "Analyst",
+        "name": "Jordan", "detail": "the data platform", "me": "Sam",
+        "voice": "formal"})
+    assert formal["body"].startswith("Dear Jordan") and \
+        "Kind regards," in formal["body"], formal["body"]
+    assert "the data platform" in formal["body"], "voice changed the facts"
+    await call(s, "profile_save", {"voice": "warm"})
+    warm = await call(s, "message_draft", {"kind": "thank_you",
+                                           "name": "Jordan", "me": "Sam"})
+    assert warm["voice"] == "warm" and "Warm wishes," in warm["body"]
+    await call(s, "profile_save", {"replace": True})   # newcomer again
     risky = await call(s, "message_draft", {
         "kind": "thank_you", "company": "Acme", "role": "Analyst",
         "detail": "I'm a guaranteed hire and cut costs by 85%"})

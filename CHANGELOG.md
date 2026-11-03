@@ -139,6 +139,12 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- Drafts in your voice (B-032). Messages can sound plain (the default),
+  warm or formal. Only the greeting, opening and sign-off change, never
+  the facts. Say which you like once and it's remembered.
+  **Try it:** say "Write my thank-you notes in a formal voice from now
+  on", then ask for a thank-you note. It should start "Dear" and end
+  "Kind regards".
 - The spec page is now Spec v2 (B-011): the journey-first design, with
   what's built and what's still open marked on every part, including
   the acceptance tests. The old v1 spec and cost model moved to

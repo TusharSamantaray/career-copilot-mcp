@@ -5,6 +5,17 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Low-hanging backlog items.
+**Did:** B-032: `message_draft` takes voice (plain, warm, formal) or the
+profile's saved voice; only greeting, opening and sign-off change.
+`profile_save` takes voice.
+**Files:** `copilot/prep.py`, `copilot/journey.py`, `app.py`,
+`tests/test_soul.py`.
+**Tests:** 7 suites passed, 0 failed.
+**Try it:** "Write my notes in a formal voice", then a thank-you note.
+**Open:** none.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Low-hanging backlog items.
 **Did:** B-027 `ats_keyword_check`: posting skills split into covered,
 missing but true (confirmed facts or profile keywords, minus honest
 gaps) and missing and a gap.

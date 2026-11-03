@@ -416,7 +416,8 @@ def profile_save(target_role: str = "", situation: str = "",
                  location: str = "", country: str = "",
                  goals: str = "", hours_preference: str = "",
                  comp_floor: str = "", work_authorization: str = "",
-                 schedule: str = "", wants: list[str] | None = None,
+                 schedule: str = "", voice: str = "",
+                 wants: list[str] | None = None,
                  dealbreakers: list[str] | None = None,
                  locations: list[str] | None = None,
                  target_companies: list[str] | None = None,
@@ -436,7 +437,8 @@ def profile_save(target_role: str = "", situation: str = "",
     job, career_move, finance, future. comp_floor: e.g. "60k".
     wants rank results; dealbreakers filter them out. honest_gaps: things
     they can't truthfully claim, which tailoring respects.
-    work_authorization: only if they volunteer it.
+    work_authorization: only if they volunteer it. voice: how drafts
+    sound, plain (default), warm or formal.
     unsure: names of fields they aren't sure about (labelled unsure, never
     used on a resume as fact). skip: fields they said "not sure" or "skip"
     to, so they aren't asked again. Read the answer back before saving.
@@ -447,6 +449,7 @@ def profile_save(target_role: str = "", situation: str = "",
               "location": location, "country": country, "goals": goals,
               "hours_preference": hours_preference, "comp_floor": comp_floor,
               "work_authorization": work_authorization, "schedule": schedule,
+              "voice": voice,
               "wants": wants, "dealbreakers": dealbreakers,
               "locations": locations, "target_companies": target_companies,
               "excluded_companies": excluded_companies,
@@ -1229,15 +1232,19 @@ def loop_next_round_prep(loop_id: str, next_format: str = "",
 
 @mcp.tool
 def message_draft(kind: str, company: str = "", role: str = "",
-                  name: str = "", detail: str = "", me: str = "") -> dict:
+                  name: str = "", detail: str = "", me: str = "",
+                  voice: str = "") -> dict:
     """Draft a job-search message for the user to send themselves.
 
     kind: thank_you, follow_up, assessment_extension, recruiter_reply,
     level_question, referral_request, offer_negotiation, withdraw.
-    The draft comes with check, the response_check result: fix anything
-    it flags before showing it.
+    voice: plain (default), warm or formal; empty uses the profile's
+    voice (save it with profile_save(voice=...)). The draft comes with
+    check, the response_check result: fix anything it flags before
+    showing it.
     """
-    draft = prep.message_draft(kind, company, role, name, detail, me)
+    voice = voice or journey.profile(current_user()).get("voice", "plain")
+    draft = prep.message_draft(kind, company, role, name, detail, me, voice)
     if "body" in draft:
         draft["check"] = conduct.check(
             current_user(), f"{draft['subject']}\n{draft['body']}",
