@@ -9,7 +9,8 @@ Start with the guide that matches what you want to do.
 | Add it to my AI assistant | [CONNECT.md](CONNECT.md) |
 | Run it, host it, or list it for sale | [SETUP.md](SETUP.md) |
 | See how the system is built | [ARCHITECTURE.md](ARCHITECTURE.md) |
-| Read the full spec, with costs and roadmap | [SPEC.md](SPEC.md) |
+| Read the product spec (v2) and what's built | [SPEC.md](SPEC.md) |
+| See the cost model and the v1 spec | [archive/SPEC-v1.md](archive/SPEC-v1.md) |
 | See where it goes next, and why | [BLUEPRINT.md](BLUEPRINT.md) |
 | Pick the project back up (owner) | [OWNER.md](OWNER.md) |
 | Design screens for it in Figma | [FIGMA.md](FIGMA.md) |

@@ -10,13 +10,36 @@
   still delete or rotate it. From: claude.ai connector setup.
 - B-010 [P2] Lawyer review of docs/PRIVACY.md and docs/TERMS.md before
   paid users. From: ground rules work.
-- B-011 [P2] Add Spec v2 as docs/SPEC.md (current file is v1).
-  From: CLAUDE.md.
+- B-025 [P1] ownership_check: ask "wrote, led or fixed?" before owner
+  verbs; reject verbs stronger than the fact's ownership. From: spec v2.
+- B-026 [P1] resume_tailor (resume_patch): edits cite fact ids; server
+  rejects unsupported numbers, ownership inflation, merged claims,
+  honest-gap hits. From: spec v2 and blueprint.
+- B-027 [P1] ats_keyword_check: posting keywords covered vs missing but
+  true vs real gaps. From: spec v2.
+- B-028 [P1] cover_letter_draft from confirmed facts, checked. From:
+  spec v2.
+- B-029 [P1] sponsorship_verify: posting text plus public filing data,
+  as education. From: spec v2.
+- B-030 [P1] deadline_add (best case and conservative date) and
+  fast_track mode; acceptance test B. From: spec v2.
+- B-031 [P1] study_plan aware of the loop format. From: spec v2.
+- B-032 [P1] message_draft in the person's chosen voice. From: spec v2.
+- B-033 [P2] Lessons list after each loop. From: spec v2.
+- B-034 [P2] Dashboard action strip. From: spec v2.
+- B-035 [P2] recruiter_find (public sources, links only). From: spec v2.
+- B-036 [P2] Local-first Markdown mirror of the data file. From: spec v2.
+- B-037 [P2] pipeline_digest sponsorship and overdue columns. From:
+  spec v2.
+- B-038 [P1] Acceptance test A as one scripted conversation. From:
+  spec v2.
 - B-012 [P2] Delete the old prototype server.py from the project
   folder (it's untracked). From: repo setup.
 
 
 ## Done
+- B-011 Spec v2 in docs/SPEC.md (condensed, with status); v1 archived.
+  Remaining spec gaps added as B-025 to B-038. From: CLAUDE.md.
 - B-021 Per-person data keys (AES-GCM, wrapped by
   CAREER_COPILOT_MASTER_KEY), crypto-shred on delete, plain rows still
   read. Owner must add the key to the existing Render service. From:

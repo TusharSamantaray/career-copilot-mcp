@@ -230,7 +230,7 @@ The same in `render.yaml`, once you're on a paid plan:
         value: /var/data
 ```
 
-For many users, switch storage to Postgres (SPEC Phase 2).
+For many users, switch storage to Postgres (see the roadmap in [archive/SPEC-v1.md](archive/SPEC-v1.md)).
 
 ## 6b. Deploy to MCPHosting
 
@@ -256,12 +256,12 @@ MCPHosting builds from your GitHub repo and redeploys on every push.
 
 The Free plan allows 500 requests a month, which is enough for testing.
 Move to Pro ($19/mo, 50,000 requests) before you take paying users (see
-SPEC section 7).
+section 7 of [archive/SPEC-v1.md](archive/SPEC-v1.md)).
 
 **Data durability:** Ask MCPHosting support whether project disk survives
 redeploys. If it doesn't, every push wipes user data. Keep paid users off
-the server until this is answered or storage moves to Postgres (SPEC
-Phase 2).
+the server until this is answered or storage moves to Postgres (Phase 2
+in [archive/SPEC-v1.md](archive/SPEC-v1.md)).
 
 ## 7. List on MCPize
 

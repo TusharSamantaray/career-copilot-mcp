@@ -7,7 +7,8 @@ Read this fully at the start of every session. It has four parts:
 4. File templates (used by part 2)
 
 Full spec lives in the owner's Claude doc "Career Copilot: Product Spec
-v2 (journey-first)". Save a copy as `docs/SPEC.md` when available.
+v2 (journey-first)". `docs/SPEC.md` holds a condensed copy with build
+status; replace its summary sections with the full text when available.
 
 ---
 

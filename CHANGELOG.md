@@ -126,6 +126,12 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- The spec page is now Spec v2 (B-011): the journey-first design, with
+  what's built and what's still open marked on every part, including
+  the acceptance tests. The old v1 spec and cost model moved to
+  `docs/archive/`.
+  **Try it:** open `docs/SPEC.md` and read section 7: each build step
+  says Done or Open, with a backlog id.
 - Ready for a persistent disk (B-008). Sign-ins are now kept in the same
   place as your data, so adding one disk on Render keeps both through
   restarts. The steps are in the setup guide. On the free plan nothing

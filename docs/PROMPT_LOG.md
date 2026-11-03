@@ -5,6 +5,19 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Continue the backlog.
+**Did:** B-011: wrote `docs/SPEC.md` as Spec v2, condensed from CLAUDE.md
+part 3, with build and acceptance-test status; moved v1 to
+`docs/archive/SPEC-v1.md` and fixed links. Added the spec's remaining
+gaps to the backlog as B-025 to B-038.
+**Files:** `docs/SPEC.md`, `docs/archive/SPEC-v1.md`, `docs/BACKLOG.md`,
+`docs/README.md`, `docs/SETUP.md`, `CLAUDE.md`.
+**Tests:** 7 suites passed, 0 failed (docs only).
+**Try it:** open docs/SPEC.md, section 7.
+**Open:** the full Spec v2 text from the owner's document is still not in
+the repo.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Continue the backlog.
 **Did:** B-008, code side: in HTTP mode FASTMCP_HOME defaults to
 `<COPILOT_DATA_DIR>/_fastmcp`, so FastMCP's encrypted sign-in store sits
 with the data and one disk keeps both. SETUP.md has the paid-disk steps
