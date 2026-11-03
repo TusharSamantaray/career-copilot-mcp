@@ -66,12 +66,32 @@ def round_log(user, company, round_n, round_format, req_id="", role="",
     return result
 
 
-def next_round_prep(user, loop_id, next_format="", known_panel=None):
+def _calendar_check(company, events):
+    """Is the next round actually on the calendar? Spec: verify interview
+    status against the calendar before planning around it."""
+    if events is None:
+        return {"status": "not_checked",
+                "do": "Pass upcoming events from the person's calendar "
+                      "connector to confirm the date."}
+    name = company.lower()
+    hits = sorted(str(e.get("start", ""))[:10] for e in events
+                  if name in str(e.get("subject", "")).lower()
+                  or name in str(e.get("organizer", "")).lower())
+    if hits:
+        return {"status": "on_calendar", "date": hits[0]}
+    return {"status": "not_on_calendar",
+            "do": "No matching event. Confirm the date with the recruiter "
+                  "before planning prep around it."}
+
+
+def next_round_prep(user, loop_id, next_format="", known_panel=None,
+                    calendar_events=None):
     rounds = _rounds(user, loop_id)
     if not rounds:
         return {"error": "No rounds logged for this loop yet.",
                 "loops": sorted({r["loop"] for r in
                                  store.list_kind(user, "round")})}
+    calendar = _calendar_check(rounds[0]["company"], calendar_events)
     stories = {s["id"]: s for s in store.list_kind(user, "story")}
     covered, used = set(), {}
     weak = []
@@ -121,7 +141,7 @@ def next_round_prep(user, loop_id, next_format="", known_panel=None):
     else:
         today = "Every competency is covered: do one mock round."
     return {"loop_id": loop_id, "rounds_logged": len(rounds),
-            "next_format": next_format or "unknown",
+            "next_format": next_format or "unknown", "calendar": calendar,
             "covered_competencies": sorted(covered),
             "uncovered_competencies": uncovered, "story_plan": plan,
             "weak_spots": weak, "one_thing_today": today,

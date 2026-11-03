@@ -6,6 +6,11 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Round prep checks your calendar (B-024). When your calendar is
+  connected, it confirms the next round is really booked before planning
+  prep, and tells you to check with the recruiter if it isn't there.
+  **Try it:** with your calendar connected, say "Prep me for my next
+  Acme round". It should say whether the round is on your calendar.
 - Story coverage (B-018). See your interview stories against each
   competency (ownership, conflict, failure, ambiguity, influence,
   leadership, impact, customer, speed), how strong each one is, where you

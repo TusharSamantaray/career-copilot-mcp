@@ -1136,13 +1136,16 @@ def loop_round_log(company: str, round_n: int, round_format: str,
 
 @mcp.tool
 def loop_next_round_prep(loop_id: str, next_format: str = "",
-                         known_panel: list[dict] | None = None) -> dict:
+                         known_panel: list[dict] | None = None,
+                         calendar_events: list[dict] | None = None) -> dict:
     """Prepare the next round of a loop: competencies already covered and
     still open, which story to bring for each (and whether this panel may
     have heard it), weak spots from low self-ratings or real feedback, and
-    one thing to do today. loop_id comes from loop_round_log."""
+    one thing to do today. loop_id comes from loop_round_log.
+    calendar_events: [{subject, start, organizer}] from the person's own
+    calendar connector, to confirm the round is really booked."""
     return loops.next_round_prep(current_user(), loop_id, next_format,
-                                 known_panel)
+                                 known_panel, calendar_events)
 
 
 @mcp.tool

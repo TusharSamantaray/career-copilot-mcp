@@ -3,7 +3,18 @@
 What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
-### 2026-11-03 | v0.3.1-dev
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Continue the backlog.
+**Did:** B-024: `loop_next_round_prep` takes calendar events from the
+person's own calendar connector and reports on_calendar (with the date),
+not_on_calendar (confirm with the recruiter first) or not_checked.
+Fixed the previous log entry's version label.
+**Files:** `copilot/loops.py`, `app.py`, `tests/test_soul.py`.
+**Tests:** 6 suites passed, 0 failed.
+**Try it:** "Prep me for round 2 at Acme" with your calendar connected.
+**Open:** none.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Continue the backlog.
 **Did:** B-023: triage reads a req id from emails; a rejection updates
 only the open application at that company whose req id or role matches;

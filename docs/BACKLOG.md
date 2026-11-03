@@ -16,12 +16,12 @@
 
 - B-016 [P1] skill_gap_evidence from postings seen and the outcome log.
   From: blueprint.
-- B-024 [P2] Check logged interview round dates against the calendar
-  before prep starts (spec: verify interview status). From: B-017.
 - B-020 [P2] Watches and an outbox read at the next chat. From: blueprint.
 - B-021 [P2] Per-person data keys for hosted storage. From: blueprint.
 
 ## Done
+- B-024 Next-round prep checks the round is on the calendar. From:
+  B-017.
 - B-023 Rejections close only the application whose role or req id they
   name; unclear ones come back as "confirm". application_log takes
   req_id. From: B-017.

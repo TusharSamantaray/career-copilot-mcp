@@ -543,6 +543,17 @@ async def loop_checks(s):
     assert by_theme["speed"]["reuse_risk"] == "same_panelist"
     assert len(plan["weak_spots"]) == 2, plan["weak_spots"]
     assert plan["one_thing_today"].startswith("Rework")
+    assert plan["calendar"]["status"] == "not_checked"
+    booked = await call(s, "loop_next_round_prep", {
+        "loop_id": loop_id, "calendar_events": [
+            {"subject": "Acme Corp panel interview",
+             "start": "2026-11-10T15:00:00Z"}]})
+    assert booked["calendar"] == {"status": "on_calendar",
+                                  "date": "2026-11-10"}, booked["calendar"]
+    missing = await call(s, "loop_next_round_prep", {
+        "loop_id": loop_id, "calendar_events": [
+            {"subject": "Dentist", "start": "2026-11-10T15:00:00Z"}]})
+    assert missing["calendar"]["status"] == "not_on_calendar"
     print("interview rounds: logged by req id, next round builds on it, "
           "repeat stories flagged: OK")
 
