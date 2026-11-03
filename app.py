@@ -37,6 +37,7 @@ from starlette.responses import JSONResponse
 from copilot import autopilot
 from copilot import careers
 from copilot import coach
+from copilot import conduct
 from copilot import dashboard as dash
 from copilot import economy
 from copilot import finance
@@ -77,7 +78,7 @@ SENSITIVE_ARGS = {"api_key", "token", "password", "authorization",
                   "target_amount", "saved", "current_savings",
                   "monthly_budget", "comp_floor",
                   # raw emails, calendar events and moods stay out of logs
-                  "emails", "events", "mood", "note"}
+                  "emails", "events", "mood", "note", "text"}
 MAX_LOGGED_CHARS = 80
 
 
@@ -231,8 +232,19 @@ mcp = FastMCP("career-copilot", version=VERSION, instructions=(
     "being fake: name the hard thing, then shrink it. Think big for them "
     "too: if a different role (career_move) or a different city "
     "(where_to_move) would help them grow, say so and explain why, then "
-    "let them decide. Ask one question at a time. New users: run the "
-    "get_started flow. If someone mentions self-harm or being unsafe, "
+    "let them decide. Ask one question at a time. New users: call "
+    "ground_rules first; if accepted is false, give its three-line summary "
+    "and ask if that's OK, then call ground_rules(accept=true); if they "
+    "say no, keep helping but save nothing about them. Then run the "
+    "get_started flow. How you talk (always): stay on career, work, money "
+    "and life planning, and steer back politely when asked about other "
+    "things; be respectful and neutral, never insult, mock or stereotype "
+    "anyone; never comment on religion, politics, race, gender, age, "
+    "health or other personal traits unless the person raises them for a "
+    "practical reason; say where each fact comes from, say 'I don't know' "
+    "instead of guessing, and label estimates. Before showing a resume "
+    "line, message, cover letter or plan the person may send or rely on, "
+    "run response_check and fix everything it flags. If someone mentions self-harm or being unsafe, "
     "stop all career talk and share the crisis_support resources from "
     "daily_step. Rules: only facts the user confirmed go on a resume; "
     "never invent numbers; money, tax, visa and relocation outputs are "
@@ -473,6 +485,28 @@ def runway_calc(last_working_day: str, payroll_end: str,
                       f"{holiday_start:%b %d}; front-load applications.")
     result["disclaimer"] = "Confirm immigration timelines with an attorney."
     return result
+
+
+@mcp.tool
+def ground_rules(accept: bool = False) -> dict:
+    """Privacy, terms and how Career Copilot talks, in plain words. Call
+    first with a new person. accept=True records that they agreed to the
+    current version (write action); only pass it after they say yes.
+    """
+    return conduct.ground_rules(current_user(), accept)
+
+
+@mcp.tool
+def response_check(text: str, kind: str = "chat") -> dict:
+    """Check text before the person reads, sends or relies on it.
+
+    kind: chat, plan, resume, message, cover_letter or linkedin. Flags
+    insults, profanity, promised outcomes, biased wording, personal traits
+    in things they send, missing education-not-advice notes, and numbers
+    not backed by a confirmed fact. ok is false while anything must be
+    fixed; rewrite and check again.
+    """
+    return conduct.check(current_user(), text, kind)
 
 
 @mcp.tool
@@ -1068,6 +1102,15 @@ def rubric() -> str:
     return ("six_second_scan, role_clarity, quantified_impact, ownership, "
             "seniority, thesis, bullet_order, credibility, ats_parse, "
             "density. 10 points each.")
+
+
+@mcp.resource("copilot://ground-rules")
+def ground_rules_text() -> dict:
+    """Privacy summary, terms of use and conduct rules, with links to the
+    full documents."""
+    return {key: value for key, value in
+            conduct.ground_rules(current_user()).items()
+            if key not in {"accepted", "accepted_on"}}
 
 
 @mcp.resource("copilot://pipeline")

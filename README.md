@@ -194,7 +194,7 @@ flowchart LR
 | Language | Python 3.11+ |
 | Framework | [FastMCP](https://gofastmcp.com) 2.x |
 | Protocol | Model Context Protocol: stdio (local) or streamable HTTP at `/mcp` |
-| Surface | 60 tools, 7 resources, 13 starter prompts |
+| Surface | 62 tools, 8 resources, 13 starter prompts |
 | Storage | SQLite, one file per user (`data/`); Postgres planned for scale |
 | Auth (hosted) | One API key per subscriber (`Authorization: Bearer`). Local mode needs none |
 | Network calls out | World Bank API only (public, no key, cached 6 hours) |
@@ -257,8 +257,11 @@ Every suite ends with `ALL PASSED`. CI runs them on every push.
 To run the hosted mode locally: `CAREER_COPILOT_API_KEY=dev-key uv run
 app.py`, then connect to `http://localhost:8080/mcp` with that key.
 
-## 12. Contributing, security and license
+## 12. Privacy, terms, contributing and license
 
+- What's stored and your rights: [docs/PRIVACY.md](docs/PRIVACY.md)
+- Terms of use: [docs/TERMS.md](docs/TERMS.md)
+- What changed in each version: [CHANGELOG.md](CHANGELOG.md)
 - How to propose changes: [CONTRIBUTING.md](CONTRIBUTING.md)
 - How to report a security or privacy problem: [SECURITY.md](SECURITY.md)
 - All docs in one place: [docs/README.md](docs/README.md)

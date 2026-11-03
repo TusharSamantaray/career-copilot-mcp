@@ -105,6 +105,23 @@ def no_injected_instructions():
                   f"{hit.group(0)!r}" if hit else "")
 
 
+def respectful_language():
+    """Everything Career Copilot says from its knowledge base must pass
+    the same checks response_check applies to the assistant's drafts."""
+    from copilot import conduct
+    folder = os.path.dirname(careers.__file__)
+    strict = {"insult", "profanity", "overpromise", "biased_wording"}
+    for name in sorted(os.listdir(folder)):
+        if not name.endswith(".py"):
+            continue
+        text = open(os.path.join(folder, name), encoding="utf-8").read()
+        for kind, _, pattern, _, _ in conduct.RULES:
+            if kind not in strict:
+                continue
+            hits = sorted({m.group(0).lower() for m in pattern.finditer(text)})
+            check(not hits, f"knowledge/{name}: {kind} wording {hits}")
+
+
 def no_personal_data():
     folder = os.path.dirname(careers.__file__)
     for name in sorted(os.listdir(folder)):
@@ -123,6 +140,7 @@ if __name__ == "__main__":
     money_content()
     no_personal_data()
     no_injected_instructions()
+    respectful_language()
     if FAILURES:
         print("KNOWLEDGE CHECK FAILED")
         for f in FAILURES:

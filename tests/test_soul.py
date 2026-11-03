@@ -190,6 +190,60 @@ async def dashboard_checks(s):
     print("dashboard built and saved on the device:", os.path.basename(path))
 
 
+async def conduct_checks(s):
+    rules = await call(s, "ground_rules")
+    assert rules["accepted"] is False and rules["privacy"] and rules["terms"]
+    assert any("not financial" in t for t in rules["terms"])
+    rules = await call(s, "ground_rules", {"accept": True})
+    assert rules["accepted"] is True and rules["accepted_on"]
+    assert (await call(s, "ground_rules"))["accepted"] is True
+
+    rude = await call(s, "response_check", {
+        "text": "Honestly that recruiter is an idiot. This is guaranteed "
+                "to work, damn it."})
+    kinds = {i["type"] for i in rude["issues"]}
+    assert rude["ok"] is False
+    assert {"insult", "profanity", "overpromise"} <= kinds, kinds
+
+    biased = await call(s, "response_check", {
+        "text": "Seeking a young, energetic salesman who is a culture fit.",
+        "kind": "message"})
+    assert any(i["type"] == "biased_wording" for i in biased["issues"])
+
+    trait = await call(s, "response_check", {
+        "text": "I am married and a practising Hindu.", "kind": "message"})
+    assert any(i["type"] == "personal_trait" for i in trait["issues"])
+    chat = await call(s, "response_check", {
+        "text": "I am married and a practising Hindu.", "kind": "chat"})
+    assert chat["ok"] and not chat["issues"], "traits only flagged in sends"
+
+    money = await call(s, "response_check", {
+        "text": "Put the rest into an index fund for retirement."})
+    assert any(i["type"] == "missing_disclaimer" for i in money["issues"])
+    money = await call(s, "response_check", {
+        "text": "Index funds are common for retirement. This is general "
+                "education, not financial advice."})
+    assert money["ok"], money
+
+    # Numbers in a resume must come from a confirmed fact.
+    await call(s, "experience_add", {
+        "employer": "Acme", "title": "Analyst", "start": "2022",
+        "end": "2025", "fact": "Cut report time from 6 hours to 40 minutes",
+        "confirmed": True})
+    made_up = await call(s, "response_check", {
+        "text": "Cut report time by 85% and saved $2M across 40 teams.",
+        "kind": "resume"})
+    nums = next(i for i in made_up["issues"]
+                if i["type"] == "unsupported_number")["found"]
+    assert "85%" in nums and "$2M" in nums and "40" not in nums, nums
+    clean = await call(s, "response_check", {
+        "text": "Cut report time from 6 hours to 40 minutes at Acme "
+                "(2022-2025), using lazy loading to fix a race condition.",
+        "kind": "resume"})
+    assert clean["ok"] and not clean["issues"], clean
+    print("ground rules, terms consent and response_check: OK")
+
+
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     env = {**os.environ, "COPILOT_DATA_DIR": TEST_DIR,
@@ -207,6 +261,7 @@ async def main():
             await interview_checks(s)
             await connector_checks(s)
             await dashboard_checks(s)
+            await conduct_checks(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
               encoding="utf-8") as handle:
         log = handle.read()
@@ -214,6 +269,8 @@ async def main():
     assert "acc-secret-1" not in log and "4200" not in log, \
         "imported account data leaked into logs"
     print("emails, moods and imported accounts kept out of logs: OK")
+    assert "practising Hindu" not in log, "checked text leaked into logs"
+    print("text sent to response_check kept out of logs: OK")
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     print("ALL PASSED")
 
