@@ -130,6 +130,12 @@ async def interview_checks(s):
         "kind": "thank_you", "company": "Acme", "role": "Analyst",
         "name": "Jordan", "detail": "the data platform", "me": "Sam"})
     assert "Jordan" in draft["body"] and "never sends" in draft["note"]
+    assert draft["check"]["ok"], draft["check"]
+    risky = await call(s, "message_draft", {
+        "kind": "thank_you", "company": "Acme", "role": "Analyst",
+        "detail": "I'm a guaranteed hire and cut costs by 85%"})
+    flagged = {i["type"] for i in risky["check"]["issues"]}
+    assert {"overpromise", "unsupported_number"} <= flagged, flagged
     assert "story_bank" in await call(s, "prep_checklist")
     print("interview questions, story bank, drafts: OK")
 

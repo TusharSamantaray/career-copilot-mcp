@@ -408,9 +408,11 @@ def resume_build_draft() -> str:
     """Draft resume bullets from CONFIRMED facts only, grouped by job.
 
     Never invents numbers. Ends with a count of facts left off because they
-    are unconfirmed; ask the user about those before adding them.
+    are unconfirmed (ask the user about those before adding them) and the
+    result of response_check on the draft.
     """
-    facts = store.list_kind(current_user(), "experience")
+    user = current_user()
+    facts = store.list_kind(user, "experience")
     confirmed = [f for f in facts if f["confirmed"]]
     skipped = len(facts) - len(confirmed)
     lines, current = [], None
@@ -422,6 +424,11 @@ def resume_build_draft() -> str:
             current = header
         lines.append(f"- {fact['fact']}")
     lines.append(f"\n[{skipped} unconfirmed fact(s) left off.]")
+    check = conduct.check(user, "\n".join(lines), "resume")
+    lines.append("[Check: ok.]" if check["ok"] else
+                 "[Check: fix " + ", ".join(sorted({i["type"] for i in
+                                                    check["issues"]}))
+                 + " before using this.]")
     return "\n".join(lines).strip()
 
 
@@ -907,8 +914,15 @@ def message_draft(kind: str, company: str = "", role: str = "",
 
     kind: thank_you, follow_up, assessment_extension, recruiter_reply,
     level_question, referral_request, offer_negotiation, withdraw.
+    The draft comes with check, the response_check result: fix anything
+    it flags before showing it.
     """
-    return prep.message_draft(kind, company, role, name, detail, me)
+    draft = prep.message_draft(kind, company, role, name, detail, me)
+    if "body" in draft:
+        draft["check"] = conduct.check(
+            current_user(), f"{draft['subject']}\n{draft['body']}",
+            "message")
+    return draft
 
 
 # ---------------------------------------------------------- inbox & calendar

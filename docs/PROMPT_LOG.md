@@ -4,6 +4,16 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** Keep picking up backlog items.
+**Did:** B-007: `message_draft` returns a `check` with the response_check
+result; `resume_build_draft` ends with a check line.
+**Files:** `app.py`, `tests/test_soul.py`, `tests/test_poc.py`.
+**Tests:** 5 suites passed, 0 failed.
+**Try it:** ask for a thank-you note that says "guaranteed hire" and
+"cut costs by 85%". Both parts should be flagged.
+**Open:** none.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** A guided start: the person either says what's on their mind
 or answers starter questions, and a path builds from there.
 **Did:** Added `journey_state` (stage, known facts with confirmed or

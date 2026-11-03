@@ -63,6 +63,7 @@ async def main():
             draft = await session.call_tool("resume_build_draft", {})
             draft_text = draft.content[0].text
             assert "unsure" not in draft_text, "unconfirmed leaked"
+            assert "[Check: ok.]" in draft_text, draft_text
             print("draft excludes unconfirmed: OK")
 
             good = await call(session, "resume_score",

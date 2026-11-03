@@ -41,6 +41,12 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- Message and resume drafts now check themselves (B-007). A draft that
+  promises an outcome, uses an unconfirmed number or has biased wording
+  comes back marked, so it gets fixed before you see it.
+  **Try it:** say "draft a thank-you note to Acme saying I'm a
+  guaranteed hire and cut costs by 85%". It should refuse those parts
+  and ask for your real figure instead.
 - Your profile builds a piece at a time (B-002). Nothing is required,
   not even a target role. New answers add to it instead of wiping it,
   and it can hold what you want, hard no's, places, companies to target

@@ -7,9 +7,6 @@
   jd_analyze. From: spec v2.
 - B-006 [P1] Move hosted key from URL to header or OAuth.
   From: README review.
-- B-007 [P1] Run response_check inside message_draft and
-  resume_build_draft, so their output is checked even if the assistant
-  forgets. From: code review.
 - B-008 [P1] Persistent storage for the hosted version (paid disk or
   Postgres). The free demo loses data on every restart. From: Render
   setup.
@@ -27,6 +24,8 @@
   tester. From: owner testing.
 
 ## Done
+- B-007 message_draft and resume_build_draft run response_check on
+  their own output. From: code review.
 - B-001 journey_state: two ways in, one question at a time, read-back
   after three answers. From: spec v2 and owner.
 - B-002 profile_save relaxed and merging, with lists and confidence.
