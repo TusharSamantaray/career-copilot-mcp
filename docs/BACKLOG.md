@@ -1,9 +1,10 @@
 # Backlog
 
 ## Open
-- B-008 [P1] Persistent storage for the hosted version (paid disk or
-  Postgres). The free demo loses data on every restart. From: Render
-  setup.
+- B-008 [P1] Persistent storage for the hosted version. Code is ready:
+  data and sign-in state share COPILOT_DATA_DIR, steps in SETUP.md.
+  Waiting on the owner to choose a paid Render disk (about $7 a month).
+  Postgres later for many users. From: Render setup.
 - B-009 [P1] Replace the demo API key in Render, since it was shared in a
   chat. Becomes harmless once GitHub sign-in is on (keys are ignored);
   still delete or rotate it. From: claude.ai connector setup.

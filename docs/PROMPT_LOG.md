@@ -5,6 +5,17 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Continue the backlog.
+**Did:** B-008, code side: in HTTP mode FASTMCP_HOME defaults to
+`<COPILOT_DATA_DIR>/_fastmcp`, so FastMCP's encrypted sign-in store sits
+with the data and one disk keeps both. SETUP.md has the paid-disk steps
+and render.yaml snippet. Left open for the owner's spending decision.
+**Files:** `app.py`, `tests/test_oauth.py`, `docs/SETUP.md`.
+**Tests:** 7 suites passed, 0 failed.
+**Try it:** owner reads "Keep data across restarts" in SETUP.md.
+**Open:** needs the owner to choose the paid disk.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Continue the backlog.
 **Did:** B-021: with CAREER_COPILOT_MASTER_KEY set, each record body is
 AES-GCM encrypted with the person's own random data key, bound to the
 record id; data keys live in `_keys.db`, wrapped by the master key and

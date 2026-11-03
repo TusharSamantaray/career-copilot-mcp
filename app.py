@@ -27,6 +27,11 @@ if STDIO:
     # Local mode can start from any folder (uvx, Claude Desktop), so keep
     # data in one fixed place. Set before copilot modules read it.
     os.environ.setdefault("COPILOT_DATA_DIR", str(HOME_DIR / "data"))
+else:
+    # Keep sign-in state (encrypted by FastMCP) next to the data, so one
+    # persistent disk keeps both across restarts. Set before fastmcp loads.
+    os.environ.setdefault("FASTMCP_HOME", os.path.join(
+        os.environ.get("COPILOT_DATA_DIR", "./data"), "_fastmcp"))
 
 import fastmcp
 from fastmcp import FastMCP

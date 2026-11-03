@@ -207,8 +207,30 @@ working, so a shared old link is harmless.
 | No persistent disk | Saved data is wiped on every redeploy or restart, and people may need to sign in again. Fine for demos, not for real users |
 | 750 hours a month | Enough for one service running all month |
 
-For real users, move to a paid plan with a disk, or to MCPHosting
-(below), or switch storage to Postgres (SPEC Phase 2).
+**Keep data across restarts (paid, about $7 a month plus a few cents per
+GB):**
+
+1. Render → career-copilot → **Settings** → Instance type: **Starter**.
+2. **Disks** → Add disk: name `data`, mount path `/var/data`, size 1 GB.
+3. **Environment** → set `COPILOT_DATA_DIR` to `/var/data`.
+4. Save. After the redeploy, data and sign-ins both live on the disk
+   (sign-in state goes to `/var/data/_fastmcp`), so restarts and deploys
+   keep them. Back up with Render's disk snapshots.
+
+The same in `render.yaml`, once you're on a paid plan:
+
+```yaml
+    plan: starter
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: COPILOT_DATA_DIR
+        value: /var/data
+```
+
+For many users, switch storage to Postgres (SPEC Phase 2).
 
 ## 6b. Deploy to MCPHosting
 

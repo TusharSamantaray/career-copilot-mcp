@@ -126,6 +126,12 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- Ready for a persistent disk (B-008). Sign-ins are now kept in the same
+  place as your data, so adding one disk on Render keeps both through
+  restarts. The steps are in the setup guide. On the free plan nothing
+  changes, except that everyone signs in once more after this update.
+  **Try it:** (owner) read "Keep data across restarts" in
+  `docs/SETUP.md`.
 - Old resumes and the work you describe now feed the fact record
   automatically (B-022). Each resume bullet is saved as "unsure" until
   you confirm it; the same bullet in two versions is kept once; and when

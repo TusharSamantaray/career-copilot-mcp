@@ -75,6 +75,9 @@ def run():
     assert "GitHub sign-in (anyone)" in printed, printed[-1500:]
     assert "fake-client-secret" not in printed, "secret printed"
     print("startup says GitHub sign-in, secret never printed: OK")
+    assert os.path.isdir(os.path.join(TEST_DIR, "_fastmcp")), \
+        "sign-in state not kept with the data"
+    print("sign-in state kept next to the data (one disk keeps both): OK")
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     print("ALL PASSED")
 
