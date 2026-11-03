@@ -113,6 +113,39 @@ def story_add(user, title, situation, task, action, result, themes=None):
     return {"id": store.put(user, "story", body), "themes": themes}
 
 
+def _words(text):
+    return {w for w in re.findall(r"[a-z]{3,}", text.lower())}
+
+
+def cover_letter_draft(user, company, role, posting_text="", me="",
+                       voice="plain"):
+    """A short letter built only from confirmed facts, the two that best
+    match the posting, quoted as the person stated them."""
+    confirmed = facts.confirmed_statements(user) + [
+        e["fact"] for e in store.list_kind(user, "experience")
+        if e.get("confirmed")]
+    confirmed = list(dict.fromkeys(confirmed))
+    if not confirmed:
+        return {"error": "No confirmed facts yet.",
+                "ask": "What's one thing you did in your last role that "
+                       "you're proud of, with a number if you have one?"}
+    want = _words(posting_text)
+    best = sorted(confirmed, key=lambda f: -len(_words(f) & want))[:2]
+    greet = {"formal": f"Dear Hiring Team at {company},",
+             "warm": f"Hello {company} team,"}.get(voice, f"Hi {company} team,")
+    close = {"formal": "Kind regards,", "warm": "Warm wishes,"}.get(voice,
+                                                                     "Best,")
+    points = "\n".join(f"- {f.rstrip('.')}." for f in best)
+    body = (f"{greet}\n\nI'm applying for the {role} role at {company}. "
+            f"Here's what I'd bring, from work I've done:\n\n{points}\n\n"
+            f"I'd welcome a short conversation about how I could help "
+            f"{company}.\n\n{close}\n{me or '[your name]'}")
+    return {"subject": f"Application: {role}", "body": body,
+            "facts_used": best,
+            "note": "Built only from confirmed facts. Edit it, then send it "
+                    "yourself."}
+
+
 def story_strength(user, story):
     """Four checks a story must pass to hold up under follow-ups."""
     result, action = story.get("result", ""), story.get("action", "")

@@ -5,6 +5,17 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Low-hanging backlog items.
+**Did:** B-028 `cover_letter_draft`: picks the two confirmed facts with
+the most word overlap with the posting, quotes them as stated, applies
+the voice, and returns response_check as `check`. Asks for a fact when
+none is confirmed.
+**Files:** `copilot/prep.py`, `app.py`, `tests/test_soul.py`.
+**Tests:** 7 suites passed, 0 failed.
+**Try it:** "Draft a cover letter for the Data Analyst role at Acme".
+**Open:** none.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Low-hanging backlog items.
 **Did:** B-035 `recruiter_find`: LinkedIn people-search and web-search
 links for recruiters and the hiring manager; no fetching, no sending.
 **Files:** `copilot/jobs.py`, `app.py`, `tests/test_soul.py`.

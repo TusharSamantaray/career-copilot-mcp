@@ -1265,6 +1265,22 @@ def loop_next_round_prep(loop_id: str, next_format: str = "",
 
 
 @mcp.tool
+def cover_letter_draft(company: str, role: str, posting_text: str = "",
+                       me: str = "", voice: str = "") -> dict:
+    """A short cover letter from the person's confirmed facts only: the
+    two that best match the posting, in their own words. voice: plain,
+    warm or formal (default: the profile's). Comes with check, the
+    response_check result; fix anything flagged before showing it."""
+    user = current_user()
+    voice = voice or journey.profile(user).get("voice", "plain")
+    draft = prep.cover_letter_draft(user, company, role, posting_text, me,
+                                    voice)
+    if "body" in draft:
+        draft["check"] = conduct.check(user, draft["body"], "cover_letter")
+    return draft
+
+
+@mcp.tool
 def lessons(add: str = "", loop_id: str = "") -> dict:
     """The person's lessons from interviews and searches, newest first.
     add: a lesson in their own words, e.g. "Lead with the number" (write

@@ -555,6 +555,14 @@ async def job_checks(s):
     assert set(keys["missing_and_gap"]) == {"kubernetes", "tableau"}, keys
     print("ats_keyword_check: covered, missing but true, real gaps: OK")
 
+    letter = await call(s, "cover_letter_draft", {
+        "company": "Acme", "role": "Data Analyst", "me": "Sam",
+        "posting_text": "You will own reporting and cut report time."})
+    assert "Cut report time from 6 hours to 40 minutes" in letter["body"]
+    assert letter["check"]["ok"], letter["check"]
+    assert all(f in letter["body"] for f in letter["facts_used"])
+    print("cover_letter_draft: confirmed facts only, checked: OK")
+
 
 async def loop_checks(s):
     tense = await call(s, "story_add", {

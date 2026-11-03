@@ -10,8 +10,6 @@
 - B-026 [P1] resume_tailor (resume_patch): edits cite fact ids; server
   rejects unsupported numbers, ownership inflation, merged claims,
   honest-gap hits. From: spec v2 and blueprint.
-- B-028 [P1] cover_letter_draft from confirmed facts, checked. From:
-  spec v2.
 - B-029 [P1] sponsorship_verify: posting text plus public filing data,
   as education. From: spec v2.
 - B-030 [P1] deadline_add (best case and conservative date) and
@@ -25,6 +23,8 @@
 
 
 ## Done
+- B-028 cover_letter_draft: two best-matching confirmed facts, voice,
+  response_check. From: spec v2.
 - B-035 recruiter_find: search links only. From: spec v2.
 - B-031 study_plan loop_format (one rotation per LOOP_FORMATS entry,
   tested to stay in sync). From: spec v2.

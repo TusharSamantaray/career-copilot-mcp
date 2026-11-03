@@ -6,6 +6,13 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Cover letter drafts (B-028). A short letter made only from facts
+  you've confirmed: the two that best match the posting, in your own
+  words, in your chosen voice. It's checked for promises, bias and
+  unconfirmed numbers before you see it.
+  **Try it:** say "Draft a cover letter for the Data Analyst role at
+  Acme" and paste the posting. Every point in it should be something
+  you've confirmed.
 - Find a recruiter (B-035). Get ready-made search links for a company's
   recruiters or hiring manager, then draft a short note to send
   yourself. Links only: it never searches LinkedIn for you or messages
