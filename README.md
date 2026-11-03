@@ -95,8 +95,14 @@ https://<server>/mcp?key=<your-key>
 - **ChatGPT:** Settings → Apps & Connectors → Advanced → Developer mode →
   Create.
 
-You get the URL from the marketplace, or from your own deployment
-([SETUP.md](docs/SETUP.md)).
+You get the URL from the marketplace, or from your own deployment. To
+host your own free copy in one click:
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/TusharSamantaray/career-copilot-mcp)
+
+Render builds it, creates your secret key, and gives you an
+`https://….onrender.com` address. The steps are in
+[SETUP.md](docs/SETUP.md#6-free-demo-hosting-render).
 
 **Option C: from source (for developers)**
 

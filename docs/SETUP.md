@@ -140,7 +140,50 @@ To try it, ask the assistant *"I just got laid off"* or
 Knowledge-only improvements merge and deploy automatically. Anything else
 waits as a pull request labelled `needs-review`, and GitHub emails you.
 
-## 6. Deploy to MCPHosting
+## 6. Free demo hosting (Render)
+
+This is the fastest way to use Career Copilot on claude.ai, ChatGPT and
+your phone. It's free and needs no credit card.
+
+1. Click **Deploy to Render** in the README, or open
+   `https://render.com/deploy?repo=https://github.com/TusharSamantaray/career-copilot-mcp`.
+2. Sign in with GitHub, then click **Deploy Blueprint**. Render reads
+   `render.yaml`, installs everything and generates the secret key. This
+   takes about 3 minutes.
+3. Open the **career-copilot** service:
+   - Copy the address at the top (`https://career-copilot-xxxx.onrender.com`).
+   - Go to **Environment** and copy the value of `CAREER_COPILOT_API_KEY`.
+4. Your connector URL is:
+   ```
+   https://career-copilot-xxxx.onrender.com/mcp?key=<CAREER_COPILOT_API_KEY>
+   ```
+   Add it to claude.ai or ChatGPT ([CONNECT.md](CONNECT.md)). Connectors
+   added on claude.ai also work in the Claude mobile app.
+5. Optional, but best before a demo: in GitHub, go to Settings → Secrets
+   and variables → Actions → **Variables** and add `HEALTH_URL` =
+   `https://career-copilot-xxxx.onrender.com/health`. The **Keep awake**
+   workflow then pings the server every 10 minutes, so it never falls
+   asleep.
+
+**Giving demo access to other people:** give each person their own key, so
+their data stays separate. In Render → Environment, change
+`CAREER_COPILOT_API_KEY` to a comma-separated list, for example
+`<your-key>,demo-ana-7f3k,demo-ben-9x2q`, and save. Render redeploys by
+itself. Each person uses their own `?key=`. To remove someone, delete their
+key.
+
+**Free plan limits:**
+
+| Limit | What it means |
+|---|---|
+| Sleeps after 15 idle minutes | The first request then takes 30–60 seconds. Keep awake (step 5) avoids this |
+| No persistent disk | Saved data is wiped on every redeploy or restart. Fine for demos, not for real users |
+| 750 hours a month | Enough for one service running all month |
+
+For real users, move to a paid plan with a disk, or to MCPHosting
+(below), or switch storage to Postgres (SPEC Phase 2).
+
+## 6b. Deploy to MCPHosting
 
 MCPHosting builds from your GitHub repo and redeploys on every push.
 

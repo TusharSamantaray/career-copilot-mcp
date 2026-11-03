@@ -1,0 +1,23 @@
+# One-click free hosting on Render: https://render.com/deploy
+# Render builds from this repo, generates the secrets, and redeploys on
+# every push to main. The free plan sleeps after 15 idle minutes and has no
+# persistent disk, so it is for demos, not real users (see docs/SETUP.md).
+services:
+  - type: web
+    name: career-copilot
+    runtime: python
+    plan: free
+    branch: main
+    autoDeploy: true
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: CAREER_COPILOT_API_KEY
+        generateValue: true
+      - key: CAREER_COPILOT_INSIGHTS_SALT
+        generateValue: true
+      - key: CAREER_COPILOT_ADMIN_KEY
+        generateValue: true
