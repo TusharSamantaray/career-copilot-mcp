@@ -18,6 +18,10 @@
 
 
 ## Done
+- B-039 Asked to reconnect on every new chat: sign-in state lived on the
+  free host's wiped disk. Replaced with stateless sign-in
+  (copilot/signin.py); tested through a restart with a wiped disk.
+  From: owner testing, 2026-11-03.
 - B-030 deadline_add (best case, conservative), fast-track in
   journey_state and job_search ordering; acceptance test B. From: spec v2.
 - B-038 Acceptance test A scripted in tests/test_acceptance.py, in CI.

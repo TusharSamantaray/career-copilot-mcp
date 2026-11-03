@@ -35,8 +35,9 @@ The values are in Render → career-copilot → Environment.
 - **Remove someone:** take their username out and save.
 - **Connect a new app:** add a custom connector with the plain address
   and sign in with GitHub. Leave the OAuth fields empty in claude.ai.
-- **Signed out after a restart?** Expected on the free plan. Click
-  Connect again in the connector settings.
+- **Asked to reconnect?** It shouldn't happen after restarts any more.
+  It does if `CAREER_COPILOT_JWT_KEY` or the GitHub app secret changes,
+  or after a year without use. Click Connect once.
 - **See which tools ran:** in a chat, expand the tool blocks. On the
   server, open Render → Logs and search `tool call`. Logs never show your
   words.

@@ -204,7 +204,7 @@ working, so a shared old link is harmless.
 | Limit | What it means |
 |---|---|
 | Sleeps after 15 idle minutes | The first request then takes 30–60 seconds. Keep awake (step 5) avoids this |
-| No persistent disk | Saved data is wiped on every redeploy or restart, and people may need to sign in again. Fine for demos, not for real users |
+| No persistent disk | Saved data is wiped on every redeploy or restart. Sign-ins are not: they need no storage, so people stay connected. Fine for demos, not for real users |
 | 750 hours a month | Enough for one service running all month |
 
 **Keep data across restarts (paid, about $7 a month plus a few cents per
@@ -213,9 +213,8 @@ GB):**
 1. Render → career-copilot → **Settings** → Instance type: **Starter**.
 2. **Disks** → Add disk: name `data`, mount path `/var/data`, size 1 GB.
 3. **Environment** → set `COPILOT_DATA_DIR` to `/var/data`.
-4. Save. After the redeploy, data and sign-ins both live on the disk
-   (sign-in state goes to `/var/data/_fastmcp`), so restarts and deploys
-   keep them. Back up with Render's disk snapshots.
+4. Save. After the redeploy, data lives on the disk, so restarts and
+   deploys keep it. Back up with Render's disk snapshots.
 
 The same in `render.yaml`, once you're on a paid plan:
 

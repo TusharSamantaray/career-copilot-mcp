@@ -4,6 +4,27 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** claude.ai asks to reconnect on every new chat. Keep it free,
+sign up once.
+**Did:** Cause: FastMCP's OAuth proxy keeps client registrations and
+token mappings on disk; the free host wipes the disk on every sleep,
+restart and deploy (25+ deploys today, and the keep-awake cron only ran
+once). Replaced it with `copilot/signin.py`: client registration sealed
+into the client id (HMAC), sign-in state sealed into the GitHub `state`,
+codes and tokens are Fernet-sealed with the GitHub id and login, keyed
+from CAREER_COPILOT_JWT_KEY. GitHub's token is used once and dropped.
+Invite list checked at sign-in and on every call. Tokens 30 days,
+refresh a year. `tests/test_oauth.py` now runs a full sign-in against a
+fake GitHub, wipes the disk, restarts, and checks the same token and
+refresh still work.
+**Files:** `copilot/signin.py`, `app.py`, `tests/test_oauth.py`,
+`docs/SETUP.md`, `docs/OWNER.md`.
+**Tests:** 8 suites passed, 0 failed.
+**Try it:** reconnect once; a new chat the next day shouldn't ask again.
+**Open:** saved data is still wiped on restart on the free plan; tokens
+can't be revoked one by one (remove from the invite list instead).
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Trim the backlog down.
 **Did:** Refreshed counts (85 tools, 8 resources, 16 prompts) in README
 and CLAUDE.md, and the build-status table in docs/SPEC.md. Open now:

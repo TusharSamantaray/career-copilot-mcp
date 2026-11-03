@@ -27,11 +27,6 @@ if STDIO:
     # Local mode can start from any folder (uvx, Claude Desktop), so keep
     # data in one fixed place. Set before copilot modules read it.
     os.environ.setdefault("COPILOT_DATA_DIR", str(HOME_DIR / "data"))
-else:
-    # Keep sign-in state (encrypted by FastMCP) next to the data, so one
-    # persistent disk keeps both across restarts. Set before fastmcp loads.
-    os.environ.setdefault("FASTMCP_HOME", os.path.join(
-        os.environ.get("COPILOT_DATA_DIR", "./data"), "_fastmcp"))
 
 import fastmcp
 from fastmcp import FastMCP
@@ -273,18 +268,21 @@ def note_miss(kind, label):
 
 
 def make_auth():
-    """GitHub sign-in when configured; None keeps API-key mode."""
+    """GitHub sign-in when configured; None keeps API-key mode. Nothing
+    about sign-ins is stored, so restarts on the free host don't sign
+    anyone out (see copilot/signin.py)."""
     if not OAUTH:
         return None
-    from fastmcp.server.auth.providers.github import GitHubProvider
-    extra = {}
-    if os.environ.get("CAREER_COPILOT_JWT_KEY"):
-        # A fixed signing key keeps sign-ins valid across restarts.
-        extra["jwt_signing_key"] = os.environ["CAREER_COPILOT_JWT_KEY"]
-    return GitHubProvider(client_id=GITHUB_ID, client_secret=GITHUB_SECRET,
-                          base_url=PUBLIC_URL,
-                          # Public profile only: no repos, no email.
-                          required_scopes=["read:user"], **extra)
+    from copilot.signin import StatelessGitHubProvider
+    return StatelessGitHubProvider(
+        client_id=GITHUB_ID, client_secret=GITHUB_SECRET,
+        base_url=PUBLIC_URL,
+        key=os.environ.get("CAREER_COPILOT_JWT_KEY") or GITHUB_SECRET,
+        allowed=ALLOWED_GITHUB,
+        github_base=os.environ.get("CAREER_COPILOT_GITHUB_BASE",
+                                   "https://github.com"),
+        github_api=os.environ.get("CAREER_COPILOT_GITHUB_API",
+                                  "https://api.github.com"))
 
 
 mcp = FastMCP("career-copilot", version=VERSION, auth=make_auth(),

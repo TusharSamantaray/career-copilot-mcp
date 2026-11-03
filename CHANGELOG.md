@@ -254,6 +254,15 @@ Every Added or Changed line has a **Try it:** line.
   politely say that's outside what it does and offer a career step.
 
 ### Fixed
+- No more "Reconnect to use it again" (B-039). Sign-ins used to be
+  remembered on the free server's disk, which is wiped whenever the
+  server sleeps, restarts or updates, so you had to reconnect almost
+  every chat. Now nothing about your sign-in is stored on the server:
+  it's sealed inside your connection itself. Sign in once and stay
+  connected through restarts and updates. GitHub's token is also no
+  longer kept at all, only your GitHub id.
+  **Try it:** after this update, reconnect once in claude.ai. Then open
+  a new chat the next day: it should work without asking to reconnect.
 - The "I don't know what I want" journey is now tested end to end on
   every change (B-038): within five questions you get 2 or 3 directions,
   pick one, and every line of your profile is labelled confirmed or
