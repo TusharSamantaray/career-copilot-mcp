@@ -4,6 +4,18 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** Do the low-hanging backlog items and trim it down. Owner did
+the Render steps (master key, old API key removed).
+**Did:** B-025 `ownership_check`: a strong verb needs at least that
+ownership in the closest fact; otherwise a softer verb or the "wrote,
+led or fixed?" question. Closed B-009 on the owner's word. `server.py`
+is still in the folder, so B-012 stays open.
+**Files:** `copilot/facts.py`, `app.py`, `tests/test_soul.py`.
+**Tests:** 7 suites passed, 0 failed.
+**Try it:** "Check this line: Architected our billing platform".
+**Open:** B-012 (owner deletes server.py).
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Continue the backlog.
 **Did:** B-011: wrote `docs/SPEC.md` as Spec v2, condensed from CLAUDE.md
 part 3, with build and acceptance-test status; moved v1 to

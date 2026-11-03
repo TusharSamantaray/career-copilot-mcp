@@ -381,6 +381,23 @@ async def fact_checks(s):
         "text": "Cut nightly pipeline runtime by 55%.", "kind": "resume"})
     assert not check["ok"], "a retired number must not pass"
 
+    helped = await call(s, "fact_add", {
+        "statement": "Built the alerting dashboard for the ops team",
+        "employer": "Initech", "ownership": "contributed",
+        "confirmed": True, "apply": True})
+    inflated = await call(s, "ownership_check", {
+        "bullet": "Led the alerting dashboard for the ops team"})
+    assert not inflated["ok"] and inflated["fact_ownership"] == \
+        "contributed", inflated
+    fine = await call(s, "ownership_check", {
+        "bullet": "Built the alerting dashboard for the ops team",
+        "fact_id": helped["fact_id"]})
+    assert fine["ok"]
+    unknown = await call(s, "ownership_check", {
+        "bullet": "Architected a billing platform"})
+    assert not unknown["ok"] and "lead it" in unknown["ask"]
+    print("ownership_check: verbs can't claim more than the fact: OK")
+
     guess = await call(s, "fact_add", {
         "statement": "Probably mentored juniors", "source": "inferred",
         "confirmed": True})

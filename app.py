@@ -510,6 +510,15 @@ def fact_add(statement: str, source: str = "said", employer: str = "",
 
 
 @mcp.tool
+def ownership_check(bullet: str, fact_id: str = "") -> dict:
+    """Before using a strong verb (led, owned, architected, designed,
+    managed...), check it against the person's part in the fact behind
+    it. Finds the closest fact when fact_id is empty. ok=false comes with
+    a softer verb or the question to ask: wrote it, led it or fixed it?"""
+    return fact_record.ownership_check(current_user(), bullet, fact_id)
+
+
+@mcp.tool
 def fact_conflicts() -> dict:
     """Every place where saved facts disagree on a date or a number. Ask
     the person about one at a time."""

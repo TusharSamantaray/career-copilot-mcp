@@ -138,6 +138,47 @@ def import_bullets(user, bullets, label):
     return {"facts": len(set(ids)), "conflicts": len(conflicts)}
 
 
+# Verbs that claim more than taking part. Each needs at least this
+# ownership in the fact behind it.
+OWNER_VERBS = {
+    "led": "led", "headed": "led", "directed": "led", "managed": "led",
+    "spearheaded": "led", "drove": "led", "championed": "led",
+    "owned": "owned", "architected": "owned", "founded": "owned",
+    "created": "owned", "designed": "owned", "invented": "owned",
+}
+RANK = {"observed": 0, "contributed": 1, "led": 2, "owned": 3}
+
+
+def ownership_check(user, bullet, fact_id=""):
+    """Does the bullet's verb claim more than the person's part?"""
+    words = re.findall(r"[a-z]+", bullet.lower())
+    verb = next((w for w in words[:3] if w in OWNER_VERBS), None)
+    if not verb:
+        return {"ok": True, "verb": None,
+                "note": "No ownership verb to check."}
+    if fact_id:
+        fact = store.get(user, fact_id)
+    else:
+        matches = [f for f in _live(user) if _similar(f["statement"], bullet)]
+        fact = matches[0] if matches else None
+    if not fact:
+        return {"ok": False, "verb": verb, "fact": None,
+                "ask": f"'{verb.title()}' says you {OWNER_VERBS[verb]} it. "
+                       "Did you write it, lead it or fix it? I'll save "
+                       "your answer as a fact."}
+    needed, has = OWNER_VERBS[verb], fact.get("ownership", "contributed")
+    if RANK[has] >= RANK[needed]:
+        return {"ok": True, "verb": verb, "fact_ownership": has}
+    softer = {"observed": "Supported", "contributed": "Built"}[has] \
+        if has in ("observed", "contributed") else "Led"
+    return {"ok": False, "verb": verb, "fact_ownership": has,
+            "why": f"'{verb}' claims you {needed} it, but the fact says you "
+                   f"{has}.",
+            "suggest": f"Start with '{softer}' or a verb that matches, or "
+                       "ask whether their part was bigger and update the "
+                       "fact."}
+
+
 def confirmed_facts(user):
     """Confirmed, current facts, for drafts."""
     return [f for f in _live(user) if f["confidence"] == "confirmed"]

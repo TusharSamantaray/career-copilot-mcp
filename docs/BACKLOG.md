@@ -5,13 +5,8 @@
   data and sign-in state share COPILOT_DATA_DIR, steps in SETUP.md.
   Waiting on the owner to choose a paid Render disk (about $7 a month).
   Postgres later for many users. From: Render setup.
-- B-009 [P1] Replace the demo API key in Render, since it was shared in a
-  chat. Becomes harmless once GitHub sign-in is on (keys are ignored);
-  still delete or rotate it. From: claude.ai connector setup.
 - B-010 [P2] Lawyer review of docs/PRIVACY.md and docs/TERMS.md before
   paid users. From: ground rules work.
-- B-025 [P1] ownership_check: ask "wrote, led or fixed?" before owner
-  verbs; reject verbs stronger than the fact's ownership. From: spec v2.
 - B-026 [P1] resume_tailor (resume_patch): edits cite fact ids; server
   rejects unsupported numbers, ownership inflation, merged claims,
   honest-gap hits. From: spec v2 and blueprint.
@@ -38,6 +33,10 @@
 
 
 ## Done
+- B-025 ownership_check: owner verbs need matching fact ownership.
+  From: spec v2.
+- B-009 Old API key removed from Render by the owner (sign-in ignores
+  keys anyway). From: claude.ai connector setup.
 - B-011 Spec v2 in docs/SPEC.md (condensed, with status); v1 archived.
   Remaining spec gaps added as B-025 to B-038. From: CLAUDE.md.
 - B-021 Per-person data keys (AES-GCM, wrapped by

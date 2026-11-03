@@ -6,6 +6,13 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Ownership check (B-025). Before a resume line uses a strong verb like
+  "led", "owned", "architected" or "designed", Career Copilot checks it
+  against your part in the work. If your fact says you contributed, it
+  suggests a truer verb. If there's no fact yet, it asks: did you write
+  it, lead it or fix it?
+  **Try it:** say "Check this line: Architected our billing platform".
+  It should ask what your part was before using "architected".
 - Watches (B-020). Ask Career Copilot to keep an eye on companies' job
   boards, or on assessments, follow-ups and deadlines coming due. What it
   finds waits for you, and the next time you open a chat it mentions the
