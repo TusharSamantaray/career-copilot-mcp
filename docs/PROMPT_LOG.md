@@ -4,6 +4,16 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** Low-hanging backlog items.
+**Did:** B-027 `ats_keyword_check`: posting skills split into covered,
+missing but true (confirmed facts or profile keywords, minus honest
+gaps) and missing and a gap.
+**Files:** `copilot/ats.py`, `app.py`, `tests/test_soul.py`.
+**Tests:** 7 suites passed, 0 failed.
+**Try it:** paste a posting, "which keywords am I missing?".
+**Open:** none.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Do the low-hanging backlog items and trim it down. Owner did
 the Render steps (master key, old API key removed).
 **Did:** B-025 `ownership_check`: a strong verb needs at least that

@@ -691,6 +691,17 @@ def skill_gap_evidence(role_keyword: str = "", window_days: int = 90,
 
 
 @mcp.tool
+def ats_keyword_check(posting_text: str, resume_text: str = "",
+                      resume_label: str = "") -> dict:
+    """The posting's skill keywords against the resume (the latest
+    imported one unless given): covered, missing but true (backed by a
+    confirmed fact or the profile, so safe to add), and missing and a gap
+    (never add these)."""
+    return ats.ats_keyword_check(current_user(), posting_text, resume_text,
+                                 resume_label)
+
+
+@mcp.tool
 def ats_profile_check(posting_text: str = "", posting_url: str = "",
                       resume_text: str = "", resume_label: str = "") -> dict:
     """Before applying: which tracking system the posting uses (from its

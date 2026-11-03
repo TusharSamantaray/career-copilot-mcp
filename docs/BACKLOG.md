@@ -10,8 +10,6 @@
 - B-026 [P1] resume_tailor (resume_patch): edits cite fact ids; server
   rejects unsupported numbers, ownership inflation, merged claims,
   honest-gap hits. From: spec v2 and blueprint.
-- B-027 [P1] ats_keyword_check: posting keywords covered vs missing but
-  true vs real gaps. From: spec v2.
 - B-028 [P1] cover_letter_draft from confirmed facts, checked. From:
   spec v2.
 - B-029 [P1] sponsorship_verify: posting text plus public filing data,
@@ -33,6 +31,8 @@
 
 
 ## Done
+- B-027 ats_keyword_check (covered, missing but true, gaps; honest gaps
+  never offered). From: spec v2.
 - B-025 ownership_check: owner verbs need matching fact ownership.
   From: spec v2.
 - B-009 Old API key removed from Render by the owner (sign-in ignores

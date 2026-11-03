@@ -526,6 +526,15 @@ async def job_checks(s):
         clean
     print("ats_profile_check: platform, parse risks, knock-outs, verdict: OK")
 
+    await call(s, "profile_save", {"honest_gaps": ["kubernetes"]})
+    keys = await call(s, "ats_keyword_check", {
+        "posting_text": "We need SQL, Python, Kubernetes and Tableau.",
+        "resume_text": "Experience\nBuilt SQL reports for finance."})
+    assert keys["covered"] == ["sql"], keys
+    assert keys["missing_but_true"] == ["python"], keys    # profile keyword
+    assert set(keys["missing_and_gap"]) == {"kubernetes", "tableau"}, keys
+    print("ats_keyword_check: covered, missing but true, real gaps: OK")
+
 
 async def loop_checks(s):
     tense = await call(s, "story_add", {

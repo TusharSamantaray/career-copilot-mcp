@@ -64,6 +64,34 @@ def _answers_on_file(profile, kinds):
     return {k: on_file[k] for k in kinds}
 
 
+def ats_keyword_check(user, posting_text, resume_text="", resume_label=""):
+    """Posting keywords split three ways: already on the resume, missing
+    but true (backed by a confirmed fact or the profile), and real gaps
+    that must not be added."""
+    from copilot import facts, jobs
+    if not resume_text:
+        versions = store.list_kind(user, "resume")
+        if resume_label:
+            versions = [v for v in versions if v["label"] == resume_label]
+        resume_text = versions[-1]["text"] if versions else ""
+    posting, resume = (posting_text or "").lower(), resume_text.lower()
+    profile = journey.profile(user)
+    backed = " ".join(facts.confirmed_statements(user) +
+                      profile.get("domain_keywords", [])).lower()
+    honest = {g.lower() for g in profile.get("honest_gaps", [])}
+    wanted = [s for s in jobs.SKILLS if jobs._has_skill(s, posting)]
+    covered = [s for s in wanted if jobs._has_skill(s, resume)]
+    true_missing = [s for s in wanted if s not in covered
+                    and jobs._has_skill(s, backed) and s not in honest]
+    gaps = [s for s in wanted if s not in covered and s not in true_missing]
+    return {"covered": covered, "missing_but_true": true_missing,
+            "missing_and_gap": gaps,
+            "coverage": f"{len(covered)}/{len(wanted)}" if wanted else "n/a",
+            "say": "Offer to add the missing-but-true keywords inside real "
+                   "bullets (not a keyword list). Never add the gaps; offer "
+                   "one way to close the top gap instead."}
+
+
 def ats_profile_check(user, posting_text="", posting_url="",
                       resume_text="", resume_label=""):
     platform = platform_of(posting_url)

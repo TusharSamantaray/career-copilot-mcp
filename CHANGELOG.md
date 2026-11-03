@@ -6,6 +6,12 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Keyword check (B-027). Compare a posting's skills with your resume:
+  what's already there, what's missing but true (you've confirmed it,
+  so it's safe to add inside a real bullet), and real gaps, which it
+  never adds.
+  **Try it:** paste a posting and say "which keywords am I missing?".
+  You should get the safe-to-add ones and the real gaps, separately.
 - Ownership check (B-025). Before a resume line uses a strong verb like
   "led", "owned", "architected" or "designed", Career Copilot checks it
   against your part in the work. If your fact says you contributed, it
