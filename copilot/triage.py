@@ -53,6 +53,9 @@ ROLE_PATTERN = re.compile(
     r"|manager|analyst|designer|scientist|specialist|lead|architect|"
     r"associate|consultant|representative|executive|nurse|coordinator))",
     re.I)
+REQ_PATTERN = re.compile(r"\b(?:req(?:uisition)?|job id|job #)\.?\s*"
+                         r"(?:id|no\.?|number|#)?\s*[:#]?\s*([A-Z0-9][A-Z0-9-]"
+                         r"{2,})", re.I)
 EXPIRY_IN = re.compile(r"(?:expires?|due|complete it|within) (?:in )?"
                        r"(\d{1,2}) (business )?days?", re.I)
 EXPIRY_ON = re.compile(r"(?:expires?|due|by) (?:on )?(\d{4}-\d{2}-\d{2})",
@@ -108,6 +111,9 @@ def classify_email(email):
     role = ROLE_PATTERN.search(text)
     if role:
         item["role"] = role.group(1).strip()
+    req = REQ_PATTERN.search(text)
+    if req:
+        item["req_id"] = req.group(1).upper()
     if category == "assessment":
         m_on, m_in = EXPIRY_ON.search(text), EXPIRY_IN.search(text)
         if m_on:
@@ -126,10 +132,38 @@ RANK = {"saved": 0, "applied": 1, "assessment": 2, "interviewing": 3,
         "offer": 4, "rejected": 5, "withdrawn": 5}
 
 
+OPEN = ("saved", "applied", "assessment", "interviewing", "offer")
+
+
+def _rejection_target(item, pipeline):
+    """A rejection closes a loop only when it clearly names that loop.
+    Returns (row, None), (row, note) when matched by company alone, or
+    (None, candidates) when the person has to say which one."""
+    rows = [r for r in pipeline if r["company"].lower() ==
+            item["company"].lower() and r.get("status") in OPEN]
+    if not rows:
+        return None, None
+    req, role = item.get("req_id", ""), item.get("role", "").lower()
+    if req:
+        hits = [r for r in rows if r.get("req_id", "").upper() == req]
+        if hits:
+            return hits[0], None
+    if role:
+        hits = [r for r in rows if role in r.get("role", "").lower()
+                or r.get("role", "").lower() in role]
+        if len(hits) == 1:
+            return hits[0], None
+    if len(rows) == 1 and not (req and rows[0].get("req_id")) and not (
+            role and rows[0].get("role")):
+        return rows[0], "Matched by company only; check it's this role."
+    return None, [{"application_id": r.get("id"), "role": r.get("role"),
+                   "req_id": r.get("req_id", "")} for r in rows]
+
+
 def plan_updates(items, pipeline):
     """Turn classified emails into proposed pipeline changes. Never moves
     a row backwards (e.g. a late 'thanks for applying' after an
-    interview)."""
+    interview). A rejection only closes the application it names."""
     by_company = {}
     for row in pipeline:
         by_company.setdefault(row["company"].lower(), row)
@@ -139,9 +173,33 @@ def plan_updates(items, pipeline):
         if not status or not item.get("company"):
             continue
         key = (item["company"].lower(), status)
+        if status == "rejected":
+            key += (item.get("req_id", ""), item.get("role", ""))
         if key in seen:
             continue
         seen.add(key)
+        if status == "rejected" and item["company"].lower() in {
+                r["company"].lower() for r in pipeline}:
+            target, extra = _rejection_target(item, pipeline)
+            if target is None and extra:
+                proposals.append({"action": "confirm",
+                                  "company": item["company"],
+                                  "status": "rejected",
+                                  "candidates": extra,
+                                  "because": "rejection that doesn't name "
+                                             "the role or req id"})
+                continue
+            if target is not None:
+                proposal = {"action": "application_update",
+                            "application_id": target.get("id"),
+                            "company": target["company"],
+                            "status": "rejected", "due_date": "",
+                            "because": "rejection"}
+                if extra:
+                    proposal["check"] = extra
+                proposals.append(proposal)
+                target["status"] = "rejected"
+            continue
         row = by_company.get(item["company"].lower())
         due = item.get("expires", "")
         if row is None:

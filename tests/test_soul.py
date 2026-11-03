@@ -546,6 +546,32 @@ async def loop_checks(s):
     print("interview rounds: logged by req id, next round builds on it, "
           "repeat stories flagged: OK")
 
+    # A rejection closes only the application it names.
+    analyst = await call(s, "application_log", {
+        "company": "Umbrella", "role": "Data Analyst", "status":
+        "interviewing", "req_id": "r-104"})
+    engineer = await call(s, "application_log", {
+        "company": "Umbrella", "role": "Data Engineer", "status": "applied",
+        "req_id": "R-200"})
+    named = {"from": "Umbrella Talent <talent@umbrella.example>",
+             "subject": "Your application to Umbrella", "date": "2026-11-02",
+             "snippet": "Unfortunately we will not be moving forward with "
+                        "your application (Req ID: R-200)."}
+    vague = {**named, "date": "2026-11-03",
+             "snippet": "Unfortunately we will not be moving forward."}
+    plan = await call(s, "inbox_triage", {"emails": [named]})
+    update = [p for p in plan["proposals"] if p["company"] == "Umbrella"]
+    assert len(update) == 1 and update[0]["application_id"] == \
+        engineer["id"], plan["proposals"]
+    plan = await call(s, "inbox_triage", {"emails": [vague], "apply": True})
+    ask = [p for p in plan["proposals"] if p["company"] == "Umbrella"]
+    assert ask and ask[0]["action"] == "confirm" and \
+        len(ask[0]["candidates"]) == 2, ask
+    rows = {r["id"]: r for r in (await call(s, "data_export"))["application"]}
+    assert rows[analyst["id"]]["status"] == "interviewing", "closed blindly"
+    assert rows[engineer["id"]]["status"] == "applied"
+    print("rejections close only the role or req id they name: OK")
+
     grid = await call(s, "story_coverage")
     assert grid["stories"] >= 2
     conflict = grid["grid"]["conflict"][0]

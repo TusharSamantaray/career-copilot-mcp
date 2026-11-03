@@ -153,7 +153,13 @@ Every Added or Changed line has a **Try it:** line.
   politely say that's outside what it does and offer a career step.
 
 ### Fixed
-- (nothing yet)
+- A rejection email no longer closes the wrong application (B-023). If
+  you applied to two roles at one company, a rejection closes only the
+  one whose role or job id it names. If it doesn't say, Career Copilot
+  asks you which one. You can now save a job id when logging an
+  application.
+  **Try it:** log two roles at one company, then share a rejection email
+  that doesn't name the role. It should ask which application it was.
 
 ### Removed
 - (nothing yet)

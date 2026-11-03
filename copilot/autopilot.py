@@ -66,6 +66,8 @@ def apply_proposals(user, proposals, today=None):
     """Execute triage proposals against the pipeline, with reminders."""
     done = []
     for p in proposals:
+        if p["action"] == "confirm":
+            continue      # the person says which application it was
         if p["action"] == "application_log":
             row = {"company": p["company"], "role": p["role"],
                    "status": p["status"], "next_action": p["because"],

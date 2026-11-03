@@ -579,17 +579,21 @@ def resume_build_draft() -> str:
 
 @mcp.tool
 def application_log(company: str, role: str, status: str = "applied",
-                    next_action: str = "", due_date: str = "") -> dict:
+                    next_action: str = "", due_date: str = "",
+                    req_id: str = "") -> dict:
     """Add a job application to the pipeline (write action).
 
     status: one of saved, applied, assessment, interviewing, offer,
     rejected, withdrawn. next_action: e.g. "Finish HackerRank".
-    due_date: YYYY-MM-DD for the next action. Returns the new id.
+    due_date: YYYY-MM-DD for the next action. req_id: the requisition or
+    job id from the posting, so a later rejection closes the right one.
+    Returns the new id.
     """
     if status not in STATUSES:
         return {"error": f"status must be one of {STATUSES}"}
     body = {"company": company, "role": role, "status": status,
-            "next_action": next_action, "due_date": due_date}
+            "next_action": next_action, "due_date": due_date,
+            "req_id": req_id.strip().upper()}
     user = current_user()
     app_id = store.put(user, "application", body)
     reminders = autopilot.on_application(user, app_id, body)
@@ -1169,7 +1173,9 @@ def inbox_triage(emails: list[dict], apply: bool = False) -> dict:
     Gmail/Outlook connector or pasted. Detects applications, rejections,
     interview invites, assessments (with expiry), offers and recruiter
     outreach. apply=false proposes changes; after the user agrees, call
-    with apply=true. Email text is never stored.
+    with apply=true. A rejection closes an application only when its role
+    or req id matches; otherwise it comes back as a "confirm" proposal for
+    the person to settle (apply skips it). Email text is never stored.
     """
     return autopilot.triage_emails(current_user(), emails, apply)
 

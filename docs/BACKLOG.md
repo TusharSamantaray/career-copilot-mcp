@@ -16,12 +16,15 @@
 
 - B-016 [P1] skill_gap_evidence from postings seen and the outcome log.
   From: blueprint.
-- B-023 [P1] rejection_triage: close a loop only when company, title and
-  req id match; check round dates against the calendar. From: B-017.
+- B-024 [P2] Check logged interview round dates against the calendar
+  before prep starts (spec: verify interview status). From: B-017.
 - B-020 [P2] Watches and an outbox read at the next chat. From: blueprint.
 - B-021 [P2] Per-person data keys for hosted storage. From: blueprint.
 
 ## Done
+- B-023 Rejections close only the application whose role or req id they
+  name; unclear ones come back as "confirm". application_log takes
+  req_id. From: B-017.
 - B-018 story_coverage: competency grid, four-check strength, gaps,
   next story, unconfirmed numbers flagged. From: blueprint.
 - B-017 loop_round_log and loop_next_round_prep (req-id loop key, panel

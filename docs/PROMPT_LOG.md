@@ -3,6 +3,20 @@
 What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
+### 2026-11-03 | v0.3.1-dev
+**Asked:** Continue the backlog.
+**Did:** B-023: triage reads a req id from emails; a rejection updates
+only the open application at that company whose req id or role matches;
+a lone application matched by company alone carries a "check" note;
+otherwise a "confirm" proposal lists the candidates and apply skips it.
+`application_log` takes `req_id`. Split the calendar date check into
+B-024.
+**Files:** `copilot/triage.py`, `copilot/autopilot.py`, `app.py`,
+`tests/test_soul.py`.
+**Tests:** 6 suites passed, 0 failed.
+**Try it:** two roles at one company, then a vague rejection email.
+**Open:** B-024.
+
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Continue the backlog.
 **Did:** B-018: `story_coverage` (grid of stories by competency, strength
