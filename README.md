@@ -160,8 +160,8 @@ flowchart LR
   stores only a scrambled id. It never logs in anywhere for you.
 - **Masked logs.** Your words, emails, money figures and keys never reach
   the server logs. Tests check this on every change.
-- **The free demo forgets.** The demo server is wiped when it restarts,
-  so keep your own copy with "export my data".
+- **Kept safe.** The hosted version keeps data in a database, encrypted
+  per person. Keep your own copy any time with "export my data".
 
 Full text: [privacy notice](docs/PRIVACY.md) and
 [terms of use](docs/TERMS.md).
@@ -199,12 +199,12 @@ flowchart LR
 | Framework | [FastMCP](https://gofastmcp.com) 2.x |
 | Protocol | Model Context Protocol: stdio (local) or streamable HTTP at `/mcp` |
 | Surface | 85 tools, 8 resources, 16 starter prompts |
-| Storage | SQLite, one file per person, optionally encrypted per person (AES-GCM); Postgres planned |
+| Storage | SQLite files locally; Postgres when `DATABASE_URL` is set (the hosted demo uses Neon's free plan). Optionally encrypted per person (AES-GCM) |
 | Auth (hosted) | Sign in with GitHub (OAuth, `read:user` only, optional invite list), or API keys as a fallback. Local mode needs none |
 | Network calls out | GitHub (sign-in), public job boards (Greenhouse, Lever, Ashby; read-only, cached), World Bank API |
 | AI model costs | None: the person's own assistant runs the model |
 | Health check | `GET /health` |
-| Tests | 8 suites, run on every push (the main one twice: plain and encrypted) |
+| Tests | 9 suites, run on every push (the main one twice: plain and encrypted) |
 
 ### Layout
 
@@ -235,7 +235,7 @@ copilot/
   store.py             Per-person SQLite storage
   scoring.py           Ten-check resume rubric
   knowledge/           Reference content the weekly bot may update
-tests/                 8 test suites
+tests/                 9 test suites
 docs/                  Guides, spec, blueprint, backlog
 ```
 
@@ -251,6 +251,7 @@ uv run tests/test_soul.py        # coach, safety, guided start, conduct checks
 uv run tests/test_oauth.py       # GitHub sign-in mode
 uv run tests/test_crypto.py      # encryption at rest, delete destroys the key
 uv run tests/test_acceptance.py  # Spec v2 acceptance tests as scripted chats
+uv run tests/test_postgres.py    # Postgres storage (needs a throwaway DATABASE_URL)
 ```
 
 Hosted mode locally: `CAREER_COPILOT_API_KEY=dev-key uv run app.py`, then

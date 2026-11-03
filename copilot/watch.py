@@ -3,7 +3,6 @@ things (new postings, reminders coming due) and leaves them in the
 person's outbox; the assistant reads it at the next chat with digest_get.
 Watches find; they never send anything to anyone.
 """
-import os
 import threading
 import time
 from datetime import date, timedelta
@@ -122,18 +121,17 @@ def digest_get(user, today=None):
                    "as today's step. Don't list them all."}
 
 
-def start_scheduler(data_dir, minutes):
+def start_scheduler(minutes):
     """Optional: run watches for every person between chats while the
     server is awake. Off unless CAREER_COPILOT_WATCH_MINUTES is set."""
     def loop():
         while True:
             time.sleep(minutes * 60)
-            for name in os.listdir(data_dir):
-                if name.endswith(".db") and not name.startswith("_"):
-                    try:
-                        run_due(name[:-3])
-                    except Exception:      # one bad file never stops others
-                        logger.exception("watch run failed")
+            for user in store.users():
+                try:
+                    run_due(user)
+                except Exception:          # one person never stops others
+                    logger.exception("watch run failed")
     thread = threading.Thread(target=loop, daemon=True, name="watches")
     thread.start()
     return thread

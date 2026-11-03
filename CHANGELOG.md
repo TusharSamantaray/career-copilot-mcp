@@ -254,6 +254,13 @@ Every Added or Changed line has a **Try it:** line.
   politely say that's outside what it does and offer a career step.
 
 ### Fixed
+- Your data no longer disappears when the server restarts (B-008). The
+  hosted version can now keep everything in a free hosted database
+  (Neon) instead of the free server's disk, which is wiped on every
+  restart. Data stays encrypted, each person with their own key.
+  **Try it:** (owner) add `DATABASE_URL` in Render as described in
+  `docs/SETUP.md`. Save a goal in a chat, wait until the next deploy or
+  restart, and ask "what are my goals?". It should still be there.
 - No more "Reconnect to use it again" (B-039). Sign-ins used to be
   remembered on the free server's disk, which is wiped whenever the
   server sleeps, restarts or updates, so you had to reconnect almost

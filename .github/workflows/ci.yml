@@ -27,3 +27,29 @@ jobs:
         run: uv run tests/test_soul.py
         env:
           CAREER_COPILOT_MASTER_KEY: ci-only-master-key
+
+  postgres:
+    # The hosted demo keeps data in a free Postgres database, so the same
+    # suites run against a real (throwaway) Postgres here.
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync
+      - run: uv run tests/test_postgres.py
+      - run: uv run tests/test_acceptance.py
+      - name: Main suite on Postgres, encrypted
+        run: uv run tests/test_soul.py
+        env:
+          CAREER_COPILOT_MASTER_KEY: ci-only-master-key

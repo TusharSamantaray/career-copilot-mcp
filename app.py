@@ -1819,7 +1819,13 @@ def log_startup():
     else:
         auth = f"{len(API_KEYS)} key(s)"
     logger.info(f"{len(tools)} tools, auth {auth}, "
-                f"data dir {store.DATA_DIR}, logs {LOG_DIR}/mcp_server.log")
+                f"storage {_storage_label()}, logs {LOG_DIR}/mcp_server.log")
+
+
+def _storage_label():
+    # Never print DATABASE_URL: it contains the database password.
+    return "postgres (DATABASE_URL)" if store.BACKEND.name == "postgres" \
+        else f"sqlite files in {store.DATA_DIR}"
 
 
 def main():
@@ -1828,7 +1834,7 @@ def main():
     log_startup()
     minutes = os.environ.get("CAREER_COPILOT_WATCH_MINUTES", "")
     if minutes.isdigit() and int(minutes) > 0 and not STDIO:
-        watch.start_scheduler(store.DATA_DIR, int(minutes))
+        watch.start_scheduler(int(minutes))
         logger.info(f"watches run every {minutes} minutes while awake")
     try:
         if STDIO:

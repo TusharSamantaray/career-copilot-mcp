@@ -4,6 +4,32 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** The account looked empty after signing in; fix storage for
+free.
+**Did:** The account wasn't new: the same GitHub id maps to the same
+storage id; the free host's disk had been wiped by restarts. Added a
+Postgres backend to `copilot/store.py` (used when DATABASE_URL is set):
+one `cc_records` table keyed by (user_id, id) and a `cc_keys` table for
+wrapped data keys; encryption and every public function unchanged;
+`store.users()` replaces listing files for background watches. Startup
+names the storage and never prints the URL. New
+`tests/test_postgres.py` (per-person rows, encryption, delete, a fresh
+process after a disk wipe still sees data, URL never printed); the main
+and acceptance suites also pass on Postgres, plain and encrypted. CI has
+a Postgres job. Docs: Neon steps in SETUP.md, runbook, privacy notice
+names the database host (2026-11-03.9). New dependency
+`psycopg[binary,pool]`.
+**Files:** `copilot/store.py`, `copilot/watch.py`, `app.py`,
+`tests/test_postgres.py`, `tests/pg_reset.py`, `tests/test_soul.py`,
+`tests/test_acceptance.py`, `.github/workflows/ci.yml`, `render.yaml`,
+`pyproject.toml`, `requirements.txt`, `uv.lock`, docs.
+**Tests:** 8 suites passed locally (Postgres suite skips without a
+database); Postgres, soul and acceptance passed on a local Postgres.
+**Try it:** add DATABASE_URL in Render, save something, restart, check.
+**Open:** data saved before this is already gone and must be re-entered
+once.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** claude.ai asks to reconnect on every new chat. Keep it free,
 sign up once.
 **Did:** Cause: FastMCP's OAuth proxy keeps client registrations and

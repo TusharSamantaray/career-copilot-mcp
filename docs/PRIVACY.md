@@ -1,6 +1,6 @@
 # Privacy notice
 
-Version 2026-11-03.8. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-03.9. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 Career Copilot is run by Tushar Samantaray ("we"). It's a connector that
@@ -63,7 +63,8 @@ operator to turn this off (`CAREER_COPILOT_INSIGHTS=0`).
 |---|---|
 | Your AI assistant (Claude, ChatGPT and so on) | Your conversation, under its own privacy policy |
 | GitHub | That you signed in to Career Copilot |
-| The host (Render now; later MCPHosting or another) | Stores the data files and logs for the hosted version |
+| The host (Render now; later MCPHosting or another) | Runs the hosted version and keeps its logs |
+| The database host (Neon) | Stores the hosted version's records, encrypted when the operator turns encryption on |
 | The marketplace (MCPize, when listed) | Your subscription and billing details |
 | World Bank API | Only which country's public data is requested; nothing about you |
 | Public job boards (Greenhouse, Lever, Ashby) | Only which company's public job list the server read; nothing about you |

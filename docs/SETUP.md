@@ -117,6 +117,7 @@ To try it, ask the assistant *"I just got laid off"* or
 | `CAREER_COPILOT_PUBLIC_URL` | For sign-in | `RENDER_EXTERNAL_URL` | The server's public address, for sign-in redirects |
 | `CAREER_COPILOT_JWT_KEY` | For sign-in | from the secret | Keeps sign-ins valid across restarts |
 | `CAREER_COPILOT_USER_SALT` | For sign-in | none | Random secret mixed into each person's storage id |
+| `DATABASE_URL` | Recommended, hosted | none | Postgres connection string (for example Neon's free plan). Data then survives restarts of a free host. Never logged |
 | `CAREER_COPILOT_MASTER_KEY` | Recommended, hosted | off | Encrypts each person's records with their own key (AES-GCM); deleting a person destroys their key. **Never change it once set** |
 | `CAREER_COPILOT_WATCH_MINUTES` | No | off | Run everyone's watches every N minutes while the server is awake (otherwise they run when the person opens a chat) |
 | `CAREER_COPILOT_API_KEY` | Without sign-in | none | Valid keys, comma-separated |
@@ -204,10 +205,28 @@ working, so a shared old link is harmless.
 | Limit | What it means |
 |---|---|
 | Sleeps after 15 idle minutes | The first request then takes 30–60 seconds. Keep awake (step 5) avoids this |
-| No persistent disk | Saved data is wiped on every redeploy or restart. Sign-ins are not: they need no storage, so people stay connected. Fine for demos, not for real users |
+| No persistent disk | Data on the server's disk is wiped on every redeploy or restart. Fix it for free with a Postgres database (below). Sign-ins need no storage, so people stay connected either way |
 | 750 hours a month | Enough for one service running all month |
 
-**Keep data across restarts (paid, about $7 a month plus a few cents per
+**Keep data across restarts, free (Neon Postgres, recommended):**
+
+1. Sign up at [neon.tech](https://neon.tech) (free plan, no card).
+   Create a project in the region nearest your Render service (Oregon →
+   AWS US West 2).
+2. On the project dashboard, click **Connect** and copy the connection
+   string. It starts with `postgresql://` and ends with
+   `?sslmode=require`. It contains a password: paste it only into Render.
+3. Render → career-copilot → **Environment** → add `DATABASE_URL` with
+   that string. Save; Render redeploys.
+4. The startup log line now says `storage postgres (DATABASE_URL)`.
+   Career Copilot creates its two tables (`cc_records`, `cc_keys`) on
+   first use. With `CAREER_COPILOT_MASTER_KEY` set, the rows are
+   encrypted, so Neon only ever holds scrambled data.
+
+Neon's free database sleeps when idle and wakes on the next request (a
+second or so); nothing is deleted. Any Postgres works the same way.
+
+**Or keep data on a paid disk (about $7 a month plus a few cents per
 GB):**
 
 1. Render → career-copilot → **Settings** → Instance type: **Starter**.
@@ -229,7 +248,7 @@ The same in `render.yaml`, once you're on a paid plan:
         value: /var/data
 ```
 
-For many users, switch storage to Postgres (see the roadmap in [archive/SPEC-v1.md](archive/SPEC-v1.md)).
+For many users, a paid Postgres plan scales the same setup.
 
 ## 6b. Deploy to MCPHosting
 

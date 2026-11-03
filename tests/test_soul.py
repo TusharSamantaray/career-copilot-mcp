@@ -8,6 +8,7 @@ import sys
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
+from pg_reset import fresh_database
 
 TEST_DIR = "./test_data_soul"
 TODAY = "2026-11-02"   # a Monday
@@ -753,6 +754,7 @@ async def mirror_checks(s):
 
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)
+    fresh_database()
     os.makedirs(TEST_DIR)
     fixture = os.path.join(TEST_DIR, "boards.json")
     with open(fixture, "w", encoding="utf-8") as handle:

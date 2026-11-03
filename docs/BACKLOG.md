@@ -1,10 +1,6 @@
 # Backlog
 
 ## Open
-- B-008 [P1] Persistent storage for the hosted version. Code is ready:
-  data and sign-in state share COPILOT_DATA_DIR, steps in SETUP.md.
-  Waiting on the owner to choose a paid Render disk (about $7 a month).
-  Postgres later for many users. From: Render setup.
 - B-010 [P2] Lawyer review of docs/PRIVACY.md and docs/TERMS.md before
   paid users. From: ground rules work.
 - B-026 [P1] resume_tailor (resume_patch): edits cite fact ids; server
@@ -18,6 +14,10 @@
 
 
 ## Done
+- B-008 Free persistent storage: Postgres backend (DATABASE_URL, Neon
+  free plan), encryption unchanged, tested in CI against a real Postgres
+  and through a wiped-disk restart. Owner adds DATABASE_URL in Render.
+  From: Render setup and owner testing.
 - B-039 Asked to reconnect on every new chat: sign-in state lived on the
   free host's wiped disk. Replaced with stateless sign-in
   (copilot/signin.py); tested through a restart with a wiped disk.

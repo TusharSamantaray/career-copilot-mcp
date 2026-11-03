@@ -23,6 +23,7 @@ The values are in Render → career-copilot → Environment.
 | `CAREER_COPILOT_ALLOWED_GITHUB_USERS` | Invite list: GitHub usernames, comma-separated |
 | `CAREER_COPILOT_JWT_KEY` | Keeps sign-ins valid across restarts. Changing it signs everyone out |
 | `CAREER_COPILOT_USER_SALT` | Mixed into each person's storage id. **Never change it**: everyone's data would seem to vanish |
+| `DATABASE_URL` | Where data lives (Neon free Postgres), so restarts don't wipe it. Contains a password: keep it only in Render |
 | `CAREER_COPILOT_MASTER_KEY` | Encrypts everyone's data, each with their own key. Add a long random value once. **Never change it**: stored data would become unreadable |
 | `CAREER_COPILOT_API_KEY` | Old fallback, unused while sign-in is on. Safe to delete |
 | `CAREER_COPILOT_INSIGHTS_SALT`, `CAREER_COPILOT_ADMIN_KEY` | Anonymous usage counts and the `/insights` page |
@@ -57,7 +58,8 @@ The values are in Render → career-copilot → Environment.
 
 ## Known limits
 
-- The free plan wipes data on every restart or deploy (fix: B-008).
+- Without `DATABASE_URL`, the free plan wipes data on every restart or
+  deploy. With it (Neon free), data stays.
 - Privacy notice and terms are plain-English drafts. Have a lawyer review
   them before taking paying users (B-010).
 - The old `server.py` prototype is still in your local folder, outside

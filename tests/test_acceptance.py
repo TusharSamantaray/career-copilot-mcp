@@ -10,6 +10,7 @@ from datetime import date, timedelta
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
+from pg_reset import fresh_database
 
 TEST_DIR = "./test_data_acceptance"
 
@@ -112,6 +113,7 @@ async def on_a_clock(s):
 
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)
+    fresh_database()
     env = {**os.environ, "COPILOT_DATA_DIR": TEST_DIR,
            "CAREER_COPILOT_HOME": os.path.join(TEST_DIR, "home"),
            "CAREER_COPILOT_LOG_DIR": os.path.join(TEST_DIR, "logs")}

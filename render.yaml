@@ -29,6 +29,11 @@ services:
         generateValue: true
       - key: CAREER_COPILOT_USER_SALT
         generateValue: true
+      # Free storage that survives restarts: paste a Neon (or any
+      # Postgres) connection string. Without it, data lives on the
+      # server's disk, which the free plan wipes on every restart.
+      - key: DATABASE_URL
+        sync: false
       # Encrypts each person's data with their own key. Never change it
       # once set, or stored data can't be read.
       - key: CAREER_COPILOT_MASTER_KEY
