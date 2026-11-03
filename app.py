@@ -107,7 +107,9 @@ SENSITIVE_ARGS = {"api_key", "token", "password", "authorization",
                   "target_amount", "saved", "current_savings",
                   "monthly_budget", "comp_floor",
                   # raw emails, calendar events and moods stay out of logs
-                  "emails", "events", "mood", "note", "text", "statement"}
+                  "emails", "events", "mood", "note", "text", "statement",
+                  # people's own words: lessons, resume lines, answers
+                  "add", "bullet", "answer", "posting_text", "resume_text"}
 MAX_LOGGED_CHARS = 80
 
 
@@ -1228,6 +1230,15 @@ def loop_next_round_prep(loop_id: str, next_format: str = "",
     calendar connector, to confirm the round is really booked."""
     return loops.next_round_prep(current_user(), loop_id, next_format,
                                  known_panel, calendar_events)
+
+
+@mcp.tool
+def lessons(add: str = "", loop_id: str = "") -> dict:
+    """The person's lessons from interviews and searches, newest first.
+    add: a lesson in their own words, e.g. "Lead with the number" (write
+    action); loop_id links it to a loop. Next-round prep shows the latest
+    three."""
+    return loops.lessons(current_user(), add, loop_id)
 
 
 @mcp.tool

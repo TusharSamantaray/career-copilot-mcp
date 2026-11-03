@@ -587,6 +587,12 @@ async def loop_checks(s):
     assert len(plan["weak_spots"]) == 2, plan["weak_spots"]
     assert plan["one_thing_today"].startswith("Rework")
     assert plan["calendar"]["status"] == "not_checked"
+    await call(s, "lessons", {"add": "Lead with the number, then the story",
+                              "loop_id": loop_id})
+    noted = await call(s, "lessons")
+    assert noted["lessons"][0]["text"].startswith("Lead with the number")
+    again = await call(s, "loop_next_round_prep", {"loop_id": loop_id})
+    assert again["your_lessons"][0]["loop"] == loop_id
     booked = await call(s, "loop_next_round_prep", {
         "loop_id": loop_id, "calendar_events": [
             {"subject": "Acme Corp panel interview",
@@ -728,6 +734,8 @@ async def main():
         "imported account data leaked into logs"
     print("emails, moods and imported accounts kept out of logs: OK")
     assert "practising Hindu" not in log, "checked text leaked into logs"
+    assert "Lead with the number" not in log, "lesson text leaked into logs"
+    assert "billing platform" not in log, "resume line leaked into logs"
     print("text sent to response_check kept out of logs: OK")
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     print("ALL PASSED")

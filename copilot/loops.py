@@ -66,6 +66,20 @@ def round_log(user, company, round_n, round_format, req_id="", role="",
     return result
 
 
+def lessons(user, add="", loop_id="", today=None):
+    """The person's own lessons from loops: add one, or list them."""
+    from datetime import date
+    if add:
+        store.put(user, "lesson", {"text": add.strip()[:300],
+                                   "loop": loop_id,
+                                   "day": str(today or date.today())})
+    rows = store.list_kind(user, "lesson")
+    return {"lessons": [{"text": r["text"], "loop": r["loop"],
+                         "day": r["day"]} for r in reversed(rows)],
+            "say": "Read back only the newest lesson unless they ask for "
+                   "all."}
+
+
 def _calendar_check(company, events):
     """Is the next round actually on the calendar? Spec: verify interview
     status against the calendar before planning around it."""
@@ -145,5 +159,6 @@ def next_round_prep(user, loop_id, next_format="", known_panel=None,
             "covered_competencies": sorted(covered),
             "uncovered_competencies": uncovered, "story_plan": plan,
             "weak_spots": weak, "one_thing_today": today,
+            "your_lessons": lessons(user)["lessons"][:3],
             "say": "Give one_thing_today first, then the top story to bring. "
                    "Recruiter or interviewer feedback beats your own read."}

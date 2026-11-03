@@ -6,6 +6,11 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Lessons (B-033). Note what you learned after an interview or a
+  search week, in your own words. Prep for your next round shows your
+  three latest lessons.
+  **Try it:** say "Lesson from Acme: lead with the number, then the
+  story". Next time you prep a round it should remind you.
 - Keyword check (B-027). Compare a posting's skills with your resume:
   what's already there, what's missing but true (you've confirmed it,
   so it's safe to add inside a real bullet), and real gaps, which it
@@ -219,6 +224,8 @@ Every Added or Changed line has a **Try it:** line.
 - (nothing yet)
 
 ### Security
+- Lessons, resume lines, answers and posting text you share are now
+  hidden from server logs, like the rest of your words.
 - Encryption at rest (B-021). When the server owner adds a master key,
   everyone's saved data is encrypted, each person with their own key.
   Deleting your data destroys your key, so even an old backup of your

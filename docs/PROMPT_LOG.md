@@ -5,6 +5,19 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Low-hanging backlog items.
+**Did:** B-033 `lessons` (add, list) and the latest three in
+`loop_next_round_prep`. Masked more argument names in logs (add, bullet,
+answer, posting_text, resume_text) with tests. Privacy notice lists
+lessons (2026-11-03.7).
+**Files:** `copilot/loops.py`, `copilot/store.py`, `app.py`,
+`copilot/conduct.py`, `docs/PRIVACY.md`, `docs/TERMS.md`,
+`tests/test_soul.py`.
+**Tests:** 7 suites passed, 0 failed.
+**Try it:** "Lesson from Acme: lead with the number".
+**Open:** none.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Low-hanging backlog items.
 **Did:** B-032: `message_draft` takes voice (plain, warm, formal) or the
 profile's saved voice; only greeting, opening and sign-off change.
 `profile_save` takes voice.

@@ -23,7 +23,7 @@ _keys = {}
 KINDS = {"profile", "experience", "story", "application", "resume",
          "account", "holding", "budget", "nudge", "goal", "checkin",
          "consent", "compass", "fact", "seen", "round", "posting",
-         "watch", "outbox"}
+         "watch", "outbox", "lesson"}
 
 
 @contextmanager
