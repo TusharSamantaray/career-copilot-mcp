@@ -632,6 +632,14 @@ async def loop_checks(s):
     assert rows[engineer["id"]]["status"] == "applied"
     print("rejections close only the role or req id they name: OK")
 
+    await call(s, "application_log", {"company": "Wayne", "role": "Analyst",
+                                      "sponsorship": "no"})
+    digest = await call(s, "pipeline_digest", {"today": TODAY})
+    assert "Wayne" in digest["sponsorship"]["says_no"], digest
+    assert "Umbrella" in digest["sponsorship"]["unknown"]
+    assert "overdue" in digest
+    print("pipeline_digest: sponsorship column when it's a need: OK")
+
     grid = await call(s, "story_coverage")
     assert grid["stories"] >= 2
     conflict = grid["grid"]["conflict"][0]

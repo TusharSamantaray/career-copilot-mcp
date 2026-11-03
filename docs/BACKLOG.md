@@ -20,8 +20,6 @@
 - B-034 [P2] Dashboard action strip. From: spec v2.
 - B-035 [P2] recruiter_find (public sources, links only). From: spec v2.
 - B-036 [P2] Local-first Markdown mirror of the data file. From: spec v2.
-- B-037 [P2] pipeline_digest sponsorship and overdue columns. From:
-  spec v2.
 - B-038 [P1] Acceptance test A as one scripted conversation. From:
   spec v2.
 - B-012 [P2] Delete the old prototype server.py from the project
@@ -29,6 +27,8 @@
 
 
 ## Done
+- B-037 pipeline_digest sponsorship column (overdue already existed);
+  application_log takes sponsorship. From: spec v2.
 - B-033 lessons (add, list; latest three in next-round prep). From:
   spec v2.
 - B-032 message_draft voice (plain, warm, formal), saved on the profile.

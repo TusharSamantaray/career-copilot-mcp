@@ -602,7 +602,8 @@ def resume_build_draft() -> str:
 @mcp.tool
 def application_log(company: str, role: str, status: str = "applied",
                     next_action: str = "", due_date: str = "",
-                    req_id: str = "", resume_label: str = "") -> dict:
+                    req_id: str = "", resume_label: str = "",
+                    sponsorship: str = "unknown") -> dict:
     """Add a job application to the pipeline (write action).
 
     status: one of saved, applied, assessment, interviewing, offer,
@@ -610,14 +611,19 @@ def application_log(company: str, role: str, status: str = "applied",
     due_date: YYYY-MM-DD for the next action. req_id: the requisition or
     job id from the posting, so a later rejection closes the right one.
     resume_label: which resume version was sent, for the outcome log.
+    sponsorship: yes, no or unknown, what the posting or recruiter said
+    about visa sponsorship (only matters if the person needs it).
     Returns the new id.
     """
     if status not in STATUSES:
         return {"error": f"status must be one of {STATUSES}"}
+    if sponsorship not in ("yes", "no", "unknown"):
+        return {"error": "sponsorship must be yes, no or unknown"}
     body = {"company": company, "role": role, "status": status,
             "next_action": next_action, "due_date": due_date,
             "req_id": req_id.strip().upper(),
-            "resume_label": resume_label.strip()[:60]}
+            "resume_label": resume_label.strip()[:60],
+            "sponsorship": sponsorship}
     user = current_user()
     app_id = store.put(user, "application", body)
     reminders = autopilot.on_application(user, app_id, body)
@@ -775,7 +781,21 @@ def pipeline_digest(today: str = "") -> dict:
             overdue.append(item)
         elif due <= now + timedelta(days=3):
             soon.append(item)
-    return {"counts": counts, "overdue": overdue, "due_within_3_days": soon}
+    result = {"counts": counts, "overdue": overdue,
+              "due_within_3_days": soon}
+    dealbreakers = " ".join(journey.profile(current_user())
+                            .get("dealbreakers", [])).lower()
+    if "sponsor" in dealbreakers:
+        live = [r for r in rows if r["status"] not in ("rejected",
+                                                       "withdrawn")]
+        result["sponsorship"] = {
+            "unknown": [r["company"] for r in live
+                        if r.get("sponsorship", "unknown") == "unknown"],
+            "says_no": [r["company"] for r in live
+                        if r.get("sponsorship") == "no"],
+            "do": "Ask about sponsorship once, early, as a plain fact. "
+                  "This is education, not immigration advice."}
+    return result
 
 
 @mcp.tool

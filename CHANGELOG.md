@@ -144,6 +144,13 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- Sponsorship in your pipeline (B-037). If needing visa sponsorship is
+  one of your hard no's, the daily pipeline view lists applications where
+  sponsorship is still unknown and flags any that said no, so you can ask
+  once, early. You can record what each company said when logging it.
+  **Try it:** with "no visa sponsorship" as a hard no, log an application
+  and say "what's my pipeline today?". It should list where sponsorship
+  is still unknown.
 - Drafts in your voice (B-032). Messages can sound plain (the default),
   warm or formal. Only the greeting, opening and sign-off change, never
   the facts. Say which you like once and it's remembered.

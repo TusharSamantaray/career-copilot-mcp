@@ -5,6 +5,17 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Low-hanging backlog items.
+**Did:** B-037: `application_log` takes sponsorship (yes, no, unknown);
+`pipeline_digest` adds a sponsorship block (unknown, says no) only when
+the profile's dealbreakers mention sponsorship. Overdue was already
+there.
+**Files:** `app.py`, `tests/test_soul.py`.
+**Tests:** 7 suites passed, 0 failed.
+**Try it:** "What's my pipeline today?" with a sponsorship dealbreaker.
+**Open:** none.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Low-hanging backlog items.
 **Did:** B-033 `lessons` (add, list) and the latest three in
 `loop_next_round_prep`. Masked more argument names in logs (add, bullet,
 answer, posting_text, resume_text) with tests. Privacy notice lists
