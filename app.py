@@ -869,6 +869,22 @@ def data_export() -> dict:
 
 
 @mcp.tool
+def data_mirror(save_local: bool = True) -> dict:
+    """Everything stored about the person as one readable Markdown page,
+    with confirmed and unsure labels. On their own computer it's also
+    saved as ~/CareerCopilot/my-data.md (saved_to). Show it as a document
+    or summarise it; don't paste it all."""
+    text = store.markdown(current_user())
+    result = {"markdown": text}
+    if save_local and STDIO:
+        path = HOME_DIR / "my-data.md"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+        result["saved_to"] = str(path)
+    return result
+
+
+@mcp.tool
 def data_delete(confirm: bool = False) -> dict:
     """Permanently delete all of this user's records (write action).
 

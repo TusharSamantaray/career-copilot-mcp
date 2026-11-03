@@ -169,6 +169,35 @@ def export_all(user_id):
     return {kind: list_kind(user_id, kind) for kind in sorted(KINDS)}
 
 
+HIDDEN = {"id", "updated", "superseded_by", "skipped"}
+
+
+def _cell(value):
+    if isinstance(value, list):
+        return ", ".join(_cell(v) for v in value)
+    if isinstance(value, dict):
+        return "; ".join(f"{k}: {_cell(v)}" for k, v in value.items())
+    return str(value).replace("\n", " ")
+
+
+def markdown(user_id):
+    """Everything stored for this person as a readable Markdown page."""
+    lines = ["# My Career Copilot data", "",
+             "A readable copy of everything stored about you. Confirmed "
+             "and unsure facts are labelled.", ""]
+    for kind, rows in export_all(user_id).items():
+        if not rows:
+            continue
+        lines += [f"## {kind.title()} ({len(rows)})", ""]
+        for row in rows:
+            shown = {k: v for k, v in row.items()
+                     if k not in HIDDEN and v not in ("", None, [], {})}
+            lines.append("- " + " | ".join(f"**{k}**: {_cell(v)}"
+                                          for k, v in shown.items()))
+        lines.append("")
+    return "\n".join(lines)
+
+
 def delete_all(user_id):
     path = os.path.join(DATA_DIR, f"{user_id}.db")
     _forget_key(user_id)        # any old copy of the file is now unreadable

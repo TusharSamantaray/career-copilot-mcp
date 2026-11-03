@@ -6,6 +6,12 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- A readable copy of your data (B-036). Ask for it and you get one
+  plain page with everything stored about you, with confirmed and unsure
+  facts labelled. On your own computer it's also saved as
+  `~/CareerCopilot/my-data.md`, so you can open it in any editor.
+  **Try it:** say "Show me everything you know about me". You should get
+  a short summary, and on your computer a file you can open.
 - Cover letter drafts (B-028). A short letter made only from facts
   you've confirmed: the two that best match the posting, in your own
   words, in your chosen voice. It's checked for promises, bias and

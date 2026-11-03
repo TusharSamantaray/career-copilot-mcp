@@ -739,6 +739,18 @@ async def watch_checks(s):
     print("watches: findings wait in the outbox, read once, removable: OK")
 
 
+async def mirror_checks(s):
+    mirror = await call(s, "data_mirror", {})
+    text = mirror["markdown"]
+    assert text.startswith("# My Career Copilot data")
+    assert "## Fact (" in text and "**confidence**: unsure" in text
+    assert "Cut onboarding time by 30%" in text
+    assert "test_data_soul" in mirror["saved_to"], "wrote outside the test"
+    with open(mirror["saved_to"], encoding="utf-8") as handle:
+        assert handle.read() == text
+    print("data_mirror: readable Markdown, saved on the device: OK")
+
+
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     os.makedirs(TEST_DIR)
@@ -747,6 +759,7 @@ async def main():
         json.dump(BOARD_FIXTURE, handle)
     env = {**os.environ, "COPILOT_DATA_DIR": TEST_DIR,
            "CAREER_COPILOT_JOBS_FIXTURE": fixture,
+           "CAREER_COPILOT_HOME": os.path.join(TEST_DIR, "home"),
            "CAREER_COPILOT_LOG_DIR": os.path.join(TEST_DIR, "logs"),
            "CAREER_COPILOT_DASHBOARD_DIR": os.path.join(TEST_DIR, "dash")}
     params = StdioServerParameters(
@@ -768,6 +781,7 @@ async def main():
             await loop_checks(s)
             await evidence_checks(s)
             await watch_checks(s)
+            await mirror_checks(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
               encoding="utf-8") as handle:
         log = handle.read()

@@ -5,6 +5,17 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Low-hanging backlog items.
+**Did:** B-036 `data_mirror`: `store.markdown` renders every kind as a
+readable page (ids and internals hidden); local mode writes
+`~/CareerCopilot/my-data.md`. Tests now set CAREER_COPILOT_HOME so they
+never write to the real home folder.
+**Files:** `copilot/store.py`, `app.py`, `tests/test_soul.py`.
+**Tests:** 7 suites passed, 0 failed.
+**Try it:** "Show me everything you know about me".
+**Open:** the mirror is written on request, not on every change.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Low-hanging backlog items.
 **Did:** B-028 `cover_letter_draft`: picks the two confirmed facts with
 the most word overlap with the posting, quotes them as stated, applies
 the voice, and returns response_check as `check`. Asks for a fact when

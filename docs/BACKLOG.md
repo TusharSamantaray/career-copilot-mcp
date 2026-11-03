@@ -15,7 +15,6 @@
 - B-030 [P1] deadline_add (best case and conservative date) and
   fast_track mode; acceptance test B. From: spec v2.
 - B-034 [P2] Dashboard action strip. From: spec v2.
-- B-036 [P2] Local-first Markdown mirror of the data file. From: spec v2.
 - B-038 [P1] Acceptance test A as one scripted conversation. From:
   spec v2.
 - B-012 [P2] Delete the old prototype server.py from the project
@@ -23,6 +22,8 @@
 
 
 ## Done
+- B-036 data_mirror: Markdown copy, saved locally in stdio mode.
+  From: spec v2.
 - B-028 cover_letter_draft: two best-matching confirmed facts, voice,
   response_check. From: spec v2.
 - B-035 recruiter_find: search links only. From: spec v2.
