@@ -27,11 +27,10 @@
   From: blueprint.
 - B-020 [P2] Watches and an outbox read at the next chat. From: blueprint.
 - B-021 [P2] Per-person data keys for hosted storage. From: blueprint.
-- B-014 [P1] A true new-user test needs its own identity, since the
-  profile belongs to the sign-in. With GitHub sign-in, a second GitHub
-  account works. From: owner testing.
 
 ## Done
+- B-014 New-user testing: sign in with a second GitHub account on the
+  invite list (docs/OWNER.md). From: owner testing.
 - B-015 Fact record (source, ownership, metrics, confirmed or unsure),
   fact_conflicts and fact_resolve; response_check reads it. From:
   blueprint.

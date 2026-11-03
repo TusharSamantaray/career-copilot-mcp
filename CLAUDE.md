@@ -203,10 +203,9 @@ Verified:
   labels (B-002 done).
 - life_compass saves each answer, and can add it as a want or
   dealbreaker (B-003 done). journey_state is called first (B-001 done).
-- Hosted access accepts the API key in the URL query string (needed
-  because claude.ai and ChatGPT can't send headers; claude.ai now offers
-  request headers). Move to a header or OAuth before outside users
-  (B-006).
+- Hosted access uses GitHub sign-in (OAuth, read:user) with an invite
+  list; API keys and ?key= URLs are refused while it's on. Live since
+  2026-11-03 (B-006 done). Owner runbook: `docs/OWNER.md`.
 - License is "all rights reserved", source-available, in the owner's
   name. Decided by the owner on 2026-11-03.
 

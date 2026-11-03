@@ -4,6 +4,19 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** Write the instructions down so the owner can come back later.
+GitHub sign-in is now set up on Render.
+**Did:** Checked the live server: sign-in on, no-sign-in and key URLs
+refused, apps can register and reach the consent page. Wrote
+`docs/OWNER.md` (what's live, setting names, everyday tasks, working with
+Claude, limits). B-014 closed: test with a second GitHub account.
+**Files:** `docs/OWNER.md`, `CLAUDE.md`, `docs/README.md`,
+`docs/BACKLOG.md`.
+**Tests:** 6 suites passed, 0 failed (docs only).
+**Try it:** open docs/OWNER.md on GitHub.
+**Open:** ChatGPT's sign-in path is untested.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Build the blueprint's foundation next.
 **Did:** B-015 first version: `fact_add` (source, ownership, metrics,
 confirmed or unsure; preview shows conflicts), `fact_conflicts`,

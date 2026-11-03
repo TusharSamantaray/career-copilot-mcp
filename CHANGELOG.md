@@ -62,6 +62,9 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- An owner's runbook: what's live, which settings do what, how to invite
+  or remove people, and how to work on it with Claude.
+  **Try it:** open `docs/OWNER.md` and follow "Invite a friend".
 - The project page now starts with how to use it: connect in two minutes
   (hosted with GitHub sign-in, on your own computer, or your own free
   copy), then what your first chat looks like and what to ask. Technical
