@@ -13,10 +13,10 @@
   folder (it's untracked). From: repo setup.
 
 
-- B-040 [P1] Reset the Neon database password (it was pasted in a
-  chat), then update DATABASE_URL in Render. From: Neon setup.
 
 ## Done
+- B-040 Neon password reset and the new pooled DATABASE_URL set in
+  Render by the owner; live /health reports postgres. From: Neon setup.
 - B-008 Free persistent storage: Postgres backend (DATABASE_URL, Neon
   free plan), encryption unchanged, tested in CI against a real Postgres
   and through a wiped-disk restart. Owner adds DATABASE_URL in Render.

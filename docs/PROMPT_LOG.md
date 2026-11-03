@@ -4,6 +4,16 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** Owner reset the Neon password and set the new pooled
+DATABASE_URL in Render.
+**Did:** Confirmed the live server reports `"storage": "postgres"`.
+Closed B-040.
+**Files:** `docs/BACKLOG.md`.
+**Tests:** 8 suites passed, 0 failed (docs only).
+**Try it:** save something, let this deploy finish, ask for it back.
+**Open:** none.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Set the app up on Neon (generic Neon prompt) with the owner's
 connection strings.
 **Did:** Skipped the template's `neon init`/`neon deploy` (JavaScript
