@@ -51,6 +51,28 @@ def _conflicts_between(new, old):
     return found
 
 
+METRIC = re.compile(r"(\$)?(\d[\d,]*(?:\.\d+)?)\s*(%|[kmb]\b|x\b|"
+                    r"[a-z]+)?", re.I)
+SCALE = {"k": 1e3, "m": 1e6, "b": 1e9}
+
+
+def parse_metrics(text):
+    """Numbers in a statement with their units: '40%', '$2M', '6 hours'.
+    Years (19xx, 20xx) are dates, not metrics."""
+    found = []
+    for dollar, number, unit in METRIC.findall(text):
+        value = float(number.replace(",", ""))
+        unit = (unit or "").lower()
+        if not dollar and not unit and re.fullmatch(r"(19|20)\d\d", number):
+            continue
+        if unit in SCALE:
+            value, unit = value * SCALE[unit], "$" if dollar else ""
+        elif dollar:
+            unit = "$"
+        found.append({"value": value, "unit": unit or "count"})
+    return found
+
+
 def _live(user):
     return [f for f in store.list_kind(user, "fact")
             if not f.get("superseded_by")]
@@ -87,8 +109,38 @@ def add(user, statement, source="said", employer="", title="", start="",
         result["ask"] = ("These disagree with something already saved. Ask "
                          "the person which is right, then fact_resolve.")
     if apply:
-        result["fact_id"] = store.put(user, "fact", fact)
+        same = next((old for old in _live(user)
+                     if old["statement"].lower() == fact["statement"].lower()
+                     and _role(old) == _role(fact)), None)
+        if same:
+            # The same claim from another source: one fact, more sources.
+            seen = same.setdefault("also_in", [])
+            if source_ref and source_ref not in seen:
+                seen.append(source_ref[:60])
+            if confirmed and same["confidence"] != "confirmed":
+                same["confidence"] = "confirmed"
+                same["confirmed_on"] = fact["confirmed_on"]
+            store.put(user, "fact", same, record_id=same["id"])
+            result.update(fact_id=same["id"], merged=True)
+        else:
+            result["fact_id"] = store.put(user, "fact", fact)
     return result
+
+
+def import_bullets(user, bullets, label):
+    """Each resume bullet becomes an imported, unsure fact."""
+    ids, conflicts = [], []
+    for bullet in bullets:
+        added = add(user, bullet, source="imported", source_ref=label,
+                    metrics=parse_metrics(bullet), apply=True)
+        ids.append(added["fact_id"])
+        conflicts += added["conflicts"]
+    return {"facts": len(set(ids)), "conflicts": len(conflicts)}
+
+
+def confirmed_facts(user):
+    """Confirmed, current facts, for drafts."""
+    return [f for f in _live(user) if f["confidence"] == "confirmed"]
 
 
 def conflicts(user):
@@ -121,5 +173,4 @@ def resolve(user, keep_id, drop_id, confirm_kept=True):
 
 def confirmed_statements(user):
     """Confirmed, current statements: what drafts may rely on."""
-    return [f["statement"] for f in _live(user)
-            if f["confidence"] == "confirmed"]
+    return [f["statement"] for f in confirmed_facts(user)]

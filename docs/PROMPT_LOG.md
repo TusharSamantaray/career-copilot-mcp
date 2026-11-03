@@ -4,6 +4,19 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** Implement the whole backlog, one item at a time.
+**Did:** B-022: `experience_add` also writes a fact (said; confirmed or
+unsure); `resume_import` turns each bullet into an imported, unsure fact
+with parsed numbers, merges identical bullets (`also_in`) and reports
+version conflicts; `resume_build_draft` includes confirmed facts.
+**Files:** `copilot/facts.py`, `copilot/careers.py`, `app.py`,
+`tests/test_soul.py`.
+**Tests:** 6 suites passed, 0 failed.
+**Try it:** import two resume versions with different numbers for one
+line.
+**Open:** stories link to facts with B-018.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Write the instructions down so the owner can come back later.
 GitHub sign-in is now set up on Render.
 **Did:** Checked the live server: sign-in on, no-sign-in and key URLs

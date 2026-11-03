@@ -62,6 +62,14 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- Old resumes and the work you describe now feed the fact record
+  automatically (B-022). Each resume bullet is saved as "unsure" until
+  you confirm it; the same bullet in two versions is kept once; and when
+  two versions give different numbers for the same thing, you're asked
+  which is right. Facts you settle show up in your resume draft.
+  **Try it:** paste two versions of one resume line, say "v1: Cut
+  onboarding time by 30%" and "v2: Cut onboarding time by 45%", as two
+  resumes. Career Copilot should ask which number is right.
 - An owner's runbook: what's live, which settings do what, how to invite
   or remove people, and how to work on it with Claude.
   **Try it:** open `docs/OWNER.md` and follow "Invite a friend".

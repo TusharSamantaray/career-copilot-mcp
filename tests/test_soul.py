@@ -388,6 +388,23 @@ async def fact_checks(s):
     print("facts: conflicts raised, person resolves, only kept number "
           "passes: OK")
 
+    # Imported resumes feed the fact record; versions that disagree are
+    # caught without anyone describing them.
+    first = await call(s, "resume_import", {
+        "label": "v1", "text": "- Cut onboarding time by 30% for new "
+                               "hires\n- Ran weekly demos for 12 clients"})
+    assert first["facts_saved_unsure"] == 2 and "conflicts" not in first
+    second = await call(s, "resume_import", {
+        "label": "v2", "text": "- Cut onboarding time by 45% for new "
+                               "hires\n- Ran weekly demos for 12 clients"})
+    assert second.get("conflicts") == 1, second
+    record = (await call(s, "data_export"))["fact"]
+    demos = [f for f in record if "weekly demos" in f["statement"]]
+    assert len(demos) == 1 and demos[0]["also_in"] == ["v2"], demos
+    assert all(f["confidence"] == "unsure" for f in record
+               if f["source_ref"] in ("v1", "v2"))
+    print("resume imports become unsure facts, version conflicts caught: OK")
+
 
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)

@@ -16,8 +16,6 @@
 - B-012 [P2] Delete the old prototype server.py from the project
   folder (it's untracked). From: repo setup.
 
-- B-022 [P1] Make experience, resume bullets and stories views over the
-  fact record, and import resume bullets as facts. From: B-015.
 - B-016 [P1] skill_gap_evidence from postings seen and the outcome log.
   From: blueprint.
 - B-017 [P1] Interview rounds: loop_round_log and loop_next_round_prep.
@@ -29,6 +27,9 @@
 - B-021 [P2] Per-person data keys for hosted storage. From: blueprint.
 
 ## Done
+- B-022 experience_add and resume_import write facts (numbers parsed,
+  duplicates merged, version conflicts raised); resume_build_draft reads
+  confirmed facts. Stories link to facts in B-018. From: B-015.
 - B-014 New-user testing: sign in with a second GitHub account on the
   invite list (docs/OWNER.md). From: owner testing.
 - B-015 Fact record (source, ownership, metrics, confirmed or unsure),

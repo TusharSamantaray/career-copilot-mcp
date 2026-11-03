@@ -1,6 +1,7 @@
 """Resume versions, contribution bullets, LinkedIn review, role fit."""
 import re
 
+from copilot import facts
 from copilot import store
 from copilot.knowledge.careers import (ADJACENT, COMP_LEVERS, CONTRIBUTION_FRAMEWORK,
                                LEVELS, RESUME_SECTIONS, ROLES, SECTION_FOCUS)
@@ -84,7 +85,14 @@ def resume_import(user, text, label):
     bullets = _bullets(text)
     body = {"label": label, "text": text, "bullets": len(bullets)}
     record_id = store.put(user, "resume", body)
-    return {"id": record_id, "label": label, "bullets_found": len(bullets)}
+    imported = facts.import_bullets(user, bullets, label)
+    result = {"id": record_id, "label": label, "bullets_found": len(bullets),
+              "facts_saved_unsure": imported["facts"]}
+    if imported["conflicts"]:
+        result["conflicts"] = imported["conflicts"]
+        result["next"] = ("Some numbers disagree with another version. Call "
+                          "fact_conflicts and ask about one at a time.")
+    return result
 
 
 def resume_versions(user):

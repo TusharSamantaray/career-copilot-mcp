@@ -460,7 +460,19 @@ def experience_add(employer: str, title: str, start: str, end: str,
     body = {"employer": employer, "title": title, "start": start,
             "end": end, "fact": fact, "confirmed": confirmed,
             "role_in_work": owned_or_contributed}
-    return {"id": store.put(current_user(), "experience", body)}
+    user = current_user()
+    record_id = store.put(user, "experience", body)
+    ownership = owned_or_contributed if owned_or_contributed in \
+        fact_record.OWNERSHIP else "contributed"
+    recorded = fact_record.add(
+        user, fact, "said", employer, title, start, end, ownership,
+        fact_record.parse_metrics(fact), confirmed,
+        f"experience:{record_id}", apply=True)
+    result = {"id": record_id, "fact_id": recorded["fact_id"]}
+    if recorded["conflicts"]:
+        result["conflicts"] = recorded["conflicts"]
+        result["ask"] = recorded["ask"]
+    return result
 
 
 @mcp.tool
@@ -535,6 +547,16 @@ def resume_build_draft() -> str:
     facts = store.list_kind(user, "experience")
     confirmed = [f for f in facts if f["confirmed"]]
     skipped = len(facts) - len(confirmed)
+    # Facts confirmed in the fact record (for example a resume number the
+    # person settled with fact_resolve) count too, once each.
+    have = {f["fact"].lower() for f in confirmed}
+    for f in fact_record.confirmed_facts(user):
+        if f["statement"].lower() not in have:
+            have.add(f["statement"].lower())
+            confirmed.append({"title": f["title"] or "Role",
+                              "employer": f["employer"] or "employer",
+                              "start": f["start"], "end": f["end"],
+                              "fact": f["statement"]})
     lines, current = [], None
     for fact in confirmed:
         header = f"{fact['title']}, {fact['employer']} " \
