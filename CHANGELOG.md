@@ -172,6 +172,18 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- Documentation brought up to date, with diagrams in one colour scheme
+  (blue is you, green is Career Copilot, amber is stored data, grey is an
+  outside service, pink is a safety check, orange is something it never
+  does). Each diagram answers one stated question. New page,
+  `docs/ENGINEERING.md`: how it's tested, the acceptance tests, a
+  timeline of every problem found during testing, and for each one the
+  cause, the fix and the test that guards it. The architecture page is
+  rewritten for today's system (sign-in, encryption, Neon storage, job
+  search), and the guided tour covers the new features.
+  **Try it:** open `docs/ENGINEERING.md` on GitHub and look at section 3:
+  one picture of why the free host lost sign-ins and data, and what
+  changed.
 - Study plans fit the interview format (B-031). Tell it the kind of loop
   (coding-heavy, values-heavy, practical, enterprise, startup or
   non-technical) and the daily plan shifts to match: more story practice
