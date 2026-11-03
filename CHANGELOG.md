@@ -54,6 +54,13 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- The project page now starts with how to use it: connect in two minutes
+  (hosted with GitHub sign-in, on your own computer, or your own free
+  copy), then what your first chat looks like and what to ask. Technical
+  details moved to a developer section at the end. A new blueprint page
+  explains where Career Copilot goes next.
+  **Try it:** open the GitHub repo page. The first section should be
+  "Start in two minutes", with the plain connector address.
 - Message and resume drafts now check themselves (B-007). A draft that
   promises an outcome, uses an unconfirmed number or has biased wording
   comes back marked, so it gets fixed before you see it.

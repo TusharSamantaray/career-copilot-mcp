@@ -10,6 +10,7 @@ Start with the guide that matches what you want to do.
 | Run it, host it, or list it for sale | [SETUP.md](SETUP.md) |
 | See how the system is built | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | Read the full spec, with costs and roadmap | [SPEC.md](SPEC.md) |
+| See where it goes next, and why | [BLUEPRINT.md](BLUEPRINT.md) |
 | Design screens for it in Figma | [FIGMA.md](FIGMA.md) |
 | Know what's stored and how to delete it | [PRIVACY.md](PRIVACY.md) |
 | Read the terms of use | [TERMS.md](TERMS.md) |

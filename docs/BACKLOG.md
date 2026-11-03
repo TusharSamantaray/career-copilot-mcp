@@ -16,9 +16,21 @@
 - B-012 [P2] Delete the old prototype server.py from the project
   folder (it's untracked). From: repo setup.
 
-- B-014 [P1] A true new-user test needs its own key, since the profile
-  belongs to the key. Add a one-step "start over" or a demo key per
-  tester. From: owner testing.
+- B-015 [P1] Fact record (source, ownership, metrics, confirmed or
+  unsure) and fact_conflicts; experience becomes a view over facts.
+  From: blueprint.
+- B-016 [P1] skill_gap_evidence from postings seen and the outcome log.
+  From: blueprint.
+- B-017 [P1] Interview rounds: loop_round_log and loop_next_round_prep.
+  From: blueprint.
+- B-018 [P1] story_coverage grid across competencies. From: blueprint.
+- B-019 [P1] ats_profile_check: platform, parse risks, knock-outs.
+  From: blueprint.
+- B-020 [P2] Watches and an outbox read at the next chat. From: blueprint.
+- B-021 [P2] Per-person data keys for hosted storage. From: blueprint.
+- B-014 [P1] A true new-user test needs its own identity, since the
+  profile belongs to the sign-in. With GitHub sign-in, a second GitHub
+  account works. From: owner testing.
 
 ## Done
 - B-006 GitHub sign-in with a plain URL; keys ignored when it's on.

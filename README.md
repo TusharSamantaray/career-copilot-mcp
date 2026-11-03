@@ -1,142 +1,130 @@
 # Career Copilot
 
-**A small MCP connector that turns your AI assistant into a career
-coach.** It helps you find the right job, change careers, sort out your
-money and plan ahead, one small step a day.
+**A career coach inside the AI assistant you already use.** Tell it where
+you are, or let it ask a few quick questions. It works out what you want,
+then gives you one small step at a time: finding a direction, building a
+truthful resume, tracking applications, preparing for interviews, and
+keeping an eye on money and deadlines.
 
-- Works inside the assistant you already use: Claude, ChatGPT, Gemini,
-  Cursor, VS Code, Muse and others.
-- There is no app to install and nothing to log in to.
-- It gives you a personal dashboard you can see and customise.
-
-[Why we built it](docs/WHY.md) · [Guided tour](docs/TOUR.md) ·
-[Connect your AI](docs/CONNECT.md) · [Setup and deploy](docs/SETUP.md) ·
-[Full spec](docs/SPEC.md) · [Architecture](docs/ARCHITECTURE.md) ·
-[Design in Figma](docs/FIGMA.md)
+- Works in Claude (web, desktop, phone), ChatGPT, Muse, Claude Code,
+  Cursor, VS Code and other assistants that support MCP connectors.
+- No forms to fill in. Your profile builds from the conversation.
+- Short, plain answers: one step and one question, not a lecture.
+- You decide and you send. It drafts; it never applies or messages anyone
+  for you, and it never asks for a password.
 
 ---
 
-## 1. What it does
+## 1. Start in two minutes
 
-You talk to your assistant as usual. Career Copilot gives it four things
-it doesn't have on its own:
+Pick the way that fits you.
 
-| It adds | What that means for you |
-|---|---|
-| **Memory** | It remembers your goals, work history, applications, deadlines, money and progress between chats |
-| **Structure** | Rules that turn emails and interviews into reminders, so nothing slips |
-| **Knowledge** | Roles and skills, interview prep, money basics, job hubs by city, live economic data |
-| **A coach** | Every day it gives you **one small step** sized to your energy. Rest days are fine; just never skip twice |
+### A. Use it in claude.ai, ChatGPT or on your phone
 
-## 2. How it works
+1. Copy the connector address:
+   ```
+   https://career-copilot-cg2k.onrender.com/mcp
+   ```
+   This is the demo server. It's invite-only, so ask the owner to add your
+   GitHub username, or host your own copy (option C).
+2. Add it to your assistant:
+   - **claude.ai:** Settings → Connectors → **Add custom connector**. Name
+     it `Career Copilot`, paste the address and leave the OAuth fields
+     empty.
+   - **ChatGPT:** Settings → Apps & Connectors → Advanced → **Developer
+     mode** → Create. Paste the address and choose **OAuth**.
+   - **Muse:** add a custom connector with the same address.
+3. Click **Connect** and **sign in with GitHub**. That keeps your data
+   private to you. Career Copilot never sees your password.
+4. Open a new chat and say **"get started"**.
 
-```mermaid
-flowchart LR
-  you(["You"]) <--> ai["Your AI assistant<br/>Claude · ChatGPT · Gemini · Muse"]
-  ai <--> others["Your other connectors<br/>Gmail · Calendar · Zoom · bank"]
-  ai -- "MCP" --> cc["Career Copilot<br/>connector"]
-  cc --> mem[("Your data<br/>one private file per person")]
-  cc --> kb[("Knowledge<br/>roles · prep · money · cities")]
-  cc --> dash["Your dashboard<br/>an HTML page on your device"]
+Connectors you add on claude.ai also work in the Claude phone app.
+
+### B. Run it on your own computer (private, free)
+
+Install [uv](https://docs.astral.sh/uv/), then run this one line for
+Claude Code:
+
+```bash
+claude mcp add --scope user career-copilot -- uvx --from git+https://github.com/TusharSamantaray/career-copilot-mcp career-copilot --stdio
 ```
 
-1. **Your assistant does the talking.** Career Copilot never runs an AI
-   model itself. That keeps it light and nearly free to run.
-2. **Career Copilot does the remembering and the rules.** Each tool is a
-   small function: save a fact, plan a step, check a resume line.
-3. **Other connectors feed it, if you want them to.** Your assistant reads
-   your email, calendar or bank through *your* connectors and passes over
-   only the facts that are needed. Career Copilot never logs in anywhere
-   and never asks for passwords.
+Nothing to clone and no sign-in. Your data stays in `~/CareerCopilot/` on
+your computer. For Claude Desktop, Cursor, VS Code and others, see
+[docs/CONNECT.md](docs/CONNECT.md).
 
-## 3. A day with Career Copilot
+### C. Host your own copy for free
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/TusharSamantaray/career-copilot-mcp)
+
+Render builds it and gives you an `https://….onrender.com` address. Then
+add a GitHub sign-in app (5 minutes, once) so your address is safe to
+share. Step by step: [docs/SETUP.md](docs/SETUP.md#6-free-demo-hosting-render).
+
+## 2. Your first chat
 
 ```mermaid
 sequenceDiagram
   participant Y as You
   participant A as Your assistant
   participant C as Career Copilot
-  Y->>A: "hey"
-  A->>C: daily_step(energy)
-  C-->>A: one step, what's due, your streak
-  A->>Y: "Low energy? Just save one job posting today."
-  Y->>A: "done"
-  A->>C: step_done
-  C-->>A: celebrate · streak 4
-  Y->>A: "show my dashboard"
-  A->>C: dashboard
-  C-->>A: HTML page (also saved on your device)
-  A->>Y: shows it as an artifact
+  Y->>A: "get started"
+  A->>C: ground_rules
+  A->>Y: Three lines: your data is yours, this is education not advice, you send everything. OK?
+  Y->>A: "OK"
+  A->>C: journey_state
+  A->>Y: "Want to tell me what's on your mind, or should I ask a few quick questions?"
+  Y->>A: "ask me"
+  A->>Y: "Where are you right now? Starting out, between jobs, working but want a change, or interviewing?"
+  Y->>A: "working, want a change"
+  A->>C: profile_save (saved at once)
+  Note over A,C: Two more questions, then it gives something back
+  A->>Y: Your profile so far (confirmed / unsure), and one step to take
 ```
 
-## 4. Quick start
+- **Two ways in.** Talk it out in your own words, or answer one question
+  at a time. "Not sure" and "skip" are fine answers, and it never asks
+  the same thing twice.
+- **Something useful within five questions.** It reads back what it knows,
+  marks each item confirmed or unsure, and gives you one step.
+- **Then, one step a day.** It asks your energy (low, medium or high) and
+  sizes the step to it. Rest days are fine, just never skip twice.
 
-**Option A: one line, on your own computer (free and private)**
+## 3. What you can ask
 
-You need [uv](https://docs.astral.sh/uv/) installed. Then, for Claude Code:
-
-```bash
-claude mcp add --scope user career-copilot -- uvx --from git+https://github.com/TusharSamantaray/career-copilot-mcp career-copilot --stdio
-```
-
-That's it. There's nothing to clone. Your data stays in `~/CareerCopilot/`
-on your computer. For Claude Desktop, Cursor and others, see
-[CONNECT.md](docs/CONNECT.md).
-
-**Option B: hosted, for claude.ai, ChatGPT and phones**
-
-Paste one URL into your assistant's connector settings:
-
-```
-https://<server>/mcp?key=<your-key>
-```
-
-- **claude.ai:** Settings → Connectors → Add custom connector.
-- **ChatGPT:** Settings → Apps & Connectors → Advanced → Developer mode →
-  Create.
-
-You get the URL from the marketplace, or from your own deployment. To
-host your own free copy in one click:
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/TusharSamantaray/career-copilot-mcp)
-
-Render builds it, creates your secret key, and gives you an
-`https://….onrender.com` address. The steps are in
-[SETUP.md](docs/SETUP.md#6-free-demo-hosting-render).
-
-**Option C: from source (for developers)**
-
-```bash
-git clone https://github.com/TusharSamantaray/career-copilot-mcp.git
-cd career-copilot-mcp
-uv sync
-claude mcp add career-copilot -- uv run --directory "$PWD" app.py --stdio
-```
-
-On Windows, `powershell -ExecutionPolicy Bypass -File scripts/setup.ps1`
-does all of this for you.
-
-**Then say:** *"get started"*. Career Copilot asks five quick questions
-and builds your dashboard. Say *"give me the tour"* at any time.
-
-## 5. What you can ask
-
-| Say something like | What happens |
+| Say something like | What you get |
 |---|---|
-| "What's my one thing today? Energy is low." | A 5-minute step, plus your streak |
-| "Which roles fit me? I know Python, SQL and Excel." | Your best-fit roles and the skills you're missing |
-| "I'm in sales and want to move into product." | A career-move plan with stepping stones and a timeline |
-| "Should I move cities for this?" | Ranked job hubs, the remote option, visa and cost cautions |
-| "Here are my job emails. Update my pipeline." | Applications, rejections, interviews and deadlines sorted, after you say yes |
-| "Help me prep for Friday's interview." | Stories from your bank, likely questions, a thank-you draft |
-| "How long can I last without a job?" | Runway, money you can reach vs money that's locked, flags |
-| "Show my dashboard." | Your visual dashboard as an artifact, also saved on your device |
+| "I don't know what I want." | Reflection questions, one at a time, then 2 or 3 directions to test |
+| "Let me describe my work: …" | The facts read back to you, saved only after you agree |
+| "I'm good at SQL, Python and dashboards. What could I try?" | 2 or 3 directions, each with why it fits, the gaps, the risk and a small test for this week |
+| "I just lost my job." | Key dates (pay, any visa grace period), then a 72-hour plan |
+| "Here are my old resumes." | The best bullets merged, with questions on the weak ones |
+| "Draft a thank-you note to Acme." | A draft for you to edit and send, checked for promises and made-up numbers |
+| "Here are my job emails. Update my pipeline." | Applications, interviews and deadlines sorted, after you say yes |
+| "I have an interview on the 20th." | A prep plan with reminders, and the one thing to do today |
+| "Show my dashboard." | Your progress as a visual page |
 
-## 6. Your dashboard
+## 4. How it talks to you
+
+- **Short and direct.** 2 to 4 sentences, one step and one question. Say
+  "tell me more" when you want detail.
+- **Honest.** Only facts you confirmed go on a resume or into a message.
+  No invented numbers, no promised outcomes. It says "I don't know"
+  rather than guess.
+- **Respectful and on task.** It stays on your career, work, money and
+  plans, and it never comments on personal traits unless you bring them
+  up for a practical reason.
+- **Checked.** Drafts go through `response_check`, which flags insults,
+  biased wording, promises and unconfirmed numbers before you see them.
+- **Safe.** If you mention self-harm or feeling unsafe, it stops the
+  career talk and shares support lines first.
+
+Money, tax, visa and relocation answers are general education, not
+advice.
+
+## 5. Your dashboard
 
 ![Dashboard tabs: Today, Pipeline, Prep, Money, Direction](docs/assets/dashboard-tabs.svg)
-
-The dashboard is a single HTML file built from your own data:
 
 | Tab | What it shows |
 |---|---|
@@ -146,48 +134,60 @@ The dashboard is a single HTML file built from your own data:
 | **Money** | Net worth, money you can reach vs money that's locked, runway, goals |
 | **Direction** | Where you are, where you're going, your next steps |
 
-- **Where it lives.** When Career Copilot runs on your computer, the file
-  is saved to `~/CareerCopilot/dashboard.html`. In any chat, your
-  assistant also shows it as an artifact.
-- **Customise it.** Change the colours in the `:root` block at the top of
-  the file, and pick tabs with `SHOW_TABS` near the bottom.
-- **Try it without setup.** Open the demo built from test data:
-  [docs/assets/dashboard-demo.html](docs/assets/dashboard-demo.html).
-- **Stuck?** Empty sections tell you what to ask, so the dashboard
-  doubles as a guided tour.
+Say "show my dashboard" in any chat. On your own computer it's also saved
+to `~/CareerCopilot/dashboard.html`, where you can change colours and
+tabs. See a demo built from test data:
+[docs/assets/dashboard-demo.html](docs/assets/dashboard-demo.html).
 
-## 7. Your data and privacy
+## 6. Your data and privacy
 
 ```mermaid
 flowchart LR
-  src["Your email, calendar, bank<br/>(through your own connectors)"] -- "only needed facts" --> cc["Career Copilot"]
+  you(["You"]) -- "sign in with GitHub<br/>(public profile only)" --> cc["Career Copilot"]
+  src["Your email, calendar, bank<br/>(through your own connectors)"] -- "only the needed facts" --> cc
   cc --> store[("Your private file<br/>export or delete any time")]
-  cc -- "anonymous counts only" --> sig[("Usage signals<br/>k ≥ 5 users")]
+  cc -- "anonymous counts only" --> sig[("Usage signals<br/>5+ people before anything shows")]
   cc -. "never" .-> x["Passwords · account numbers ·<br/>raw emails · selling data"]
 ```
 
-- **One private file per person.** `data_export` gives you everything;
-  `data_delete` erases it all, including your anonymous usage signals.
-- **No logins.** No passwords, no one-time codes, no bank logins. Account
-  numbers and IDs are dropped on import.
-- **Logs are masked.** Money amounts, emails, moods and lists never
-  appear in server logs; tests check this.
-- **Honest limits.** Money, tax, visa and relocation answers are
-  education, not advice.
-- **Safety first.** If someone mentions self-harm, Career Copilot shares
-  crisis lines instead of a task.
+- **Yours alone.** Each person has one private file. Say "export my data"
+  to see everything, or "delete my data" to erase it.
+- **No passwords, ever.** GitHub handles sign-in, and Career Copilot
+  stores only a scrambled id. It never logs in anywhere for you.
+- **Masked logs.** Your words, emails, money figures and keys never reach
+  the server logs. Tests check this on every change.
+- **The free demo forgets.** The demo server is wiped when it restarts,
+  so keep your own copy with "export my data".
 
-## 8. How it gets better on its own
+Full text: [privacy notice](docs/PRIVACY.md) and
+[terms of use](docs/TERMS.md).
+
+## 7. How it works
 
 ```mermaid
 flowchart LR
-  use["Anonymous signals<br/>tool errors · missing roles · ratings"] --> bot["Weekly GitHub Action<br/>Claude edits copilot/knowledge/ only"]
-  bot --> tests["5 test suites<br/>+ personal-data and injection checks"]
-  tests -- "pass, knowledge only" --> live["Auto-merge → redeploy"]
-  tests -- "anything else" --> pr["Pull request for a human"]
+  you(["You"]) <--> ai["Your AI assistant<br/>Claude · ChatGPT · Muse"]
+  ai <--> others["Your other connectors<br/>Gmail · Calendar · Drive"]
+  ai -- "MCP" --> cc["Career Copilot"]
+  cc --> journey["Journey<br/>where you are · next question"]
+  cc --> rules["Ground rules<br/>truth · conduct · response_check"]
+  cc --> mem[("Your data<br/>one private file per person")]
+  cc --> kb[("Knowledge<br/>roles · prep · money · cities")]
 ```
 
-## 9. System specs
+1. **Your assistant does the talking.** Career Copilot runs no AI model
+   of its own, which keeps it light and nearly free to run.
+2. **Career Copilot does the remembering and the rules.** It knows where
+   you are on your journey, what's confirmed, and what to ask next.
+3. **Other connectors feed it only if you want them to.** Your assistant
+   reads your email or calendar through *your* connectors and passes on
+   only the facts needed.
+
+---
+
+## For developers
+
+### Specs
 
 | Item | Value |
 |---|---|
@@ -195,76 +195,70 @@ flowchart LR
 | Framework | [FastMCP](https://gofastmcp.com) 2.x |
 | Protocol | Model Context Protocol: stdio (local) or streamable HTTP at `/mcp` |
 | Surface | 65 tools, 8 resources, 16 starter prompts |
-| Storage | SQLite, one file per user (`data/`); Postgres planned for scale |
-| Auth (hosted) | One API key per subscriber (`Authorization: Bearer`). Local mode needs none |
-| Network calls out | World Bank API only (public, no key, cached 6 hours) |
-| AI model costs | None: the user's own assistant runs the model |
-| Dependencies | `fastmcp`, `httpx`, `loguru` |
+| Storage | SQLite, one file per person; Postgres planned |
+| Auth (hosted) | Sign in with GitHub (OAuth, `read:user` only, optional invite list), or API keys as a fallback. Local mode needs none |
+| Network calls out | GitHub (sign-in), World Bank API (public data, cached) |
+| AI model costs | None: the person's own assistant runs the model |
 | Health check | `GET /health` |
-| Default port | 8080 (`PORT`) |
-| Tests | 5 suites, 140+ checks, run on every change |
-| Hosting cost | $0–$49 a month for the whole service ([costs](docs/SPEC.md#7-costs)) |
+| Tests | 6 suites, run on every push |
 
-## 10. Project layout
+### Layout
 
 ```
-app.py                 Entry point: registers every tool, auth, logging
-copilot/               The logic, one small module per area
-  coach.py             Daily step, momentum, life compass, crisis safety
+app.py                 Entry point: tools, auth, logging, server instructions
+copilot/
+  journey.py           Where the person is, next question, profile building, directions
+  conduct.py           Ground rules, privacy and terms text, response_check
+  coach.py             Daily step, momentum, crisis safety
   careers.py           Resumes, contributions, LinkedIn, roles, career moves
   places.py            Where to move for a role
   autopilot.py         Pipeline rules → reminders; email and calendar intake
   triage.py            Sorts job emails and calendar events
-  prep.py              Interview questions, stories, patterns, study plans
-  finance.py           Accounts, budget, runway, goals, projections, import
+  prep.py              Interview questions, stories, patterns, drafts
+  finance.py           Accounts, budget, runway, goals, projections
   nudges.py            Reminders and calendar export (.ics)
-  dashboard.py         Builds the dashboard; dashboard.html is the template
-  guide.py             Onboarding and next steps
+  dashboard.py         Builds the dashboard
+  guide.py             Next steps from what's stored
   economy.py           Live World Bank data
-  insights.py          Anonymous, k-anonymous usage signals
-  store.py             Per-user SQLite storage
+  insights.py          Anonymous usage signals
+  store.py             Per-person SQLite storage
   scoring.py           Ten-check resume rubric
-  knowledge/           Reference content (data, no code paths)
-tests/                 5 test suites
-docs/                  Plain-English guides
-scripts/setup.ps1      One-command setup on Windows
-agents/IMPROVE.md      Instructions for the weekly improver
-.github/workflows/     CI and the weekly improvement job
+  knowledge/           Reference content the weekly bot may update
+tests/                 6 test suites
+docs/                  Guides, spec, blueprint, backlog
 ```
 
-```mermaid
-flowchart TB
-  app["app.py<br/>tools · auth · logs"] --> coach & careers & autopilot & prep & finance & dash["dashboard"]
-  coach --> guide & nudges
-  autopilot --> triage & nudges
-  careers & places & prep & coach --> kb["knowledge/"]
-  coach & careers & autopilot & prep & finance & nudges & guide --> store[("store")]
-```
-
-## 11. Develop and test
+### Develop and test
 
 ```bash
 uv sync
-uv run tests/test_knowledge.py   # knowledge is valid, no personal data, no injected text
+uv run tests/test_knowledge.py   # knowledge is valid, respectful, no personal data
 uv run tests/test_poc.py         # core tools
-uv run tests/test_features.py    # finance, resumes, roles, prep, reminders, economy
-uv run tests/test_http.py        # auth, data isolation, privacy of usage signals
-uv run tests/test_soul.py        # coach, safety, relocation, email intake, dashboard
+uv run tests/test_features.py    # finance, resumes, roles, prep, reminders
+uv run tests/test_http.py        # API keys, data isolation, private usage signals
+uv run tests/test_soul.py        # coach, safety, guided start, conduct checks
+uv run tests/test_oauth.py       # GitHub sign-in mode
 ```
 
-Every suite ends with `ALL PASSED`. CI runs them on every push.
+Hosted mode locally: `CAREER_COPILOT_API_KEY=dev-key uv run app.py`, then
+connect to `http://localhost:8080/mcp` with that key.
 
-To run the hosted mode locally: `CAREER_COPILOT_API_KEY=dev-key uv run
-app.py`, then connect to `http://localhost:8080/mcp` with that key.
+### It improves itself, safely
 
-## 12. Privacy, terms, contributing and license
+A weekly GitHub Action reads anonymous signals (tool errors, missing
+roles, ratings) and edits only `copilot/knowledge/`. Changes that pass
+every test merge on their own. Anything else waits for a human review.
+The ground rules sit outside that folder on purpose.
 
-- What's stored and your rights: [docs/PRIVACY.md](docs/PRIVACY.md)
-- Terms of use: [docs/TERMS.md](docs/TERMS.md)
-- What changed in each version: [CHANGELOG.md](CHANGELOG.md)
-- How to propose changes: [CONTRIBUTING.md](CONTRIBUTING.md)
-- How to report a security or privacy problem: [SECURITY.md](SECURITY.md)
-- All docs in one place: [docs/README.md](docs/README.md)
+### More docs
+
+[Connect any assistant](docs/CONNECT.md) ·
+[Setup and hosting](docs/SETUP.md) · [Spec](docs/SPEC.md) ·
+[Blueprint](docs/BLUEPRINT.md) · [Architecture](docs/ARCHITECTURE.md) ·
+[Backlog](docs/BACKLOG.md) · [Changelog](CHANGELOG.md) ·
+[Why we built it](docs/WHY.md) · [All docs](docs/README.md)
+
+## License
 
 Copyright © 2026 Tushar Samantaray. All rights reserved. The source is
 public so people can read and check it, and you can run it for your own

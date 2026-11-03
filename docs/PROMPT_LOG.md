@@ -4,6 +4,22 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** Save the next-generation blueprint, update the docs, and make
+the main README user-first with setup at the top.
+**Did:** Wrote `docs/BLUEPRINT.md` (gaps, tool designs, privacy modes,
+trade-offs, order) and added B-015 to B-021 to the backlog. Rewrote the
+README: setup first (hosted with GitHub sign-in, local, host your own),
+then the first chat, what to ask, how it talks, dashboard, privacy, how
+it works, and a developer section at the end.
+**Files:** `README.md`, `docs/BLUEPRINT.md`, `docs/BACKLOG.md`,
+`docs/README.md`.
+**Tests:** 6 suites passed, 0 failed (docs only).
+**Try it:** open the repo page on GitHub; the first section should be
+"Start in two minutes".
+**Open:** the demo address in the README is invite-only until the
+owner sets the invite list.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** The connector URL has the API key in it. Make it a generic
 URL. Owner chose Sign in with GitHub.
 **Did:** GitHub OAuth through FastMCP's GitHubProvider (scope read:user
