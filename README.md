@@ -97,6 +97,8 @@ sequenceDiagram
 | "I don't know what I want." | Reflection questions, one at a time, then 2 or 3 directions to test |
 | "Let me describe my work: …" | The facts read back to you, saved only after you agree |
 | "I'm good at SQL, Python and dashboards. What could I try?" | 2 or 3 directions, each with why it fits, the gaps, the risk and a small test for this week |
+| "Find new remote analyst roles at greenhouse:acme and lever:globex." | Fresh roles from official job boards, each with its posting date. Your hard no's are filtered out, and you only see roles you haven't seen |
+| "Is this posting worth it? (paste)" | Level, pay against your floor, sponsorship, fit and gaps, and a verdict |
 | "I just lost my job." | Key dates (pay, any visa grace period), then a 72-hour plan |
 | "Here are my old resumes." | The best bullets merged, with questions on the weak ones |
 | "Draft a thank-you note to Acme." | A draft for you to edit and send, checked for promises and made-up numbers |
@@ -194,10 +196,10 @@ flowchart LR
 | Language | Python 3.11+ |
 | Framework | [FastMCP](https://gofastmcp.com) 2.x |
 | Protocol | Model Context Protocol: stdio (local) or streamable HTTP at `/mcp` |
-| Surface | 68 tools, 8 resources, 16 starter prompts |
+| Surface | 70 tools, 8 resources, 16 starter prompts |
 | Storage | SQLite, one file per person; Postgres planned |
 | Auth (hosted) | Sign in with GitHub (OAuth, `read:user` only, optional invite list), or API keys as a fallback. Local mode needs none |
-| Network calls out | GitHub (sign-in), World Bank API (public data, cached) |
+| Network calls out | GitHub (sign-in), public job boards (Greenhouse, Lever, Ashby; read-only, cached), World Bank API |
 | AI model costs | None: the person's own assistant runs the model |
 | Health check | `GET /health` |
 | Tests | 6 suites, run on every push |
@@ -210,6 +212,7 @@ copilot/
   journey.py           Where the person is, next question, profile building, directions
   conduct.py           Ground rules, privacy and terms text, response_check
   facts.py             The fact record: source, ownership, numbers, conflicts
+  jobs.py              Job search on public boards, reading a posting
   coach.py             Daily step, momentum, crisis safety
   careers.py           Resumes, contributions, LinkedIn, roles, career moves
   places.py            Where to move for a role

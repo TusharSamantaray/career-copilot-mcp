@@ -406,9 +406,87 @@ async def fact_checks(s):
     print("resume imports become unsure facts, version conflicts caught: OK")
 
 
+# Public job-board answers, in each board's own shape (synthetic).
+BOARD_FIXTURE = {
+    "https://boards-api.greenhouse.io/v1/boards/acme/jobs": {"jobs": [
+        {"id": 1, "title": "Senior Data Analyst",
+         "location": {"name": "Remote - US"},
+         "first_published": "2026-10-30T10:00:00Z",
+         "updated_at": "2026-11-01T10:00:00Z",
+         "absolute_url": "https://boards.greenhouse.io/acme/jobs/1"},
+        {"id": 2, "title": "Data Analyst", "location": {"name": "Remote"},
+         "updated_at": "2026-11-01T10:00:00Z",
+         "absolute_url": "https://boards.greenhouse.io/acme/jobs/2"},
+        {"id": 3, "title": "Data Analyst II", "location": {"name": "Remote"},
+         "first_published": "2026-09-01T10:00:00Z",
+         "absolute_url": "https://boards.greenhouse.io/acme/jobs/3"},
+        {"id": 4, "title": "Data Analyst", "location": {"name": "Austin"},
+         "first_published": "2026-11-01T10:00:00Z",
+         "absolute_url": "https://boards.greenhouse.io/acme/jobs/4"}]},
+    "https://api.lever.co/v0/postings/globex?mode=json": [
+        {"id": "g-1", "text": "Analyst, Growth", "workplaceType": "remote",
+         "categories": {"location": "Remote"}, "createdAt": 1793491200000,   # 2026-11-01
+
+         "hostedUrl": "https://jobs.lever.co/globex/g-1"}],
+    "https://api.ashbyhq.com/posting-api/job-board/initech": {"jobs": [
+        {"id": "i-1", "title": "Product Analyst", "location": "Remote",
+         "isRemote": True, "publishedAt": "2026-10-31T09:00:00Z",
+         "jobUrl": "https://jobs.ashbyhq.com/initech/i-1"}]},
+}
+
+
+async def job_checks(s):
+    # Acceptance E: no dealbreaker broken, every result dated, second run
+    # silent. The profile already says "fully on-site" is a hard no.
+    first = await call(s, "job_search", {
+        "companies": ["greenhouse:acme", "lever:globex", "ashby:initech"],
+        "keywords": ["analyst"], "today": TODAY})
+    titles = {j["title"] for j in first["new"]}
+    assert titles == {"Senior Data Analyst", "Analyst, Growth",
+                      "Product Analyst"}, titles
+    assert all(j["posted"] and j["url"] and j["remote"]
+               for j in first["new"])
+    assert first["dropped"]["no_date"] == 1, "updated_at isn't a post date"
+    assert first["dropped"]["too_old"] == 1
+    assert first["dropped"]["dealbreaker"] == 1, "on-site role slipped in"
+    again = await call(s, "job_search", {
+        "companies": ["greenhouse:acme", "lever:globex", "ashby:initech"],
+        "keywords": ["analyst"], "today": TODAY})
+    assert again["new_count"] == 0 and again["say"].startswith("Nothing new")
+    await call(s, "profile_save", {"excluded_companies": ["globex"]})
+    shown = await call(s, "job_search", {
+        "companies": ["lever:globex"], "keywords": ["analyst"],
+        "include_seen": True, "today": TODAY})
+    assert not shown["new"], "excluded company shown"
+    print("job_search: dated, filtered, deduped, silent when nothing new: OK")
+
+    posting = ("Senior Data Analyst at Acme. 5+ years with SQL and Python, "
+               "dashboards in Tableau. Remote. Pay range $120k - $150k. We "
+               "are unable to sponsor visas for this role.")
+    await call(s, "profile_save", {"domain_keywords": ["sql", "python"]})
+    read = await call(s, "jd_analyze", {"text": posting,
+                                        "title": "Senior Data Analyst",
+                                        "company": "Acme"})
+    assert read["level_read"] == "senior" and read["years_asked"] == [5]
+    assert read["pay_read"]["vs_floor"] == "meets your floor", read
+    assert read["sponsorship_read"] == "says no sponsorship"
+    assert {"sql", "python"} <= set(read["fit_points"])
+    assert "tableau" in read["gap_points"]
+    assert read["verdict"].startswith("apply"), read["verdict"]
+    await call(s, "profile_save", {"dealbreakers": ["no visa sponsorship"]})
+    read = await call(s, "jd_analyze", {"text": posting})
+    assert read["verdict"].startswith("skip"), read
+    print("jd_analyze: level, pay vs floor, sponsorship, fit, verdict: OK")
+
+
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)
+    os.makedirs(TEST_DIR)
+    fixture = os.path.join(TEST_DIR, "boards.json")
+    with open(fixture, "w", encoding="utf-8") as handle:
+        json.dump(BOARD_FIXTURE, handle)
     env = {**os.environ, "COPILOT_DATA_DIR": TEST_DIR,
+           "CAREER_COPILOT_JOBS_FIXTURE": fixture,
            "CAREER_COPILOT_LOG_DIR": os.path.join(TEST_DIR, "logs"),
            "CAREER_COPILOT_DASHBOARD_DIR": os.path.join(TEST_DIR, "dash")}
     params = StdioServerParameters(
@@ -426,6 +504,7 @@ async def main():
             await conduct_checks(s)
             await journey_checks(s)
             await fact_checks(s)
+            await job_checks(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
               encoding="utf-8") as handle:
         log = handle.read()

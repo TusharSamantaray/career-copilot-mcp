@@ -49,6 +49,7 @@ from copilot import facts as fact_record
 from copilot import finance
 from copilot import guide
 from copilot import insights
+from copilot import jobs
 from copilot import journey
 from copilot import nudges
 from copilot import places
@@ -614,6 +615,37 @@ def application_update(application_id: str, status: str = "",
     store.put(user, "application", row, record_id=application_id)
     reminders = autopilot.on_application(user, application_id, row)
     return {"updated": True, "reminders_created": len(reminders)}
+
+
+@mcp.tool
+def job_search(companies: list[str] | None = None,
+               keywords: list[str] | None = None,
+               locations: list[str] | None = None, max_age_days: int = 7,
+               include_seen: bool = False, today: str = "") -> dict:
+    """Find fresh roles on companies' official public job boards
+    (Greenhouse, Lever, Ashby). Read-only; it never applies.
+
+    companies: "greenhouse:acme", "lever:globex", "ashby:initech", or a
+    bare board name to try on all three; the profile's target_companies
+    are added. keywords: words the title must contain (default: the target
+    role). locations: e.g. "remote", "seattle" (default: the profile's).
+    Every result has a provable posting date within max_age_days; the
+    profile's excluded companies and dealbreakers filter, its wants rank.
+    Only roles not shown before are returned, so "nothing new" is normal.
+    For LinkedIn, give the person a link; never automate it.
+    """
+    now = date.fromisoformat(today) if today else None
+    return jobs.job_search(current_user(), companies, keywords, locations,
+                           max_age_days, include_seen, now)
+
+
+@mcp.tool
+def jd_analyze(text: str, title: str = "", company: str = "") -> dict:
+    """Read a job posting the person pasted: what the role is, level read,
+    years asked, pay read (flagged if below their floor), sponsorship
+    read, why bother, fit points and gap points from their confirmed
+    facts, dealbreakers it breaks, and a verdict."""
+    return jobs.jd_analyze(current_user(), text, title, company)
 
 
 @mcp.tool

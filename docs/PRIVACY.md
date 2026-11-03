@@ -1,6 +1,6 @@
 # Privacy notice
 
-Version 2026-11-03.2. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-03.3. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 Career Copilot is run by Tushar Samantaray ("we"). It's a connector that
@@ -14,7 +14,7 @@ Only what you or your assistant give it:
 |---|---|
 | Profile | Target role, level, location, goals |
 | Work history | Jobs, achievements, stories, resume text you paste |
-| Job search | Applications, statuses, reminders, interview dates |
+| Job search | Applications, statuses, reminders, interview dates, roles already shown to you (so you only see new ones) |
 | Money | Account names, types and balances you enter or import |
 | Coaching | Daily check-ins, energy level, steps done |
 | Agreement | The date you agreed to these terms |
@@ -64,6 +64,7 @@ operator to turn this off (`CAREER_COPILOT_INSIGHTS=0`).
 | The host (Render now; later MCPHosting or another) | Stores the data files and logs for the hosted version |
 | The marketplace (MCPize, when listed) | Your subscription and billing details |
 | World Bank API | Only which country's public data is requested; nothing about you |
+| Public job boards (Greenhouse, Lever, Ashby) | Only which company's public job list the server read; nothing about you |
 
 We don't sell your data, and we don't use it for ads.
 

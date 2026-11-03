@@ -6,6 +6,20 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Job search on official job boards (B-005). Give it companies'
+  Greenhouse, Lever or Ashby boards and it finds fresh roles, each with
+  the date it was posted (nothing older than a week by default, and
+  nothing without a provable date). Hard no's and excluded companies are
+  filtered out, your wants rank the rest, and it only shows roles you
+  haven't seen, so "nothing new" is a normal answer. It never applies for
+  you. For LinkedIn it gives you a link instead.
+  **Try it:** say "Find new engineering roles at greenhouse:anthropic".
+  You should get a few dated roles. Ask again: it should say nothing is
+  new.
+- Posting analysis (B-005). Paste a job posting and get the level, years
+  asked, pay compared with your floor, what it says about sponsorship,
+  where you fit, the gaps, and a verdict.
+  **Try it:** paste any posting and say "is this worth applying to?".
 - A fact record (B-015). Every claim about your work is kept with where
   it came from (you said it, an old resume, or a guess), your part in it
   (owned, led, contributed) and its numbers. When two resumes disagree

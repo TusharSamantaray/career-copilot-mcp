@@ -1,8 +1,6 @@
 # Backlog
 
 ## Open
-- B-005 [P0] job_search on public job-board endpoints, then
-  jd_analyze. From: spec v2.
 - B-008 [P1] Persistent storage for the hosted version (paid disk or
   Postgres). The free demo loses data on every restart. From: Render
   setup.
@@ -27,6 +25,9 @@
 - B-021 [P2] Per-person data keys for hosted storage. From: blueprint.
 
 ## Done
+- B-005 job_search (Greenhouse, Lever, Ashby; provable dates; filters;
+  seen-dedup) and jd_analyze. Owner OK'd outbound reads on 2026-11-03.
+  From: spec v2.
 - B-022 experience_add and resume_import write facts (numbers parsed,
   duplicates merged, version conflicts raised); resume_build_draft reads
   confirmed facts. Stories link to facts in B-018. From: B-015.

@@ -4,6 +4,25 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** Continue the backlog (owner said implement all of it, which
+covers the outbound job-board reads B-005 was waiting on).
+**Did:** `job_search` reads Greenhouse (first_published), Lever
+(createdAt) and Ashby (publishedAt) public boards; drops undated and old
+postings and counts why; filters excluded companies, locations,
+on-site dealbreaker; ranks by wants; records every role shown in a new
+"seen" kind. `jd_analyze` reads level, years, pay vs floor, sponsorship,
+fit and gaps from confirmed facts, and a verdict. Checked the three live
+boards return those date fields. Privacy notice lists job boards
+(version 2026-11-03.3).
+**Files:** `copilot/jobs.py`, `app.py`, `copilot/store.py`,
+`copilot/conduct.py`, `tests/test_soul.py`, `docs/PRIVACY.md`,
+`docs/TERMS.md`, `README.md`, `CLAUDE.md`.
+**Tests:** 6 suites passed, 0 failed (acceptance test E added).
+**Try it:** "Find new engineering roles at greenhouse:anthropic", twice.
+**Open:** company names must be given as board names; no lookup of
+which board a company uses yet beyond trying all three.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Implement the whole backlog, one item at a time.
 **Did:** B-022: `experience_add` also writes a fact (said; confirmed or
 unsure); `resume_import` turns each bullet into an imported, unsure fact
