@@ -16,9 +16,8 @@
 - B-012 [P2] Delete the old prototype server.py from the project
   folder (it's untracked). From: repo setup.
 
-- B-015 [P1] Fact record (source, ownership, metrics, confirmed or
-  unsure) and fact_conflicts; experience becomes a view over facts.
-  From: blueprint.
+- B-022 [P1] Make experience, resume bullets and stories views over the
+  fact record, and import resume bullets as facts. From: B-015.
 - B-016 [P1] skill_gap_evidence from postings seen and the outcome log.
   From: blueprint.
 - B-017 [P1] Interview rounds: loop_round_log and loop_next_round_prep.
@@ -33,6 +32,9 @@
   account works. From: owner testing.
 
 ## Done
+- B-015 Fact record (source, ownership, metrics, confirmed or unsure),
+  fact_conflicts and fact_resolve; response_check reads it. From:
+  blueprint.
 - B-006 GitHub sign-in with a plain URL; keys ignored when it's on.
   Owner chose GitHub on 2026-11-03. From: README review.
 - B-004 profile_from_text (read back, then save) and direction_options

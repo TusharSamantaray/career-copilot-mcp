@@ -4,6 +4,20 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** Build the blueprint's foundation next.
+**Did:** B-015 first version: `fact_add` (source, ownership, metrics,
+confirmed or unsure; preview shows conflicts), `fact_conflicts`,
+`fact_resolve`. Inferred facts can't be confirmed. `response_check` now
+also accepts numbers from confirmed, current facts, so a retired number
+fails. This reads a new data source inside the existing rule; no rule
+text changed, so no new ground-rules version.
+**Files:** `copilot/facts.py`, `copilot/conduct.py`, `copilot/store.py`,
+`app.py`, `tests/test_soul.py`, `docs/BLUEPRINT.md`.
+**Tests:** 6 suites passed, 0 failed (acceptance test C added).
+**Try it:** describe two resumes that disagree on a date and a number.
+**Open:** experience_add and resume_import don't write facts yet (B-022).
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Save the next-generation blueprint, update the docs, and make
 the main README user-first with setup at the top.
 **Did:** Wrote `docs/BLUEPRINT.md` (gaps, tool designs, privacy modes,

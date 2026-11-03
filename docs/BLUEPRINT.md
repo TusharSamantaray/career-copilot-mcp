@@ -146,8 +146,8 @@ Outside systems:
 
 | Step | Pieces |
 |---|---|
-| Built | journey_state, profile_from_text, direction_options, response_check in drafts, GitHub sign-in |
-| Next | Fact record and conflicts (B-015) |
+| Built | journey_state, profile_from_text, direction_options, response_check in drafts, GitHub sign-in, fact record and conflicts (B-015, first version) |
+| Next | Make experience and resume bullets views over facts |
 | Then | job_search (B-005), resume_patch on facts, ats_profile_check (B-019) |
 | Then | Loop rounds (B-017), story coverage (B-018), skill gaps from evidence (B-016) |
 | Later | Watches and outbox (B-020), persistent storage (B-008), per-person keys (B-021) |

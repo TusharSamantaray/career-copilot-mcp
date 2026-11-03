@@ -6,6 +6,14 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- A fact record (B-015). Every claim about your work is kept with where
+  it came from (you said it, an old resume, or a guess), your part in it
+  (owned, led, contributed) and its numbers. When two resumes disagree
+  on a date or a number, it asks you which is right instead of picking
+  one. Only the version you keep can appear in drafts.
+  **Try it:** say "My 2024 resume says I cut pipeline time by 35% at
+  Initech (2021-2024), but my 2025 one says 55% and starts in 2022."
+  It should flag both the date and the number and ask which is right.
 - Talk it out (B-004). Describe your work in your own words; Career
   Copilot reads the facts back with confirmed or unsure labels and saves
   them only after you agree.

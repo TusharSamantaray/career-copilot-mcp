@@ -7,6 +7,7 @@ auto-merge knowledge changes, but changes here always need a human review.
 import re
 from datetime import date
 
+from copilot import facts as fact_record
 from copilot import store
 
 TERMS_VERSION = "2026-11-03.2"
@@ -202,7 +203,7 @@ def _norm(token):
 
 def _confirmed_numbers(user):
     facts = [f.get("fact", "") for f in store.list_kind(user, "experience")
-             if f.get("confirmed")]
+             if f.get("confirmed")] + fact_record.confirmed_statements(user)
     return {_norm(n) for fact in facts for n in NUMBER.findall(fact)}
 
 

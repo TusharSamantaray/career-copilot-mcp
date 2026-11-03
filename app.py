@@ -45,6 +45,7 @@ from copilot import coach
 from copilot import conduct
 from copilot import dashboard as dash
 from copilot import economy
+from copilot import facts as fact_record
 from copilot import finance
 from copilot import guide
 from copilot import insights
@@ -96,7 +97,7 @@ SENSITIVE_ARGS = {"api_key", "token", "password", "authorization",
                   "target_amount", "saved", "current_savings",
                   "monthly_budget", "comp_floor",
                   # raw emails, calendar events and moods stay out of logs
-                  "emails", "events", "mood", "note", "text"}
+                  "emails", "events", "mood", "note", "text", "statement"}
 MAX_LOGGED_CHARS = 80
 
 
@@ -460,6 +461,46 @@ def experience_add(employer: str, title: str, start: str, end: str,
             "end": end, "fact": fact, "confirmed": confirmed,
             "role_in_work": owned_or_contributed}
     return {"id": store.put(current_user(), "experience", body)}
+
+
+@mcp.tool
+def fact_add(statement: str, source: str = "said", employer: str = "",
+             title: str = "", start: str = "", end: str = "",
+             ownership: str = "contributed",
+             metrics: list[dict] | None = None, confirmed: bool = False,
+             source_ref: str = "", apply: bool = False) -> dict:
+    """Record one claim about the person's work, with where it came from.
+
+    source: said (the person told you), imported (from a resume; set
+    source_ref to its label) or inferred (you guessed; never confirmed).
+    ownership: owned, led, contributed or observed. Ask "did you write it,
+    lead it or fix it?" before choosing owned or led. metrics: numbers in
+    the statement, e.g. [{"value": 40, "unit": "%"}], with approx=true for
+    "about". apply=false previews and lists conflicts with saved facts
+    (different dates for the same job, different numbers for the same
+    work); apply=true saves (write action). Settle conflicts with the
+    person, then fact_resolve.
+    """
+    return fact_record.add(current_user(), statement, source, employer,
+                           title, start, end, ownership, metrics, confirmed,
+                           source_ref, apply)
+
+
+@mcp.tool
+def fact_conflicts() -> dict:
+    """Every place where saved facts disagree on a date or a number. Ask
+    the person about one at a time."""
+    return fact_record.conflicts(current_user())
+
+
+@mcp.tool
+def fact_resolve(keep_id: str, drop_id: str,
+                 confirm_kept: bool = True) -> dict:
+    """Settle a conflict the way the person said (write action): keep one
+    fact, retire the other. The kept fact becomes confirmed unless it was
+    inferred."""
+    return fact_record.resolve(current_user(), keep_id, drop_id,
+                               confirm_kept)
 
 
 @mcp.tool

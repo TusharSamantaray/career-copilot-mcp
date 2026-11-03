@@ -339,6 +339,56 @@ async def journey_checks(s):
     print("direction_options gives 2-3 directions to test: OK")
 
 
+async def fact_checks(s):
+    # Acceptance C: resume versions disagree on a date and a number.
+    job = {"employer": "Initech", "title": "Data Engineer"}
+    a = await call(s, "fact_add", {
+        **job, "start": "2021", "end": "2024", "source": "imported",
+        "source_ref": "2024 resume", "ownership": "led",
+        "statement": "Cut nightly pipeline runtime by 35%",
+        "metrics": [{"value": 35, "unit": "%"}], "apply": True})
+    assert not a["conflicts"]
+    preview = await call(s, "fact_add", {
+        **job, "start": "2022", "end": "2024", "source": "imported",
+        "source_ref": "2025 resume", "ownership": "led",
+        "statement": "Cut the nightly pipeline runtime by 55%",
+        "metrics": [{"value": 55, "unit": "%"}]})
+    fields = {c["field"] for c in preview["conflicts"]}
+    assert fields == {"date", "metric"}, preview["conflicts"]
+    assert "fact_id" not in preview, "preview must not save"
+    b = await call(s, "fact_add", {
+        **job, "start": "2022", "end": "2024", "source": "imported",
+        "source_ref": "2025 resume", "ownership": "led",
+        "statement": "Cut the nightly pipeline runtime by 55%",
+        "metrics": [{"value": 55, "unit": "%"}], "apply": True})
+    assert len((await call(s, "fact_conflicts"))["conflicts"]) == 2
+
+    # Not a confirmed fact yet, so a draft using 40% is flagged.
+    draft = "Led a fix that cut nightly pipeline runtime by 35%."
+    check = await call(s, "response_check", {"text": draft,
+                                             "kind": "resume"})
+    assert any(i["type"] == "unsupported_number" for i in check["issues"])
+
+    # The person says the 35% version is right.
+    done = await call(s, "fact_resolve", {"keep_id": a["fact_id"],
+                                          "drop_id": b["fact_id"]})
+    assert done["kept_confidence"] == "confirmed"
+    assert not (await call(s, "fact_conflicts"))["conflicts"]
+    check = await call(s, "response_check", {"text": draft,
+                                             "kind": "resume"})
+    assert check["ok"], check
+    check = await call(s, "response_check", {
+        "text": "Cut nightly pipeline runtime by 55%.", "kind": "resume"})
+    assert not check["ok"], "a retired number must not pass"
+
+    guess = await call(s, "fact_add", {
+        "statement": "Probably mentored juniors", "source": "inferred",
+        "confirmed": True})
+    assert "error" in guess, "inferred facts can't be confirmed"
+    print("facts: conflicts raised, person resolves, only kept number "
+          "passes: OK")
+
+
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     env = {**os.environ, "COPILOT_DATA_DIR": TEST_DIR,
@@ -358,6 +408,7 @@ async def main():
             await dashboard_checks(s)
             await conduct_checks(s)
             await journey_checks(s)
+            await fact_checks(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
               encoding="utf-8") as handle:
         log = handle.read()
