@@ -245,6 +245,12 @@ Every Added or Changed line has a **Try it:** line.
   politely say that's outside what it does and offer a career step.
 
 ### Fixed
+- The "I don't know what I want" journey is now tested end to end on
+  every change (B-038): within five questions you get 2 or 3 directions,
+  pick one, and every line of your profile is labelled confirmed or
+  unsure.
+  **Try it:** in a new chat, say "I don't know what I want" and answer
+  the questions. You should see directions before a sixth question.
 - A rejection email no longer closes the wrong application (B-023). If
   you applied to two roles at one company, a rejection closes only the
   one whose role or job id it names. If it doesn't say, Career Copilot

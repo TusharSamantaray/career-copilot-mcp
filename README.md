@@ -203,7 +203,7 @@ flowchart LR
 | Network calls out | GitHub (sign-in), public job boards (Greenhouse, Lever, Ashby; read-only, cached), World Bank API |
 | AI model costs | None: the person's own assistant runs the model |
 | Health check | `GET /health` |
-| Tests | 7 suites, run on every push (the main one twice: plain and encrypted) |
+| Tests | 8 suites, run on every push (the main one twice: plain and encrypted) |
 
 ### Layout
 
@@ -233,7 +233,7 @@ copilot/
   store.py             Per-person SQLite storage
   scoring.py           Ten-check resume rubric
   knowledge/           Reference content the weekly bot may update
-tests/                 7 test suites
+tests/                 8 test suites
 docs/                  Guides, spec, blueprint, backlog
 ```
 
@@ -248,6 +248,7 @@ uv run tests/test_http.py        # API keys, data isolation, private usage signa
 uv run tests/test_soul.py        # coach, safety, guided start, conduct checks
 uv run tests/test_oauth.py       # GitHub sign-in mode
 uv run tests/test_crypto.py      # encryption at rest, delete destroys the key
+uv run tests/test_acceptance.py  # Spec v2 acceptance tests as scripted chats
 ```
 
 Hosted mode locally: `CAREER_COPILOT_API_KEY=dev-key uv run app.py`, then

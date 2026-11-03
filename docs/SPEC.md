@@ -136,7 +136,7 @@ Scripted conversations with synthetic people, run in CI.
 
 | Test | What must happen | Status |
 |---|---|---|
-| A Lost | "I don't know what I want", no resume: within five questions, 2 to 3 directions with reasons, one picked, profile with every line confirmed or unsure | Parts covered (`journey_checks`, `direction_options`); full script open |
+| A Lost | "I don't know what I want", no resume: within five questions, 2 to 3 directions with reasons, one picked, profile with every line confirmed or unsure | Covered (`tests/test_acceptance.py`) |
 | B On a clock | Laid off with a last day and a deadline: dated timeline first, conservative deadline, first step fits in an hour | Open, needs B-030 |
 | C Three resumes | Versions disagree on a date and a number: both raised and resolved by the person; merged resume has no unsupported number | Covered (`fact_checks`) |
 | D Talks it out | Rambling free text: facts read back, edited, only then saved | Covered (`profile_from_text`) |

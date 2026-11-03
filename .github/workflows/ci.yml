@@ -22,6 +22,7 @@ jobs:
       - run: uv run tests/test_soul.py
       - run: uv run tests/test_oauth.py
       - run: uv run tests/test_crypto.py
+      - run: uv run tests/test_acceptance.py
       - name: Everything again with encryption on
         run: uv run tests/test_soul.py
         env:

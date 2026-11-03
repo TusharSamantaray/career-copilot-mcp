@@ -5,6 +5,18 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Low-hanging backlog items.
+**Did:** B-038: `tests/test_acceptance.py` runs acceptance test A as one
+scripted conversation on a fresh server (consent, two doors, three
+answers, compass answer saved as a want, 2-3 directions, one picked,
+every profile line labelled, at most five questions). Added to CI.
+**Files:** `tests/test_acceptance.py`, `.github/workflows/ci.yml`,
+`README.md`, `docs/SPEC.md`.
+**Tests:** 8 suites passed, 0 failed.
+**Try it:** "I don't know what I want" in a new chat.
+**Open:** acceptance test B waits on B-030.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Low-hanging backlog items.
 **Did:** B-036 `data_mirror`: `store.markdown` renders every kind as a
 readable page (ids and internals hidden); local mode writes
 `~/CareerCopilot/my-data.md`. Tests now set CAREER_COPILOT_HOME so they
