@@ -56,6 +56,22 @@ async def main():
         assert "note" in profile, "bob can see alice's data"
     print("keys are isolated: OK")
 
+    # claude.ai and ChatGPT put the key in the URL instead of a header.
+    url = Client(StreamableHttpTransport(f"{BASE}/mcp?key={KEYS[1]}"))
+    async with url as bob:
+        profile = (await bob.call_tool("profile_get", {})).data
+        assert "note" in profile
+    bad_url = Client(StreamableHttpTransport(f"{BASE}/mcp?key=wrong"))
+    async with bad_url as bad:
+        try:
+            await bad.call_tool("profile_get", {})
+            raise AssertionError("wrong key in the URL was allowed")
+        except AssertionError:
+            raise
+        except Exception as exc:
+            assert "Unauthorized" in str(exc), exc
+    print("key in the URL works, wrong one rejected: OK")
+
     # Self-improvement signals: k-anonymous, scrubbed, admin-only.
     async with client(KEYS[0]) as alice:
         await alice.call_tool("skills_gap", {"target_role": "Pastry Chef"})
@@ -87,7 +103,11 @@ def run():
            "CAREER_COPILOT_INSIGHTS_SALT": "test-salt",
            "COPILOT_DATA_DIR": TEST_DIR,
            "CAREER_COPILOT_LOG_DIR": os.path.join(TEST_DIR, "logs")}
-    server = subprocess.Popen([sys.executable, "app.py"], env=env)
+    os.makedirs(TEST_DIR, exist_ok=True)
+    console_path = os.path.join(TEST_DIR, "console.txt")
+    console = open(console_path, "w", encoding="utf-8")
+    server = subprocess.Popen([sys.executable, "app.py"], env=env,
+                              stdout=console, stderr=subprocess.STDOUT)
     try:
         for _ in range(60):
             try:
@@ -104,10 +124,18 @@ def run():
             text = handle.read()
         assert "tool done: profile_save in" in text
         assert "key-alice-test" not in text, "API key leaked into logs"
-        print("log file written, no keys in it: OK")
+        server.terminate()
+        server.wait(timeout=10)
+        console.close()
+        with open(console_path, encoding="utf-8", errors="replace") as handle:
+            printed = handle.read()
+        assert "Career Copilot" in printed, "console output not captured"
+        assert "key-bob-test" not in printed, "URL key leaked to the console"
+        print("log file written, no keys in it or on the console: OK")
     finally:
         server.terminate()
         server.wait(timeout=10)
+        console.close()
         shutil.rmtree(TEST_DIR, ignore_errors=True)
     print("ALL PASSED")
 

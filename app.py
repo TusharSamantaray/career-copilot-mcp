@@ -4,7 +4,8 @@ Cloud (HTTP):   uv run app.py          serves /mcp and /health on $PORT (8080)
 Local (stdio):  uv run app.py --stdio  for Claude Desktop / Claude Code
 
 Auth: set CAREER_COPILOT_API_KEY (comma-separated for several keys). Callers
-send it as "Authorization: Bearer <key>" or "X-API-Key: <key>".
+send it as "Authorization: Bearer <key>", "X-API-Key: <key>", or, for apps
+that can't set headers (claude.ai, ChatGPT), in the URL: /mcp?key=<key>.
 """
 import asyncio
 import hashlib
@@ -13,11 +14,20 @@ import os
 import sys
 import time
 from datetime import date, timedelta
+from pathlib import Path
+
+STDIO = "--stdio" in sys.argv
+HOME_DIR = Path(os.environ.get("CAREER_COPILOT_HOME",
+                               Path.home() / "CareerCopilot"))
+if STDIO:
+    # Local mode can start from any folder (uvx, Claude Desktop), so keep
+    # data in one fixed place. Set before copilot modules read it.
+    os.environ.setdefault("COPILOT_DATA_DIR", str(HOME_DIR / "data"))
 
 import fastmcp
 from fastmcp import FastMCP
 from fastmcp.exceptions import ResourceError, ToolError
-from fastmcp.server.dependencies import get_http_headers
+from fastmcp.server.dependencies import get_http_headers, get_http_request
 from fastmcp.server.middleware import Middleware, MiddlewareContext
 from loguru import logger
 from mcp.types import LATEST_PROTOCOL_VERSION
@@ -41,10 +51,10 @@ from copilot.knowledge.money import (DISCLAIMER, ECONOMY_GUIDES, INVEST_GUIDES,
 from copilot.scoring import score_resume
 
 VERSION = "0.3.0"
-STDIO = "--stdio" in sys.argv
 HOST = os.environ.get("HOST", "0.0.0.0")
 PORT = int(os.environ.get("PORT", "8080"))
-LOG_DIR = os.environ.get("CAREER_COPILOT_LOG_DIR", "logs")
+LOG_DIR = os.environ.get("CAREER_COPILOT_LOG_DIR",
+                         str(HOME_DIR / "logs") if STDIO else "logs")
 LOG_LEVEL = os.environ.get("CAREER_COPILOT_LOG_LEVEL", "INFO")
 API_KEYS = [key.strip() for key in
             os.environ.get("CAREER_COPILOT_API_KEY", "").split(",")
@@ -112,7 +122,16 @@ def _presented_key(headers: dict) -> str:
     auth = headers.get("authorization", "")
     if auth.lower().startswith("bearer "):
         return auth[7:].strip()
-    return headers.get("x-api-key", "").strip()
+    return headers.get("x-api-key", "").strip() or _url_key()
+
+
+def _url_key() -> str:
+    """claude.ai and ChatGPT connectors can't send headers, so the key may
+    come in the connector URL as ?key=<key>."""
+    try:
+        return get_http_request().query_params.get("key", "").strip()
+    except RuntimeError:
+        return ""
 
 
 def authorize():
@@ -1257,8 +1276,9 @@ def main():
         if STDIO:
             mcp.run(show_banner=False)
         else:
+            # No access log: request lines can carry ?key= in the URL.
             mcp.run(transport="http", host=HOST, port=PORT,
-                    show_banner=False)
+                    show_banner=False, uvicorn_config={"access_log": False})
     except KeyboardInterrupt:
         pass
     finally:

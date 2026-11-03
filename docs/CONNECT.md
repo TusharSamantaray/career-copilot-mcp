@@ -23,54 +23,74 @@ No connector? Just paste or type the facts. Ask your assistant to call
 ## Connect Career Copilot itself
 
 Career Copilot is a standard MCP server, so it works with any assistant
-that supports MCP. Below, replace `URL` with your server's endpoint (it ends
-in `/mcp`) and `KEY` with your API key.
+that supports MCP. There are two ways to run it:
 
-**Two kinds of client:**
+| Way | Best for | What you need |
+|---|---|---|
+| **Local** (runs on your computer) | Claude Code, Claude Desktop, Cursor, VS Code | [uv](https://docs.astral.sh/uv/) installed |
+| **Hosted** (runs on a server) | claude.ai, ChatGPT, phones, Muse | A server URL and a key |
 
-- **Desktop and IDE clients** (Claude Code, Claude Desktop, Cursor, VS
-  Code, Gemini CLI, Windsurf) can send your key in an `Authorization`
-  header. Use the configs below.
-- **Web chat apps** (Claude.ai, ChatGPT) can't send custom headers. Connect
-  them through the marketplace listing (MCPize), which gives you a URL tied
-  to your subscription. OAuth support for direct web connections is on the
-  roadmap.
+## The one-liners
 
-## Claude Code
+**Claude Code, local:**
 
 ```
-claude mcp add --transport http career-copilot URL --header "Authorization: Bearer KEY"
+claude mcp add --scope user career-copilot -- uvx --from git+https://github.com/TusharSamantaray/career-copilot-mcp career-copilot --stdio
+```
+
+**Claude Code, hosted:**
+
+```
+claude mcp add --scope user --transport http career-copilot "https://<server>/mcp?key=<key>"
 ```
 
 On Windows PowerShell, wrap commands containing `--` in `cmd /c "..."`.
 
+**claude.ai and ChatGPT, hosted:** paste this URL into the connector
+settings (steps below):
+
+```
+https://<server>/mcp?key=<key>
+```
+
+Below, `URL` means `https://<server>/mcp` and `KEY` means your key. A key
+in the URL works everywhere. Clients that can send headers can use
+`Authorization: Bearer KEY` instead, which keeps the key out of the URL.
+Treat a URL that contains a key like a password: anyone who has it can use
+your copy of Career Copilot.
+
 ## Claude Desktop
 
-Settings → Developer → Edit Config, then add:
+Settings → Developer → Edit Config, then add (local):
 
 ```json
 {
   "mcpServers": {
     "career-copilot": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "URL", "--header", "Authorization: Bearer KEY"]
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/TusharSamantaray/career-copilot-mcp",
+               "career-copilot", "--stdio"]
     }
   }
 }
 ```
 
-Needs Node.js. Restart Claude Desktop afterwards.
+Restart Claude Desktop afterwards. To use the hosted server instead, add it
+as a connector the same way as claude.ai.
 
 ## Claude.ai (web and mobile)
 
-Settings → Connectors → **Add custom connector** → paste your MCPize URL.
-Then enable it in a chat from the tools menu.
+Settings → Connectors → **Add custom connector**. Give it the name
+`Career Copilot` and the URL `https://<server>/mcp?key=<key>`. Then turn it
+on in a chat from the tools menu. It also appears in the Claude mobile app.
 
 ## ChatGPT
 
 Settings → Apps & Connectors → Advanced → turn on **Developer mode**. Then
-**Create** a connector and paste your MCPize URL. Developer mode is
-available on paid plans.
+**Create**: name `Career Copilot`, URL `https://<server>/mcp?key=<key>`,
+authentication **No authentication** (the key is in the URL). In a chat,
+pick it from the **+** menu → Developer mode. Developer mode needs a paid
+plan.
 
 ## Muse (Meta)
 

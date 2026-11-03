@@ -71,7 +71,34 @@ sequenceDiagram
 
 ## 4. Quick start
 
-**Option A: run it on your own computer (free, private, 2 minutes)**
+**Option A: one line, on your own computer (free and private)**
+
+You need [uv](https://docs.astral.sh/uv/) installed. Then, for Claude Code:
+
+```bash
+claude mcp add --scope user career-copilot -- uvx --from git+https://github.com/TusharSamantaray/career-copilot-mcp career-copilot --stdio
+```
+
+That's it. There's nothing to clone. Your data stays in `~/CareerCopilot/`
+on your computer. For Claude Desktop, Cursor and others, see
+[CONNECT.md](docs/CONNECT.md).
+
+**Option B: hosted, for claude.ai, ChatGPT and phones**
+
+Paste one URL into your assistant's connector settings:
+
+```
+https://<server>/mcp?key=<your-key>
+```
+
+- **claude.ai:** Settings → Connectors → Add custom connector.
+- **ChatGPT:** Settings → Apps & Connectors → Advanced → Developer mode →
+  Create.
+
+You get the URL from the marketplace, or from your own deployment
+([SETUP.md](docs/SETUP.md)).
+
+**Option C: from source (for developers)**
 
 ```bash
 git clone https://github.com/TusharSamantaray/career-copilot-mcp.git
@@ -82,10 +109,6 @@ claude mcp add career-copilot -- uv run --directory "$PWD" app.py --stdio
 
 On Windows, `powershell -ExecutionPolicy Bypass -File scripts/setup.ps1`
 does all of this for you.
-
-**Option B: use the hosted version.** Subscribe on the marketplace, then
-add the URL it gives you to your assistant. [CONNECT.md](docs/CONNECT.md)
-has the exact steps for each assistant.
 
 **Then say:** *"get started"*. Career Copilot asks five quick questions
 and builds your dashboard. Say *"give me the tour"* at any time.
@@ -235,5 +258,7 @@ app.py`, then connect to `http://localhost:8080/mcp` with that key.
 - All docs in one place: [docs/README.md](docs/README.md)
 
 Copyright © 2026 Tushar Samantaray. All rights reserved. The source is
-public so people can read and check it. Using it for your own hosted or
-paid service needs written permission.
+public so people can read and check it, and you can run it for your own
+personal use. Hosting it for others, selling it or redistributing it needs
+written permission ([LICENSE](LICENSE)). For licensing, partnership or
+investment, reach out through [GitHub](https://github.com/TusharSamantaray).

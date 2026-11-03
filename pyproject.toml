@@ -1,8 +1,10 @@
 [project]
 name = "career-copilot-mcp"
 version = "0.3.0"
-description = "MCP server for job seekers: resumes, LinkedIn, role fit, interview prep, nudges, pipeline, and a finance dashboard with layoff planning."
+description = "Career Copilot: an MCP connector that helps anyone find the right job, change careers, manage money and plan their future, one small step a day."
 readme = "README.md"
+license = { text = "Proprietary. Copyright (c) 2026 Tushar Samantaray. All rights reserved." }
+authors = [{ name = "Tushar Samantaray" }]
 requires-python = ">=3.11"
 dependencies = [
     "fastmcp>=2.12,<3",
@@ -10,5 +12,15 @@ dependencies = [
     "loguru>=0.7",
 ]
 
-[tool.uv]
-package = false
+[project.urls]
+Homepage = "https://github.com/TusharSamantaray/career-copilot-mcp"
+
+[project.scripts]
+career-copilot = "app:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["app.py", "copilot"]
