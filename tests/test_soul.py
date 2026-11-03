@@ -428,6 +428,10 @@ BOARD_FIXTURE = {
          "categories": {"location": "Remote"}, "createdAt": 1793491200000,   # 2026-11-01
 
          "hostedUrl": "https://jobs.lever.co/globex/g-1"}],
+    "https://api.ashbyhq.com/posting-api/job-board/hooli": {"jobs": [
+        {"id": "h-1", "title": "Data Analyst", "location": "Remote",
+         "isRemote": True, "publishedAt": "2026-11-01T09:00:00Z",
+         "jobUrl": "https://jobs.ashbyhq.com/hooli/h-1"}]},
     "https://api.ashbyhq.com/posting-api/job-board/initech": {"jobs": [
         {"id": "i-1", "title": "Product Analyst", "location": "Remote",
          "isRemote": True, "publishedAt": "2026-10-31T09:00:00Z",
@@ -626,6 +630,28 @@ async def evidence_checks(s):
     print("skill_gap_evidence: demand, evidence, gap cost, outcome log: OK")
 
 
+async def watch_checks(s):
+    bad = await call(s, "watch_create", {"kind": "new_postings",
+                                         "cadence": "hourly"})
+    assert "error" in bad
+    w = await call(s, "watch_create", {
+        "kind": "new_postings", "companies": ["ashby:hooli"],
+        "keywords": ["analyst"]})
+    await call(s, "watch_create", {"kind": "assessment_expiry"})
+    await call(s, "application_log", {
+        "company": "Hooli", "role": "Data Analyst", "status": "assessment",
+        "next_action": "Finish the coding assessment",
+        "due_date": "2026-11-03"})
+    first = await call(s, "digest_get", {"today": TODAY})
+    texts = " ".join(i["text"] for i in first["items"])
+    assert "Data Analyst at hooli" in texts and "assessment" in texts, texts
+    again = await call(s, "digest_get", {"today": TODAY})
+    assert again["count"] == 0 and again["say"] == "Nothing new."
+    listed = await call(s, "watches", {"remove_id": w["id"]})
+    assert listed["removed"] and len(listed["watches"]) == 1
+    print("watches: findings wait in the outbox, read once, removable: OK")
+
+
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     os.makedirs(TEST_DIR)
@@ -654,6 +680,7 @@ async def main():
             await job_checks(s)
             await loop_checks(s)
             await evidence_checks(s)
+            await watch_checks(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
               encoding="utf-8") as handle:
         log = handle.read()

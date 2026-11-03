@@ -5,6 +5,23 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Continue the backlog.
+**Did:** B-020: `watch_create` (new_postings, assessment_expiry,
+follow_up_due, deadline; daily or weekly), `watches` (list, remove),
+`digest_get` (runs due watches, returns unread outbox items once, quiet
+when empty). Optional background runs with
+CAREER_COPILOT_WATCH_MINUTES. Server instructions call digest_get at
+session start when watches exist. Privacy notice updated (2026-11-03.5).
+**Files:** `copilot/watch.py`, `copilot/store.py`, `app.py`,
+`copilot/conduct.py`, `docs/PRIVACY.md`, `docs/TERMS.md`,
+`docs/SETUP.md`, `tests/test_soul.py`.
+**Tests:** 6 suites passed, 0 failed.
+**Try it:** "Watch greenhouse:anthropic for new engineering roles,
+daily", then a new chat the next day.
+**Open:** on the free plan the server sleeps without keep-awake, so
+watches mostly run when a chat opens.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Continue the backlog.
 **Did:** B-016: `jd_analyze` keeps a short "posting" record (title,
 company, required and preferred skills; no text). `skill_gap_evidence`
 ranks skills by demand x missing evidence, refuses below min_postings,

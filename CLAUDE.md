@@ -183,7 +183,8 @@ person may send or rely on passes response_check.
 
 ### What exists today (verified in code on 2026-11-03)
 
-75 tools, 8 resources, 16 prompts. Facts: fact_add, fact_conflicts,
+78 tools, 8 resources, 16 prompts. Watches: watch_create, watches,
+digest_get. Facts: fact_add, fact_conflicts,
 fact_resolve. Discovery: job_search, jd_analyze, ats_profile_check,
 skill_gap_evidence. Loops:
 loop_round_log, loop_next_round_prep, story_coverage. Orient: journey_state, life_compass,

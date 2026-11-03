@@ -6,6 +6,15 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Watches (B-020). Ask Career Copilot to keep an eye on companies' job
+  boards, or on assessments, follow-ups and deadlines coming due. What it
+  finds waits for you, and the next time you open a chat it mentions the
+  most urgent thing in one line. Each item shows once, and it stays quiet
+  when nothing is new. Watches only find things; they never apply or
+  message anyone.
+  **Try it:** say "Watch greenhouse:anthropic for new engineering roles,
+  daily". Start a new chat tomorrow: it should mention anything new, or
+  nothing.
 - Skill gaps from real postings (B-016). Every posting you analyze leaves
   a short note (title, company, skills asked, never the full text). After
   five or more, Career Copilot shows how often each skill is asked for,

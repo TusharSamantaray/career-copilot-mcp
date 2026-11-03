@@ -14,10 +14,11 @@
 - B-012 [P2] Delete the old prototype server.py from the project
   folder (it's untracked). From: repo setup.
 
-- B-020 [P2] Watches and an outbox read at the next chat. From: blueprint.
 - B-021 [P2] Per-person data keys for hosted storage. From: blueprint.
 
 ## Done
+- B-020 watch_create, watches, digest_get; outbox read once; optional
+  scheduler (CAREER_COPILOT_WATCH_MINUTES). From: blueprint.
 - B-016 skill_gap_evidence (analyzed postings, required vs preferred,
   proven/claimed/none, gap cost) and the resume outcome log
   (resume_label on applications). From: blueprint.

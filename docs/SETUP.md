@@ -117,6 +117,7 @@ To try it, ask the assistant *"I just got laid off"* or
 | `CAREER_COPILOT_PUBLIC_URL` | For sign-in | `RENDER_EXTERNAL_URL` | The server's public address, for sign-in redirects |
 | `CAREER_COPILOT_JWT_KEY` | For sign-in | from the secret | Keeps sign-ins valid across restarts |
 | `CAREER_COPILOT_USER_SALT` | For sign-in | none | Random secret mixed into each person's storage id |
+| `CAREER_COPILOT_WATCH_MINUTES` | No | off | Run everyone's watches every N minutes while the server is awake (otherwise they run when the person opens a chat) |
 | `CAREER_COPILOT_API_KEY` | Without sign-in | none | Valid keys, comma-separated |
 | `PORT` | No | `8080` | HTTP port (hosts usually set this) |
 | `HOST` | No | `0.0.0.0` | Bind address |

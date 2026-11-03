@@ -58,6 +58,7 @@ from copilot import nudges
 from copilot import places
 from copilot import prep
 from copilot import store
+from copilot import watch
 from copilot.knowledge.money import (DISCLAIMER, ECONOMY_GUIDES, INVEST_GUIDES,
                              LAYOFF_PLAYBOOK)
 from copilot.scoring import score_resume
@@ -294,7 +295,8 @@ mcp = FastMCP("career-copilot", version=VERSION, auth=make_auth(),
     "three-line summary and ask if that's OK, then call "
     "ground_rules(accept=true); if they say no, keep helping but save "
     "nothing about them. Then call journey_state and follow its next: ask "
-    "only its question, or offer its one step. A new person can come in "
+    "only its question, or offer its one step. If they have watches, call "
+    "digest_get too and mention only its most urgent item. A new person can come in "
     "two ways: say what's on their mind (pull out the facts, read them "
     "back with confirmed or unsure labels, and save only what they "
     "confirm with profile_save), or answer starter questions one at a "
@@ -686,6 +688,38 @@ def ats_profile_check(posting_text: str = "", posting_url: str = "",
     resume_text or resume_label is given."""
     return ats.ats_profile_check(current_user(), posting_text, posting_url,
                                  resume_text, resume_label)
+
+
+@mcp.tool
+def watch_create(kind: str, companies: list[str] | None = None,
+                 keywords: list[str] | None = None,
+                 locations: list[str] | None = None, max_age_days: int = 7,
+                 cadence: str = "daily") -> dict:
+    """Keep an eye on something between chats (write action). kind:
+    new_postings (uses companies, keywords, locations like job_search),
+    assessment_expiry, follow_up_due or deadline. cadence: daily or
+    weekly. Findings wait in the outbox for digest_get. Watches never
+    apply, post or message anyone."""
+    query = {"companies": companies, "keywords": keywords,
+             "locations": locations, "max_age_days": max_age_days}
+    return watch.watch_create(current_user(), kind,
+                              {k: v for k, v in query.items() if v}, cadence)
+
+
+@mcp.tool
+def watches(remove_id: str = "") -> dict:
+    """List the person's watches. remove_id removes one first (write
+    action)."""
+    return watch.watches(current_user(), remove_id)
+
+
+@mcp.tool
+def digest_get(today: str = "") -> dict:
+    """What the watches found since the last chat: runs any watch that's
+    due, then returns unread outbox items once. Silent when nothing is
+    new. Call at the start of a session, after journey_state."""
+    now = date.fromisoformat(today) if today else None
+    return watch.digest_get(current_user(), now)
 
 
 @mcp.tool
@@ -1671,6 +1705,10 @@ def main():
     setup_logging()
     check_auth_config()
     log_startup()
+    minutes = os.environ.get("CAREER_COPILOT_WATCH_MINUTES", "")
+    if minutes.isdigit() and int(minutes) > 0 and not STDIO:
+        watch.start_scheduler(store.DATA_DIR, int(minutes))
+        logger.info(f"watches run every {minutes} minutes while awake")
     try:
         if STDIO:
             mcp.run(show_banner=False)
