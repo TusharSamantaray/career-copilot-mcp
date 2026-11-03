@@ -4,6 +4,19 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** Continue the backlog.
+**Did:** B-019: `ats_profile_check` (platform from URL, parse risks,
+knock-outs vs answers on file, quirks, verdict). Platform rules live in
+`copilot/knowledge/ats.py` so the weekly bot can refresh them; a new
+knowledge check keeps every platform covered and every pattern valid.
+**Files:** `copilot/ats.py`, `copilot/knowledge/ats.py`, `app.py`,
+`tests/test_soul.py`, `tests/test_knowledge.py`.
+**Tests:** 6 suites passed, 0 failed.
+**Try it:** "Anything to fix before I apply?" with a posting and link.
+**Open:** degree and clearance aren't profile fields yet, so they always
+show as "need an answer" when a posting asks.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Continue the backlog (owner said implement all of it, which
 covers the outbound job-board reads B-005 was waiting on).
 **Did:** `job_search` reads Greenhouse (first_published), Lever

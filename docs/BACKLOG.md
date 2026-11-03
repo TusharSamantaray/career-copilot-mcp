@@ -19,12 +19,12 @@
 - B-017 [P1] Interview rounds: loop_round_log and loop_next_round_prep.
   From: blueprint.
 - B-018 [P1] story_coverage grid across competencies. From: blueprint.
-- B-019 [P1] ats_profile_check: platform, parse risks, knock-outs.
-  From: blueprint.
 - B-020 [P2] Watches and an outbox read at the next chat. From: blueprint.
 - B-021 [P2] Per-person data keys for hosted storage. From: blueprint.
 
 ## Done
+- B-019 ats_profile_check with platform rules in knowledge/ats.py
+  (validated by test_knowledge). From: blueprint.
 - B-005 job_search (Greenhouse, Lever, Ashby; provable dates; filters;
   seen-dedup) and jd_analyze. Owner OK'd outbound reads on 2026-11-03.
   From: spec v2.

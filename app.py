@@ -39,6 +39,7 @@ from mcp.types import LATEST_PROTOCOL_VERSION
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
+from copilot import ats
 from copilot import autopilot
 from copilot import careers
 from copilot import coach
@@ -646,6 +647,20 @@ def jd_analyze(text: str, title: str = "", company: str = "") -> dict:
     read, why bother, fit points and gap points from their confirmed
     facts, dealbreakers it breaks, and a verdict."""
     return jobs.jd_analyze(current_user(), text, title, company)
+
+
+@mcp.tool
+def ats_profile_check(posting_text: str = "", posting_url: str = "",
+                      resume_text: str = "", resume_label: str = "") -> dict:
+    """Before applying: which tracking system the posting uses (from its
+    link), what in the resume its parser may lose (tables, columns, icons,
+    mixed dates, missing headings or email), the knock-out questions in
+    the posting (authorization, location, years, degree, clearance) and
+    whether an answer is on file, platform quirks, and a verdict: ready,
+    fix_first or knockout_risk. Uses the latest imported resume unless
+    resume_text or resume_label is given."""
+    return ats.ats_profile_check(current_user(), posting_text, posting_url,
+                                 resume_text, resume_label)
 
 
 @mcp.tool

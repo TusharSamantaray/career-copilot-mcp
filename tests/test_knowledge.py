@@ -9,7 +9,7 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from copilot.knowledge import careers, connect, money, patterns, system_design  # noqa: E402
+from copilot.knowledge import ats, careers, connect, money, patterns, system_design  # noqa: E402
 
 FAILURES = []
 
@@ -42,6 +42,20 @@ def roles():
     q = careers.CONTRIBUTION_FRAMEWORK["questions"]
     check(set(q) == {"ownership", "artifact", "scale", "result"},
           "contribution questions must cover the 4 checked parts")
+
+
+def ats_content():
+    for frag, name in ats.PLATFORMS.items():
+        check(name in ats.QUIRKS, f"platform {name} ({frag}) has no quirks")
+    check("unknown" in ats.QUIRKS, "no fallback quirks for unknown systems")
+    for name in ats.STRICT_PARSERS:
+        check(name in ats.QUIRKS, f"strict parser {name} has no quirks")
+    for kind, patterns_ in ats.KNOCKOUTS.items():
+        for p in patterns_:
+            try:
+                re.compile(p)
+            except re.error:
+                check(False, f"knock-out pattern for {kind} is invalid: {p}")
 
 
 def prep_content():
@@ -136,6 +150,7 @@ def no_personal_data():
 
 if __name__ == "__main__":
     roles()
+    ats_content()
     prep_content()
     money_content()
     no_personal_data()

@@ -196,7 +196,7 @@ flowchart LR
 | Language | Python 3.11+ |
 | Framework | [FastMCP](https://gofastmcp.com) 2.x |
 | Protocol | Model Context Protocol: stdio (local) or streamable HTTP at `/mcp` |
-| Surface | 70 tools, 8 resources, 16 starter prompts |
+| Surface | 71 tools, 8 resources, 16 starter prompts |
 | Storage | SQLite, one file per person; Postgres planned |
 | Auth (hosted) | Sign in with GitHub (OAuth, `read:user` only, optional invite list), or API keys as a fallback. Local mode needs none |
 | Network calls out | GitHub (sign-in), public job boards (Greenhouse, Lever, Ashby; read-only, cached), World Bank API |
@@ -213,6 +213,7 @@ copilot/
   conduct.py           Ground rules, privacy and terms text, response_check
   facts.py             The fact record: source, ownership, numbers, conflicts
   jobs.py              Job search on public boards, reading a posting
+  ats.py               Pre-apply check: platform, parse risks, knock-outs
   coach.py             Daily step, momentum, crisis safety
   careers.py           Resumes, contributions, LinkedIn, roles, career moves
   places.py            Where to move for a role

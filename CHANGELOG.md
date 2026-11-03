@@ -6,6 +6,16 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- A pre-apply check (B-019). Before you apply, it tells you which
+  application system the company uses, what in your resume that system
+  may scramble (tables, two columns, icons, mixed date styles, missing
+  headings or email), which knock-out questions the posting implies
+  (work authorization, location, years, degree, clearance) and whether
+  you have an answer ready, then gives a verdict: ready, fix first, or
+  knock-out risk.
+  **Try it:** paste a posting and its link and say "anything to fix
+  before I apply?". You should get the platform, the top fix and the
+  verdict.
 - Job search on official job boards (B-005). Give it companies'
   Greenhouse, Lever or Ashby boards and it finds fresh roles, each with
   the date it was posted (nothing older than a week by default, and

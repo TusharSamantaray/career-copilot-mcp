@@ -478,6 +478,33 @@ async def job_checks(s):
     assert read["verdict"].startswith("skip"), read
     print("jd_analyze: level, pay vs floor, sponsorship, fit, verdict: OK")
 
+    messy = ("Sam Lee | Analyst | Remote\n"
+             "Work            Jan 2024 - now\n"
+             "★ Built reports 03/2022\nEducation\nSkills: SQL")
+    check = await call(s, "ats_profile_check", {
+        "posting_url": "https://acme.wd5.myworkdayjobs.com/en-US/jobs/1",
+        "posting_text": "Must be located in Austin. 5+ years. Bachelor's "
+                        "degree required. Must be authorized to work in "
+                        "the US.",
+        "resume_text": messy})
+    assert check["platform"] == "workday"
+    joined = " ".join(check["parse_risks"])
+    for risk in ("Table", "Two columns", "Icons", "Mixed date",
+                 "experience", "email"):
+        assert risk in joined, (risk, check["parse_risks"])
+    assert set(check["likely_knockouts"]) >= {"location", "years", "degree",
+                                              "work_authorization"}
+    assert "degree" in check["need_an_answer"]
+    assert check["verdict"] == "knockout_risk"
+    clean = await call(s, "ats_profile_check", {
+        "posting_url": "https://boards.greenhouse.io/acme/jobs/1",
+        "posting_text": "Remote-friendly analyst role.",
+        "resume_text": "sam@example.com\nExperience\nAnalyst, Acme, "
+                       "Jan 2022 - Jan 2025\nEducation\nBS\nSkills\nSQL"})
+    assert clean["platform"] == "greenhouse" and clean["verdict"] == "ready",\
+        clean
+    print("ats_profile_check: platform, parse risks, knock-outs, verdict: OK")
+
 
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)
