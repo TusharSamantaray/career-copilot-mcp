@@ -60,7 +60,8 @@ async def coach_checks(s):
     gap = await call(s, "daily_step", {"today": "2026-11-05"})
     assert gap["streak_days"] == 0, gap             # two rest days reset it
     print("daily step, step_done, never-skip-twice streak: OK")
-    assert len((await call(s, "life_compass"))["questions"]) >= 5
+    compass = await call(s, "life_compass")
+    assert compass["of"] >= 5 and compass["next_question"]["number"] == 1
 
 
 async def places_checks(s):
@@ -261,6 +262,49 @@ async def conduct_checks(s):
     print("short chat replies enforced, plans may be longer: OK")
 
 
+async def journey_checks(s):
+    # First visit: two ways in, nothing required.
+    state = await call(s, "journey_state")
+    assert state["ground_rules_accepted"] and not state["known"]
+    assert "ask me questions" in state["next"]["question"]["options"]
+
+    # Starter questions, one at a time, saved at once, never re-asked.
+    await call(s, "profile_save", {"situation": "working, want a change"})
+    state = await call(s, "journey_state")
+    assert state["next"]["saves_to"] == "target_role", state
+    await call(s, "profile_save", {"skip": ["target_role"]})
+    state = await call(s, "journey_state")
+    assert state["next"]["saves_to"] == "current_role", state
+    assert "target_role" in state["skipped"]
+    await call(s, "profile_save", {"current_role": "Analyst",
+                                   "location": "remote",
+                                   "unsure": ["location"]})
+    # After three answers it gives something back instead of asking more.
+    state = await call(s, "journey_state")
+    assert state["next"]["use"] == "career_move", state
+    assert state["unsure"] == ["location"]
+    assert state["stage"] in ("orient", "prepare")
+
+    # Merges: lists add items, earlier answers stay.
+    await call(s, "profile_save", {"wants": ["remote", "growth"]})
+    await call(s, "profile_save", {"wants": ["growth", "mentoring"]})
+    profile = await call(s, "profile_get")
+    assert profile["wants"] == ["remote", "growth", "mentoring"], profile
+    assert profile["current_role"] == "Analyst"
+    assert profile["confidence"]["location"] == "unsure"
+
+    # life_compass saves answers and moves on.
+    await call(s, "life_compass", {"question": 1, "answer": "Building "
+                                   "things with a small team",
+                                   "save_as": "want"})
+    compass = await call(s, "life_compass")
+    assert compass["answered"] == 1 and compass["next_question"]["number"] \
+        == 2
+    profile = await call(s, "profile_get")
+    assert "Building things with a small team" in profile["wants"]
+    print("journey_state, two ways in, merged profile, saved compass: OK")
+
+
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     env = {**os.environ, "COPILOT_DATA_DIR": TEST_DIR,
@@ -279,6 +323,7 @@ async def main():
             await connector_checks(s)
             await dashboard_checks(s)
             await conduct_checks(s)
+            await journey_checks(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
               encoding="utf-8") as handle:
         log = handle.read()

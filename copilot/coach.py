@@ -10,8 +10,8 @@ from datetime import date, timedelta
 from copilot import guide
 from copilot import nudges
 from copilot import store
-from copilot.knowledge.coach import (CELEBRATE, COMPASS, CRISIS_SUPPORT,
-                             CRISIS_WORDS, PRINCIPLES, STEPS)
+from copilot.knowledge.coach import (CELEBRATE, CRISIS_SUPPORT,
+                                     CRISIS_WORDS, STEPS)
 
 ENERGY = ("low", "medium", "high")
 TRACK_OF = {"Find the right job": "job",
@@ -103,10 +103,3 @@ def step_done(user, note="", today=None):
     return {"message": msg, **status,
             "tomorrow": "Same deal: one small thing. Rest is allowed, just "
                         "never twice in a row."}
-
-
-def life_compass():
-    return {"questions": COMPASS, "principles": PRINCIPLES,
-            "how": "Ask one question at a time and reflect the answer back "
-                   "before moving on. Save anything concrete as a goal or "
-                   "profile update."}

@@ -194,7 +194,7 @@ flowchart LR
 | Language | Python 3.11+ |
 | Framework | [FastMCP](https://gofastmcp.com) 2.x |
 | Protocol | Model Context Protocol: stdio (local) or streamable HTTP at `/mcp` |
-| Surface | 62 tools, 8 resources, 13 starter prompts |
+| Surface | 63 tools, 8 resources, 16 starter prompts |
 | Storage | SQLite, one file per user (`data/`); Postgres planned for scale |
 | Auth (hosted) | One API key per subscriber (`Authorization: Bearer`). Local mode needs none |
 | Network calls out | World Bank API only (public, no key, cached 6 hours) |

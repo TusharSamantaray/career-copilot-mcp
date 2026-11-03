@@ -183,7 +183,8 @@ person may send or rely on passes response_check.
 
 ### What exists today (verified in code on 2026-11-03)
 
-62 tools, 8 resources, 13 prompts. Orient: life_compass, career_move,
+63 tools, 8 resources, 16 prompts. Orient: journey_state, life_compass,
+career_move,
 where_to_move, role_match, skills_gap, next_steps. Foundation:
 profile_save, resume_import, resume_merge, resume_score,
 resume_build_draft, experience_add, contribution_check, story_add,
@@ -196,9 +197,11 @@ step_done, dashboard, companions, ground_rules, response_check,
 data_export, data_delete, feedback.
 
 Verified:
-- profile_save requires target_role, so a person with no direction
-  cannot start a profile. Confirmed (B-002).
-- life_compass takes no arguments and saves nothing. Confirmed (B-003).
+- profile_save no longer requires target_role; it merges answers one at
+  a time, with wants, dealbreakers, honest gaps and confirmed or unsure
+  labels (B-002 done).
+- life_compass saves each answer, and can add it as a want or
+  dealbreaker (B-003 done). journey_state is called first (B-001 done).
 - Hosted access accepts the API key in the URL query string (needed
   because claude.ai and ChatGPT can't send headers; claude.ai now offers
   request headers). Move to a header or OAuth before outside users

@@ -4,6 +4,22 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** A guided start: the person either says what's on their mind
+or answers starter questions, and a path builds from there.
+**Did:** Added `journey_state` (stage, known facts with confirmed or
+unsure labels, missing fields, the one next question or step). Made
+`profile_save` optional-everything and merging, with wants,
+dealbreakers, places, companies, keywords, schedule, honest gaps,
+unsure and skip. `life_compass` now saves answers. Server instructions
+call journey_state first. Three new starter prompts.
+**Files:** `copilot/journey.py`, `app.py`, `copilot/coach.py`,
+`copilot/store.py`, `tests/test_soul.py`, `CLAUDE.md`, `README.md`.
+**Tests:** 5 suites passed, 0 failed.
+**Try it:** new chat, "get started", pick "ask me questions".
+**Open:** profile_from_text and direction_options (B-004) are next; for
+now the assistant extracts facts itself and reads them back.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Replies feel generic and too long, and the host assistant's
 persona takes over. Make them short, simple, one step at a time.
 **Did:** Put a reply style at the top of the server instructions (short,

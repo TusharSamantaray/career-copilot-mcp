@@ -1,12 +1,6 @@
 # Backlog
 
 ## Open
-- B-001 [P0] journey_state tool (spec part 3). From: spec v2.
-- B-002 [P0] Make target_role optional in profile_save and add
-  wants, dealbreakers, schedule, honest gaps. From: spec v2; confirmed
-  in code review.
-- B-003 [P0] Persist life_compass answers. From: spec v2; confirmed in
-  code review.
 - B-004 [P0] profile_from_text and direction_options.
   From: spec v2.
 - B-005 [P0] job_search on public job-board endpoints, then
@@ -28,7 +22,16 @@
 - B-012 [P2] Delete the old prototype server.py from the project
   folder (it's untracked). From: repo setup.
 
+- B-014 [P1] A true new-user test needs its own key, since the profile
+  belongs to the key. Add a one-step "start over" or a demo key per
+  tester. From: owner testing.
+
 ## Done
+- B-001 journey_state: two ways in, one question at a time, read-back
+  after three answers. From: spec v2 and owner.
+- B-002 profile_save relaxed and merging, with lists and confidence.
+  From: spec v2.
+- B-003 life_compass saves answers. From: spec v2.
 - B-013 Replies too long and generic; host persona took over. Make
   replies short, one step, one question. From: owner testing in Claude.
 - B-000 Ground rules (privacy, terms, conduct) and response_check.

@@ -43,6 +43,7 @@ from copilot import economy
 from copilot import finance
 from copilot import guide
 from copilot import insights
+from copilot import journey
 from copilot import nudges
 from copilot import places
 from copilot import prep
@@ -233,8 +234,14 @@ mcp = FastMCP("career-copilot", version=VERSION, instructions=(
     "Start of a session: call ground_rules; if accepted is false, give its "
     "three-line summary and ask if that's OK, then call "
     "ground_rules(accept=true); if they say no, keep helping but save "
-    "nothing about them. Then call next_steps and offer only its first "
-    "step, as a question. Most people arrive tired or overwhelmed: ask "
+    "nothing about them. Then call journey_state and follow its next: ask "
+    "only its question, or offer its one step. A new person can come in "
+    "two ways: say what's on their mind (pull out the facts, read them "
+    "back with confirmed or unsure labels, and save only what they "
+    "confirm with profile_save), or answer starter questions one at a "
+    "time (save each answer at once). Never re-ask what's known. Never "
+    "more than five questions before giving something useful back. Most "
+    "people arrive tired or overwhelmed: ask "
     "their energy (low, medium or high?) and call daily_step for ONE thing "
     "to do today; when they finish, call step_done and celebrate it. Rest "
     "days are fine; the rule is never skip twice. Name the hard thing, then "
@@ -303,30 +310,59 @@ def profile_get() -> dict:
 
 
 @mcp.tool
-def profile_save(target_role: str, current_role: str = "", level: str = "",
+def journey_state() -> dict:
+    """Call first every session (after ground_rules). Where the person is
+    (stage: orient, foundation, search, prepare, decide), what's known
+    with confirmed or unsure labels, what's missing, and next: the one
+    question to ask or the one step to offer. Follow next and say."""
+    return journey.journey_state(current_user())
+
+
+@mcp.tool
+def profile_save(target_role: str = "", situation: str = "",
+                 current_role: str = "", level: str = "",
                  industry: str = "", years_experience: int = 0,
                  location: str = "", country: str = "",
                  goals: str = "", hours_preference: str = "",
-                 comp_floor: str = "", work_authorization: str = "") -> dict:
-    """Create or replace the user's profile (write action).
+                 comp_floor: str = "", work_authorization: str = "",
+                 schedule: str = "", wants: list[str] | None = None,
+                 dealbreakers: list[str] | None = None,
+                 locations: list[str] | None = None,
+                 target_companies: list[str] | None = None,
+                 excluded_companies: list[str] | None = None,
+                 domain_keywords: list[str] | None = None,
+                 honest_gaps: list[str] | None = None,
+                 unsure: list[str] | None = None,
+                 skip: list[str] | None = None,
+                 replace: bool = False) -> dict:
+    """Save profile answers as they come, one or a few at a time (write
+    action). Nothing is required. Empty fields keep what's saved; list
+    fields add items. Set replace=true only to start the profile over.
 
-    target_role: the role they want, e.g. "Product Manager", "Nurse".
-    current_role: what they do now (for career moves).
-    level: entry, mid, senior or lead. industry: e.g. "healthcare".
-    country: where they live or want to work; money and job rules differ.
-    goals: comma-separated from job, career_move, finance, future.
-    hours_preference, comp_floor: free text, e.g. "full-time", "60k".
-    work_authorization: optional visa or permit status. Only store it if
-    the user volunteers it.
+    situation: starting out, between jobs, working, want a change, or
+    interviewing. target_role: e.g. "Product Manager" (leave empty if
+    unsure). level: entry, mid, senior or lead. goals: comma-separated from
+    job, career_move, finance, future. comp_floor: e.g. "60k".
+    wants rank results; dealbreakers filter them out. honest_gaps: things
+    they can't truthfully claim, which tailoring respects.
+    work_authorization: only if they volunteer it.
+    unsure: names of fields they aren't sure about (labelled unsure, never
+    used on a resume as fact). skip: fields they said "not sure" or "skip"
+    to, so they aren't asked again. Read the answer back before saving.
     """
-    body = {"target_role": target_role, "current_role": current_role,
-            "level": level, "industry": industry,
-            "years_experience": years_experience, "location": location,
-            "country": country, "goals": goals,
-            "hours_preference": hours_preference, "comp_floor": comp_floor,
-            "work_authorization": work_authorization}
-    store.put(current_user(), "profile", body, record_id="profile")
-    return {"saved": True}
+    fields = {"target_role": target_role, "situation": situation,
+              "current_role": current_role, "level": level,
+              "industry": industry, "years_experience": years_experience,
+              "location": location, "country": country, "goals": goals,
+              "hours_preference": hours_preference, "comp_floor": comp_floor,
+              "work_authorization": work_authorization, "schedule": schedule,
+              "wants": wants, "dealbreakers": dealbreakers,
+              "locations": locations, "target_companies": target_companies,
+              "excluded_companies": excluded_companies,
+              "domain_keywords": domain_keywords,
+              "honest_gaps": honest_gaps}
+    return journey.save_profile(current_user(), fields, unsure or [],
+                                skip or [], replace)
 
 
 @mcp.tool
@@ -581,11 +617,14 @@ def step_done(note: str = "", today: str = "") -> dict:
 
 
 @mcp.tool
-def life_compass() -> dict:
-    """Reflection questions for people who don't know what they want yet:
-    values, energy, money vs freedom, where they'd live. Ask one at a
-    time."""
-    return coach.life_compass()
+def life_compass(question: int = 0, answer: str = "",
+                 save_as: str = "") -> dict:
+    """Reflection questions for people who don't know what they want yet,
+    asked one at a time. Call with no arguments for the next question.
+    After they answer, call again with question (its number) and answer
+    to save it (write action). save_as: "want" or "dealbreaker" when the
+    answer is a clear want or hard no, so it goes on the profile too."""
+    return journey.life_compass(current_user(), question, answer, save_as)
 
 
 @mcp.tool
@@ -1160,13 +1199,34 @@ def roles_index() -> list:
 @mcp.prompt
 def get_started() -> str:
     """Starter chip: guided onboarding for a new user."""
-    return ("Welcome me to Career Copilot. Ask one question at a time: "
-            "what I want help with (finding a job, changing careers, "
-            "improving my finances, planning for the future, or several); "
-            "my current role and field; the role I want; years of "
-            "experience; and my country. Save the answers with "
-            "profile_save, then call next_steps and offer the first step "
-            "as a question. Keep it short and friendly.")
+    return ("Welcome me to Career Copilot in one sentence. Call "
+            "ground_rules, then journey_state, and follow its next: let me "
+            "either tell you what's on my mind or answer a few quick "
+            "questions, one at a time. Save each answer as I give it.")
+
+
+@mcp.prompt
+def i_dont_know_what_i_want() -> str:
+    """Starter chip: no direction yet."""
+    return ("I don't know what I want. Use life_compass: one question at a "
+            "time, save each answer, and after a few, offer 2 or 3 "
+            "directions I could test.")
+
+
+@mcp.prompt
+def i_know_my_target() -> str:
+    """Starter chip: I know the role I want."""
+    return ("I know the role I want. Ask for the role, where I want to work, "
+            "my pay floor and any hard no's, one at a time. Save them with "
+            "profile_save, then give me one step toward applying.")
+
+
+@mcp.prompt
+def interview_coming_up() -> str:
+    """Starter chip: I have an interview coming up."""
+    return ("I have an interview coming up. Ask the company, role, date and "
+            "format, one at a time. Log it with application_log, then give "
+            "me the one prep step that matters most today.")
 
 
 @mcp.prompt

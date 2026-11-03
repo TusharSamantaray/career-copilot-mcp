@@ -6,6 +6,21 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- A guided start (B-001). Each session begins by checking where you are.
+  A first-timer gets two ways in: say what's on your mind, or answer a
+  few quick questions one at a time. After about three answers it reads
+  your profile back (confirmed or unsure) and gives you one step, so you
+  never fill in a form. New starter prompts: "I don't know what I want",
+  "I know my target", "I have an interview coming up".
+  **Try it:** new chat, say "get started". After the ground rules it
+  should ask whether you'd like to tell it or be asked. Pick "ask me
+  questions": you should get one question at a time, and after three
+  answers, a short read-back and one step.
+- life_compass now remembers your answers (B-003), one question at a
+  time, and can save one as something you want or a hard no.
+  **Try it:** say "I don't know what I want". Answer the first
+  question, then start a new chat and say it again: it should move on to
+  question 2.
 - Ground rules at the start: a short privacy summary, terms of use and
   "how Career Copilot talks", which the person agrees to once per
   version. If they say no, it still helps but saves nothing.
@@ -26,6 +41,14 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- Your profile builds a piece at a time (B-002). Nothing is required,
+  not even a target role. New answers add to it instead of wiping it,
+  and it can hold what you want, hard no's, places, companies to target
+  or avoid, and things you can't truthfully claim yet. Anything you're
+  unsure about is labelled unsure, and "skip" is never asked again.
+  **Try it:** say "I'm not sure what role I want, but I want remote
+  work". It should save "remote" as a want without asking for a role,
+  and read it back.
 - Shorter, simpler replies (B-013). Career Copilot now answers in 2 to 4
   short sentences, gives one step at a time and ends with one question.
   It keeps its own voice even inside another assistant (like a custom
