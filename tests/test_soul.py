@@ -546,6 +546,18 @@ async def loop_checks(s):
     print("interview rounds: logged by req id, next round builds on it, "
           "repeat stories flagged: OK")
 
+    grid = await call(s, "story_coverage")
+    assert grid["stories"] >= 2
+    conflict = grid["grid"]["conflict"][0]
+    assert conflict["title"] == "Led a tense migration"
+    assert conflict["score"] == 4, conflict
+    failure = grid["grid"]["failure"][0]          # "Rescued a failing launch"
+    assert "has_number" in failure["missing"]
+    assert "ambiguity" in grid["gaps"] and "failure" in grid["gaps"]
+    assert grid["next_story"]["do"]
+    assert conflict["numbers_not_in_confirmed_facts"] == [], conflict
+    print("story_coverage: grid, strength, gaps, next story: OK")
+
 
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)

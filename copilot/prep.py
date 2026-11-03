@@ -1,6 +1,8 @@
 """Interview prep: coding patterns, system design and study plans."""
+import re
 from datetime import date, timedelta
 
+from copilot import facts
 from copilot import store
 from copilot.knowledge.interview import (LOOP_FORMATS, PREP_CHECKLIST, QUESTIONS,
                                  ROUNDS, STORY_THEMES, TEMPLATES)
@@ -90,6 +92,53 @@ def story_add(user, title, situation, task, action, result, themes=None):
     body = {"title": title, "situation": situation, "task": task,
             "action": action, "result": result, "themes": themes}
     return {"id": store.put(user, "story", body), "themes": themes}
+
+
+def story_strength(user, story):
+    """Four checks a story must pass to hold up under follow-ups."""
+    result, action = story.get("result", ""), story.get("action", "")
+    numbers = facts.parse_metrics(result)
+    backed = facts.confirmed_statements(user)
+    checks = {
+        "has_number": bool(numbers),
+        "clear_ownership": bool(re.search(r"\bI\b", action)),
+        "has_result": len(result.split()) >= 3,
+        "enough_detail": len(action.split()) >= 8,
+    }
+    unbacked = [m for m in re.findall(r"\$?\d[\d,.]*%?", result)
+                if not any(m.strip("$%") in s for s in backed)
+                and not re.fullmatch(r"\d", m)]
+    return {"score": sum(checks.values()), "out_of": 4,
+            "missing": [k for k, ok in checks.items() if not ok],
+            "numbers_not_in_confirmed_facts": unbacked}
+
+
+def story_coverage(user):
+    stories = store.list_kind(user, "story")
+    grid, gaps = {}, []
+    for theme in STORY_THEMES:
+        rows = []
+        for s in stories:
+            if theme in s["themes"]:
+                rows.append({"id": s["id"], "title": s["title"],
+                             **story_strength(user, s)})
+        rows.sort(key=lambda r: -r["score"])
+        grid[theme] = rows
+        if not rows or rows[0]["score"] < 3:
+            gaps.append(theme)
+    weakest = None
+    for theme in gaps:
+        weakest = {"competency": theme,
+                   "do": f"Write a {theme} story (story_add)." if not
+                   grid[theme] else
+                   f"Strengthen '{grid[theme][0]['title']}': add "
+                   f"{', '.join(grid[theme][0]['missing'])}."}
+        break
+    return {"stories": len(stories), "grid": grid, "gaps": gaps,
+            "next_story": weakest or {"do": "Every competency has a strong "
+                                            "story. Practise them out loud."},
+            "say": "Give next_story.do in one line. Numbers not in "
+                   "confirmed facts need checking before an interview."}
 
 
 def story_match(user, question):

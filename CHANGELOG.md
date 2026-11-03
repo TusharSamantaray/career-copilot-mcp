@@ -6,6 +6,13 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Story coverage (B-018). See your interview stories against each
+  competency (ownership, conflict, failure, ambiguity, influence,
+  leadership, impact, customer, speed), how strong each one is, where you
+  have no good story yet, and the one story to write or fix next. It also
+  flags story numbers you haven't confirmed.
+  **Try it:** say "Which interview stories am I missing?". You should get
+  one line: the next story to write or strengthen.
 - Interview rounds that build on each other (B-017). Log what each round
   asked, which story you told, who was on the panel (by role, never by
   name) and any feedback. Prep for the next round then shows what's

@@ -5,6 +5,16 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Continue the backlog.
+**Did:** B-018: `story_coverage` (grid of stories by competency, strength
+on four checks, gaps, next story, story numbers not in confirmed facts).
+Added B-023 (rejection_triage) found while doing B-017.
+**Files:** `copilot/prep.py`, `app.py`, `tests/test_soul.py`.
+**Tests:** 6 suites passed, 0 failed.
+**Try it:** "Which interview stories am I missing?"
+**Open:** none.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Continue the backlog.
 **Did:** B-017: `loop_round_log` (loop key = company + req id, panel by
 role and focus, questions with competency auto-tagged, feedback with
 source; preview then apply) and `loop_next_round_prep` (covered and

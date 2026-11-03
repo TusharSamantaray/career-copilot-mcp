@@ -1098,6 +1098,17 @@ def prep_checklist() -> dict:
 
 
 @mcp.tool
+def story_coverage() -> dict:
+    """The story bank as a grid: for each interview competency (ownership,
+    conflict, failure, ambiguity, influence, leadership, impact, customer,
+    speed), the stories that cover it and how strong each is (a number,
+    clear ownership, a result, enough detail). Returns the gaps and the
+    one story to write or strengthen next. Flags story numbers that aren't
+    in any confirmed fact."""
+    return prep.story_coverage(current_user())
+
+
+@mcp.tool
 def loop_round_log(company: str, round_n: int, round_format: str,
                    req_id: str = "", role: str = "", round_date: str = "",
                    panel: list[dict] | None = None,

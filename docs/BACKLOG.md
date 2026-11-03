@@ -16,11 +16,14 @@
 
 - B-016 [P1] skill_gap_evidence from postings seen and the outcome log.
   From: blueprint.
-- B-018 [P1] story_coverage grid across competencies. From: blueprint.
+- B-023 [P1] rejection_triage: close a loop only when company, title and
+  req id match; check round dates against the calendar. From: B-017.
 - B-020 [P2] Watches and an outbox read at the next chat. From: blueprint.
 - B-021 [P2] Per-person data keys for hosted storage. From: blueprint.
 
 ## Done
+- B-018 story_coverage: competency grid, four-check strength, gaps,
+  next story, unconfirmed numbers flagged. From: blueprint.
 - B-017 loop_round_log and loop_next_round_prep (req-id loop key, panel
   by role, feedback source ranking, reuse risk). From: blueprint.
 - B-019 ats_profile_check with platform rules in knowledge/ats.py
