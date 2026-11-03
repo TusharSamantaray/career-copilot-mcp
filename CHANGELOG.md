@@ -1,0 +1,65 @@
+# Changelog
+
+All notable changes to Career Copilot. Newest first.
+Every Added or Changed line has a **Try it:** line.
+
+## [Unreleased]
+
+### Added
+- Ground rules at the start: a short privacy summary, terms of use and
+  "how Career Copilot talks", which the person agrees to once per
+  version. If they say no, it still helps but saves nothing.
+  **Try it:** in a new chat, say "get started". Before any questions, it
+  should show three short lines about privacy, advice and who sends
+  things, and ask if that's OK.
+- A response check that every draft goes through before you see it. It
+  flags insults, profanity, promised outcomes ("guaranteed job"),
+  biased wording ("young", "salesman", "culture fit"), personal traits
+  in things you send, money or visa talk without the
+  education-not-advice note, and resume numbers you never confirmed.
+  **Try it:** say "check this resume line: Grew revenue 300% and
+  guaranteed results for 50 clients". It should flag the promise and
+  the numbers, ask for your real figures, and suggest a fixed line.
+- Full privacy notice and terms of use in plain English.
+  **Try it:** say "what do you store about me, and how do I delete it?"
+  It should answer from the privacy notice and mention `data_export` and
+  `data_delete`.
+
+### Changed
+- How Career Copilot talks, for every assistant: it stays on career,
+  work, money and planning, steers back politely when asked about other
+  things, stays neutral, never comments on personal traits unless you
+  raise them, says where facts come from, and says "I don't know"
+  instead of guessing.
+  **Try it:** ask "what do you think about my religion?". It should
+  politely say that's outside what it does and offer a career step.
+
+### Fixed
+- (nothing yet)
+
+### Removed
+- (nothing yet)
+
+### Security
+- Text sent to the response check is never written to logs.
+- The built-in knowledge is now tested against the same insult, bias and
+  promise checks, so a bad automated edit can't ship.
+
+### Knowledge
+- (weekly bot updates go here)
+
+## [0.3.0] - 2026-11-03 baseline
+
+Confirmed against the code on 2026-11-03.
+
+### Added
+- 60 tools, 7 resources and 13 starter prompts covering orientation,
+  resume, applications, interview prep, layoffs and money basics.
+- Daily one-step coaching with an energy check and a "never skip twice"
+  streak.
+- One private data file per user, with export and delete.
+- HTML dashboard: Today, Pipeline, Prep, Money, Direction.
+- Weekly bot that updates the knowledge folder, gated by tests.
+- One-line local install for Claude Code, and hosted access for claude.ai
+  and ChatGPT through a connector URL.
+- Free one-click demo hosting on Render, with a keep-awake ping.
