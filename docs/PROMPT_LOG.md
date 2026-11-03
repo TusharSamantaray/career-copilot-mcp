@@ -4,6 +4,22 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** Set the app up on Neon (generic Neon prompt) with the owner's
+connection strings.
+**Did:** Skipped the template's `neon init`/`neon deploy` (JavaScript
+scaffolding; the strings were already provided). Per the Neon Postgres
+skill, a long-running web app uses the pooled (-pooler) URL; set
+psycopg `prepare_threshold=None` for PgBouncer transaction mode. Ran a
+non-destructive smoke test on the real Neon database through the pooler:
+writes, reads, lists past the prepare threshold, rows encrypted, delete
+removes rows and key, and the app over MCP keeps data through a disk
+wipe; then cleaned up. `/health` now reports the storage backend.
+**Files:** `copilot/store.py`, `app.py`, `tests/test_http.py`.
+**Tests:** 8 suites passed, 0 failed; Neon smoke test passed.
+**Try it:** add DATABASE_URL (pooled) in Render; /health shows postgres.
+**Open:** B-040 rotate the Neon password (it was shared in a chat).
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** The account looked empty after signing in; fix storage for
 free.
 **Did:** The account wasn't new: the same GitHub id maps to the same

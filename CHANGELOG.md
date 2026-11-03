@@ -254,6 +254,13 @@ Every Added or Changed line has a **Try it:** line.
   politely say that's outside what it does and offer a career step.
 
 ### Fixed
+- Neon's pooled connection works reliably: Career Copilot no longer uses
+  prepared statements, which the pooler can't keep between requests. The
+  health check now says which storage is in use (`"storage":
+  "postgres"`), never the address.
+  **Try it:** open `https://career-copilot-cg2k.onrender.com/health`
+  after adding `DATABASE_URL` in Render. It should show
+  `"storage": "postgres"`.
 - Your data no longer disappears when the server restarts (B-008). The
   hosted version can now keep everything in a free hosted database
   (Neon) instead of the free server's disk, which is wiped on every

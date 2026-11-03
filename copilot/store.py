@@ -126,14 +126,17 @@ class SQLiteBackend:
 
 class PostgresBackend:
     """One records table keyed by (person, record id); data keys in their
-    own table. A small connection pool survives the database sleeping."""
+    own table. A small connection pool survives the database sleeping.
+    Works with Neon's pooled URL (PgBouncer, transaction mode): every
+    statement autocommits, no session state, no prepared statements."""
     name = "postgres"
 
     def __init__(self, url):
         from psycopg_pool import ConnectionPool
         self.pool = ConnectionPool(url, min_size=0, max_size=4, open=True,
                                    check=ConnectionPool.check_connection,
-                                   kwargs={"autocommit": True})
+                                   kwargs={"autocommit": True,
+                                           "prepare_threshold": None})
         self._ready = False
         self._lock = threading.Lock()
 

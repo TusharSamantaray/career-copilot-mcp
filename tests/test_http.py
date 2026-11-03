@@ -117,6 +117,8 @@ def run():
                 time.sleep(0.25)
         else:
             raise RuntimeError("server did not start")
+        health = httpx.get(f"{BASE}/health").json()
+        assert health["storage"] in ("sqlite", "postgres"), health
         print("health: OK")
         asyncio.run(main())
         log = os.path.join(TEST_DIR, "logs", "mcp_server.log")
