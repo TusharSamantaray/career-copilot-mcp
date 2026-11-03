@@ -5,6 +5,26 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Continue the backlog.
+**Did:** B-021: with CAREER_COPILOT_MASTER_KEY set, each record body is
+AES-GCM encrypted with the person's own random data key, bound to the
+record id; data keys live in `_keys.db`, wrapped by the master key and
+bound to the person. `delete_all` destroys the key first. Rows written
+before encryption still read; a row that fails to decrypt is skipped
+with a warning (no content). New `cryptography` dependency. CI runs the
+main suite a second time encrypted. render.yaml generates the key for
+new deploys. Privacy notice updated (2026-11-03.6).
+**Files:** `copilot/store.py`, `copilot/watch.py`, `tests/test_crypto.py`,
+`.github/workflows/ci.yml`, `render.yaml`, `pyproject.toml`,
+`requirements.txt`, `uv.lock`, `docs/SETUP.md`, `docs/OWNER.md`,
+`docs/PRIVACY.md`, `docs/TERMS.md`, `copilot/conduct.py`, `README.md`.
+**Tests:** 7 suites passed, 0 failed; soul, http and features also pass
+encrypted.
+**Try it:** owner adds the master key in Render; data export still works.
+**Open:** the existing Render service needs the key added by hand. If it
+is ever changed, stored data can't be read.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Continue the backlog.
 **Did:** B-020: `watch_create` (new_postings, assessment_expiry,
 follow_up_due, deadline; daily or weekly), `watches` (list, remove),
 `digest_get` (runs due watches, returns unread outbox items once, quiet

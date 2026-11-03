@@ -129,7 +129,7 @@ def start_scheduler(data_dir, minutes):
         while True:
             time.sleep(minutes * 60)
             for name in os.listdir(data_dir):
-                if name.endswith(".db"):
+                if name.endswith(".db") and not name.startswith("_"):
                     try:
                         run_due(name[:-3])
                     except Exception:      # one bad file never stops others

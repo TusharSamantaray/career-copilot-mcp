@@ -29,6 +29,10 @@ services:
         generateValue: true
       - key: CAREER_COPILOT_USER_SALT
         generateValue: true
+      # Encrypts each person's data with their own key. Never change it
+      # once set, or stored data can't be read.
+      - key: CAREER_COPILOT_MASTER_KEY
+        generateValue: true
       # Fallback when GitHub sign-in isn't set up.
       - key: CAREER_COPILOT_API_KEY
         generateValue: true

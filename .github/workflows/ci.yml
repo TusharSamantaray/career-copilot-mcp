@@ -21,3 +21,8 @@ jobs:
       - run: uv run tests/test_http.py
       - run: uv run tests/test_soul.py
       - run: uv run tests/test_oauth.py
+      - run: uv run tests/test_crypto.py
+      - name: Everything again with encryption on
+        run: uv run tests/test_soul.py
+        env:
+          CAREER_COPILOT_MASTER_KEY: ci-only-master-key

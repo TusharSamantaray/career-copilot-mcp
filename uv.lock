@@ -118,6 +118,7 @@ name = "career-copilot-mcp"
 version = "0.3.0"
 source = { editable = "." }
 dependencies = [
+    { name = "cryptography" },
     { name = "fastmcp" },
     { name = "httpx" },
     { name = "loguru" },
@@ -125,6 +126,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "cryptography", specifier = ">=42" },
     { name = "fastmcp", specifier = ">=2.12,<3" },
     { name = "httpx", specifier = ">=0.27" },
     { name = "loguru", specifier = ">=0.7" },

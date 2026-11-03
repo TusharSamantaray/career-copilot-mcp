@@ -198,12 +198,12 @@ flowchart LR
 | Framework | [FastMCP](https://gofastmcp.com) 2.x |
 | Protocol | Model Context Protocol: stdio (local) or streamable HTTP at `/mcp` |
 | Surface | 78 tools, 8 resources, 16 starter prompts |
-| Storage | SQLite, one file per person; Postgres planned |
+| Storage | SQLite, one file per person, optionally encrypted per person (AES-GCM); Postgres planned |
 | Auth (hosted) | Sign in with GitHub (OAuth, `read:user` only, optional invite list), or API keys as a fallback. Local mode needs none |
 | Network calls out | GitHub (sign-in), public job boards (Greenhouse, Lever, Ashby; read-only, cached), World Bank API |
 | AI model costs | None: the person's own assistant runs the model |
 | Health check | `GET /health` |
-| Tests | 6 suites, run on every push |
+| Tests | 7 suites, run on every push (the main one twice: plain and encrypted) |
 
 ### Layout
 
@@ -233,7 +233,7 @@ copilot/
   store.py             Per-person SQLite storage
   scoring.py           Ten-check resume rubric
   knowledge/           Reference content the weekly bot may update
-tests/                 6 test suites
+tests/                 7 test suites
 docs/                  Guides, spec, blueprint, backlog
 ```
 
@@ -247,6 +247,7 @@ uv run tests/test_features.py    # finance, resumes, roles, prep, reminders
 uv run tests/test_http.py        # API keys, data isolation, private usage signals
 uv run tests/test_soul.py        # coach, safety, guided start, conduct checks
 uv run tests/test_oauth.py       # GitHub sign-in mode
+uv run tests/test_crypto.py      # encryption at rest, delete destroys the key
 ```
 
 Hosted mode locally: `CAREER_COPILOT_API_KEY=dev-key uv run app.py`, then

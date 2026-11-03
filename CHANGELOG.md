@@ -188,6 +188,13 @@ Every Added or Changed line has a **Try it:** line.
 - (nothing yet)
 
 ### Security
+- Encryption at rest (B-021). When the server owner adds a master key,
+  everyone's saved data is encrypted, each person with their own key.
+  Deleting your data destroys your key, so even an old backup of your
+  file can't be read. Nothing changes in how you use it.
+  **Try it:** (owner) add `CAREER_COPILOT_MASTER_KEY` in Render, then
+  save something in a chat and say "export my data". Everything should
+  come back as normal.
 - Sign in with GitHub (B-006). The connector address is now plain, with
   no key in it, so it's safe to share. The first time someone connects,
   they sign in with GitHub and get their own private space. Career

@@ -1,6 +1,6 @@
 # Privacy notice
 
-Version 2026-11-03.5. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-03.6. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 Career Copilot is run by Tushar Samantaray ("we"). It's a connector that
@@ -21,7 +21,9 @@ Only what you or your assistant give it:
 
 Each person's data is in **its own private file**, linked to their
 sign-in (hosted) or kept on their own computer (local). Nobody else can
-see it.
+see it. On the hosted version the file can also be encrypted with a key of
+its own; when it is, deleting your data destroys that key, so even an old
+backup of the file can't be read.
 
 ## Signing in with GitHub
 

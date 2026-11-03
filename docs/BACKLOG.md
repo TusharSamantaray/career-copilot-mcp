@@ -14,9 +14,12 @@
 - B-012 [P2] Delete the old prototype server.py from the project
   folder (it's untracked). From: repo setup.
 
-- B-021 [P2] Per-person data keys for hosted storage. From: blueprint.
 
 ## Done
+- B-021 Per-person data keys (AES-GCM, wrapped by
+  CAREER_COPILOT_MASTER_KEY), crypto-shred on delete, plain rows still
+  read. Owner must add the key to the existing Render service. From:
+  blueprint.
 - B-020 watch_create, watches, digest_get; outbox read once; optional
   scheduler (CAREER_COPILOT_WATCH_MINUTES). From: blueprint.
 - B-016 skill_gap_evidence (analyzed postings, required vs preferred,
