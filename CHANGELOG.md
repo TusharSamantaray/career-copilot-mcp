@@ -92,6 +92,15 @@ Every Added or Changed line has a **Try it:** line.
 - (nothing yet)
 
 ### Security
+- Sign in with GitHub (B-006). The connector address is now plain, with
+  no key in it, so it's safe to share. The first time someone connects,
+  they sign in with GitHub and get their own private space. Career
+  Copilot never sees passwords and asks GitHub only for the public
+  profile. The owner can keep it invite-only with a list of GitHub
+  usernames. Once it's on, old links with a key in them stop working.
+  **Try it:** in claude.ai, add a connector with just
+  `https://career-copilot-cg2k.onrender.com/mcp`. It should open a GitHub
+  sign-in page, then work as before.
 - Text sent to the response check is never written to logs.
 - The built-in knowledge is now tested against the same insult, bias and
   promise checks, so a bad automated edit can't ship.

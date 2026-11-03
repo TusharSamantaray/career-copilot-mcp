@@ -1,6 +1,6 @@
 # Privacy notice
 
-Version 2026-11-03.1. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-03.2. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 Career Copilot is run by Tushar Samantaray ("we"). It's a connector that
@@ -19,8 +19,18 @@ Only what you or your assistant give it:
 | Coaching | Daily check-ins, energy level, steps done |
 | Agreement | The date you agreed to these terms |
 
-Each person's data is in **its own private file**, linked to their key
-(hosted) or kept on their own computer (local). Nobody else can see it.
+Each person's data is in **its own private file**, linked to their
+sign-in (hosted) or kept on their own computer (local). Nobody else can
+see it.
+
+## Signing in with GitHub
+
+On the hosted version you sign in with GitHub. GitHub checks your
+password; Career Copilot never sees it. Career Copilot asks GitHub only
+for your public profile (`read:user`): no repositories, no private email.
+It uses your GitHub user number to find your file, and stores it only as a
+scrambled code (a salted hash), never your username or name. Remove
+Career Copilot's access any time in GitHub under Settings, Applications.
 
 ## What we never keep
 
@@ -50,6 +60,7 @@ operator to turn this off (`CAREER_COPILOT_INSIGHTS=0`).
 | Party | What they see |
 |---|---|
 | Your AI assistant (Claude, ChatGPT and so on) | Your conversation, under its own privacy policy |
+| GitHub | That you signed in to Career Copilot |
 | The host (Render now; later MCPHosting or another) | Stores the data files and logs for the hosted version |
 | The marketplace (MCPize, when listed) | Your subscription and billing details |
 | World Bank API | Only which country's public data is requested; nothing about you |

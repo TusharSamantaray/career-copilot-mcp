@@ -3,13 +3,12 @@
 ## Open
 - B-005 [P0] job_search on public job-board endpoints, then
   jd_analyze. From: spec v2.
-- B-006 [P1] Move hosted key from URL to header or OAuth.
-  From: README review.
 - B-008 [P1] Persistent storage for the hosted version (paid disk or
   Postgres). The free demo loses data on every restart. From: Render
   setup.
 - B-009 [P1] Replace the demo API key in Render, since it was shared in a
-  chat. From: claude.ai connector setup.
+  chat. Becomes harmless once GitHub sign-in is on (keys are ignored);
+  still delete or rotate it. From: claude.ai connector setup.
 - B-010 [P2] Lawyer review of docs/PRIVACY.md and docs/TERMS.md before
   paid users. From: ground rules work.
 - B-011 [P2] Add Spec v2 as docs/SPEC.md (current file is v1).
@@ -22,6 +21,8 @@
   tester. From: owner testing.
 
 ## Done
+- B-006 GitHub sign-in with a plain URL; keys ignored when it's on.
+  Owner chose GitHub on 2026-11-03. From: README review.
 - B-004 profile_from_text (read back, then save) and direction_options
   (2-3 directions with fit, distance, gaps, risk, first test).
   From: spec v2.

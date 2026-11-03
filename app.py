@@ -3,9 +3,13 @@
 Cloud (HTTP):   uv run app.py          serves /mcp and /health on $PORT (8080)
 Local (stdio):  uv run app.py --stdio  for Claude Desktop / Claude Code
 
-Auth: set CAREER_COPILOT_API_KEY (comma-separated for several keys). Callers
-send it as "Authorization: Bearer <key>", "X-API-Key: <key>", or, for apps
-that can't set headers (claude.ai, ChatGPT), in the URL: /mcp?key=<key>.
+Auth, hosted: either
+- GitHub sign-in: set CAREER_COPILOT_GITHUB_CLIENT_ID and _SECRET. People
+  connect with the plain URL /mcp and sign in with GitHub. Optional
+  CAREER_COPILOT_ALLOWED_GITHUB_USERS limits it to an invite list.
+- API keys: set CAREER_COPILOT_API_KEY (comma-separated). Callers send it as
+  "Authorization: Bearer <key>", "X-API-Key: <key>", or in the URL:
+  /mcp?key=<key> (for apps that can't set headers).
 """
 import asyncio
 import hashlib
@@ -27,7 +31,8 @@ if STDIO:
 import fastmcp
 from fastmcp import FastMCP
 from fastmcp.exceptions import ResourceError, ToolError
-from fastmcp.server.dependencies import get_http_headers, get_http_request
+from fastmcp.server.dependencies import (get_access_token, get_http_headers,
+                                         get_http_request)
 from fastmcp.server.middleware import Middleware, MiddlewareContext
 from loguru import logger
 from mcp.types import LATEST_PROTOCOL_VERSION
@@ -66,6 +71,18 @@ USER_HEADER = os.environ.get("CAREER_COPILOT_USER_HEADER", "").lower()
 ALLOW_OPEN = os.environ.get("CAREER_COPILOT_ALLOW_OPEN") == "1"
 # Separate key for the aggregate /insights endpoint used by the improver.
 ADMIN_KEY = os.environ.get("CAREER_COPILOT_ADMIN_KEY", "")
+# GitHub sign-in: a plain connector URL, no key in it. Career Copilot only
+# sees the GitHub user id (hashed for storage), never a password.
+GITHUB_ID = os.environ.get("CAREER_COPILOT_GITHUB_CLIENT_ID", "")
+GITHUB_SECRET = os.environ.get("CAREER_COPILOT_GITHUB_CLIENT_SECRET", "")
+OAUTH = bool(GITHUB_ID and GITHUB_SECRET) and not STDIO
+PUBLIC_URL = (os.environ.get("CAREER_COPILOT_PUBLIC_URL")
+              or os.environ.get("RENDER_EXTERNAL_URL")
+              or f"http://localhost:{PORT}")
+ALLOWED_GITHUB = {name.strip().lower() for name in
+                  os.environ.get("CAREER_COPILOT_ALLOWED_GITHUB_USERS",
+                                 "").split(",") if name.strip()}
+USER_SALT = os.environ.get("CAREER_COPILOT_USER_SALT", "")
 
 LOCAL_USER = "local-user"
 GRACE_DAYS_H1B = 60
@@ -136,9 +153,24 @@ def _url_key() -> str:
         return ""
 
 
+def _github_claims() -> dict:
+    token = get_access_token()
+    return token.claims if token else {}
+
+
 def authorize():
-    """Raise PermissionError unless the caller sent a valid API key."""
-    if STDIO or (ALLOW_OPEN and not API_KEYS):
+    """Raise PermissionError unless the caller signed in or sent a valid
+    API key."""
+    if STDIO or (ALLOW_OPEN and not API_KEYS and not OAUTH):
+        return
+    if OAUTH:
+        claims = _github_claims()
+        if not claims.get("sub"):
+            raise PermissionError("Unauthorized: sign in with GitHub.")
+        if ALLOWED_GITHUB and \
+                str(claims.get("login", "")).lower() not in ALLOWED_GITHUB:
+            raise PermissionError("This Career Copilot is invite-only. Ask "
+                                  "its owner to add your GitHub username.")
         return
     key = _presented_key(get_http_headers(include_all=True))
     if not key or not any(hmac.compare_digest(key, valid)
@@ -151,6 +183,12 @@ def current_user() -> str:
     """Storage namespace for the caller: a hash, never the raw key."""
     if STDIO:
         return LOCAL_USER
+    if OAUTH:
+        sub = str(_github_claims().get("sub", ""))
+        if not sub:
+            return "anonymous"
+        seed = f"github:{sub}:{USER_SALT}"
+        return "gh_" + hashlib.sha256(seed.encode()).hexdigest()[:16]
     headers = get_http_headers(include_all=True)
     seed = _presented_key(headers)
     if USER_HEADER and headers.get(USER_HEADER):
@@ -220,7 +258,23 @@ def note_miss(kind, label):
         logger.exception("insights record failed")
 
 
-mcp = FastMCP("career-copilot", version=VERSION, instructions=(
+def make_auth():
+    """GitHub sign-in when configured; None keeps API-key mode."""
+    if not OAUTH:
+        return None
+    from fastmcp.server.auth.providers.github import GitHubProvider
+    extra = {}
+    if os.environ.get("CAREER_COPILOT_JWT_KEY"):
+        # A fixed signing key keeps sign-ins valid across restarts.
+        extra["jwt_signing_key"] = os.environ["CAREER_COPILOT_JWT_KEY"]
+    return GitHubProvider(client_id=GITHUB_ID, client_secret=GITHUB_SECRET,
+                          base_url=PUBLIC_URL,
+                          # Public profile only: no repos, no email.
+                          required_scopes=["read:user"], **extra)
+
+
+mcp = FastMCP("career-copilot", version=VERSION, auth=make_auth(),
+              instructions=(
     # The soul: who Career Copilot is when it talks to someone.
     "You are Career Copilot: a warm, honest guide that helps people find "
     "their next career move and take it, one small step at a time. While "
@@ -1382,6 +1436,14 @@ def money_checkup() -> str:
 # ------------------------------------------------------------------- main
 
 def check_auth_config():
+    if OAUTH:
+        if API_KEYS:
+            logger.warning("GitHub sign-in is on, so API keys are ignored.")
+        if not os.environ.get("CAREER_COPILOT_PUBLIC_URL") and \
+                not os.environ.get("RENDER_EXTERNAL_URL"):
+            logger.warning(f"Public URL not set; sign-in redirects go to "
+                           f"{PUBLIC_URL}. Set CAREER_COPILOT_PUBLIC_URL.")
+        return
     if STDIO or API_KEYS:
         return
     if ALLOW_OPEN:
@@ -1409,8 +1471,15 @@ def log_startup():
     logger.info(f"insights {'on' if insights.ENABLED else 'off'} "
                 f"(k={insights.K_ANON}), admin endpoint "
                 f"{'on' if ADMIN_KEY else 'off'}")
-    logger.info(f"{len(tools)} tools, auth "
-                f"{'off (stdio)' if STDIO else f'{len(API_KEYS)} key(s)'}, "
+    if STDIO:
+        auth = "off (stdio)"
+    elif OAUTH:
+        invite = f"{len(ALLOWED_GITHUB)} invited" if ALLOWED_GITHUB \
+            else "anyone"
+        auth = f"GitHub sign-in ({invite})"
+    else:
+        auth = f"{len(API_KEYS)} key(s)"
+    logger.info(f"{len(tools)} tools, auth {auth}, "
                 f"data dir {store.DATA_DIR}, logs {LOG_DIR}/mcp_server.log")
 
 

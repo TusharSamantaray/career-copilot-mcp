@@ -4,6 +4,24 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** The connector URL has the API key in it. Make it a generic
+URL. Owner chose Sign in with GitHub.
+**Did:** GitHub OAuth through FastMCP's GitHubProvider (scope read:user
+only). Storage id is a salted hash of the GitHub user id. Optional
+invite list. API keys and ?key= URLs are refused when sign-in is on.
+Privacy notice and ground rules updated (version 2026-11-03.2).
+render.yaml, CONNECT.md and SETUP.md updated with the GitHub app steps.
+**Files:** `app.py`, `tests/test_oauth.py`, `render.yaml`,
+`.github/workflows/ci.yml`, `copilot/conduct.py`, `docs/PRIVACY.md`,
+`docs/TERMS.md`, `docs/CONNECT.md`, `docs/SETUP.md`.
+**Tests:** 6 suites passed, 0 failed.
+**Try it:** after the owner adds the GitHub app id and secret in Render,
+add `https://career-copilot-cg2k.onrender.com/mcp` in claude.ai.
+**Open:** a full sign-in can only be tested with the real GitHub app.
+Each MCP request checks the token with GitHub, which adds a little delay.
+Restarts on the free plan may ask people to sign in again.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Keep picking up backlog items.
 **Did:** B-004: `profile_from_text` returns a read-back first and saves
 only with apply=true; `direction_options` gives 2-3 directions with fit,

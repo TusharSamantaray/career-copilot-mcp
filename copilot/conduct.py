@@ -9,7 +9,7 @@ from datetime import date
 
 from copilot import store
 
-TERMS_VERSION = "2026-11-03.1"
+TERMS_VERSION = "2026-11-03.2"
 DOCS = "https://github.com/TusharSamantaray/career-copilot-mcp/blob/main/docs"
 
 # How every reply sounds. People act on short, clear direction; long
@@ -31,6 +31,9 @@ PRIVACY = [
     "Career Copilot keeps only what you tell it: your goals, work history, "
     "applications, reminders, check-ins and any money figures you enter.",
     "Each person's data is in its own private file. Nobody else can see it.",
+    "Signing in with GitHub shares only your public profile. Career "
+    "Copilot never sees your password and stores your GitHub id only as a "
+    "scrambled code.",
     "It never asks for or stores passwords, one-time codes or bank logins, "
     "and it never logs in anywhere for you.",
     "Email text you share for sorting is not stored, only the application "

@@ -67,7 +67,8 @@ uv run tests/test_features.py   # finance, resumes, roles, prep, nudges, economy
 uv run tests/test_http.py       # health, key required, wrong key rejected,
                                 # data isolation, keys never logged
 uv run tests/test_knowledge.py  # knowledge is valid, no personal data
-uv run tests/test_soul.py       # coach, safety, relocation, intake, dashboard
+uv run tests/test_soul.py       # coach, safety, guided start, conduct
+uv run tests/test_oauth.py      # GitHub sign-in mode: no sign-in, no access
 ```
 
 Each one should end with `ALL PASSED`.
@@ -110,7 +111,13 @@ To try it, ask the assistant *"I just got laid off"* or
 
 | Variable | Required | Default | Meaning |
 |---|---|---|---|
-| `CAREER_COPILOT_API_KEY` | Yes, for HTTP | none | Valid keys, comma-separated |
+| `CAREER_COPILOT_GITHUB_CLIENT_ID` | For sign-in | none | GitHub OAuth app client id. With the secret, turns on GitHub sign-in and turns API keys off |
+| `CAREER_COPILOT_GITHUB_CLIENT_SECRET` | For sign-in | none | GitHub OAuth app client secret |
+| `CAREER_COPILOT_ALLOWED_GITHUB_USERS` | No | anyone | Invite list: comma-separated GitHub usernames |
+| `CAREER_COPILOT_PUBLIC_URL` | For sign-in | `RENDER_EXTERNAL_URL` | The server's public address, for sign-in redirects |
+| `CAREER_COPILOT_JWT_KEY` | For sign-in | from the secret | Keeps sign-ins valid across restarts |
+| `CAREER_COPILOT_USER_SALT` | For sign-in | none | Random secret mixed into each person's storage id |
+| `CAREER_COPILOT_API_KEY` | Without sign-in | none | Valid keys, comma-separated |
 | `PORT` | No | `8080` | HTTP port (hosts usually set this) |
 | `HOST` | No | `0.0.0.0` | Bind address |
 | `COPILOT_DATA_DIR` | No | `./data` | Where per-user SQLite files live |
@@ -150,34 +157,52 @@ your phone. It's free and needs no credit card.
 2. Sign in with GitHub, then click **Deploy Blueprint**. Render reads
    `render.yaml`, installs everything and generates the secret key. This
    takes about 3 minutes.
-3. Open the **career-copilot** service:
-   - Copy the address at the top (`https://career-copilot-xxxx.onrender.com`).
-   - Go to **Environment** and copy the value of `CAREER_COPILOT_API_KEY`.
-4. Your connector URL is:
+3. Copy the service address at the top
+   (`https://career-copilot-xxxx.onrender.com`).
+4. Turn on **Sign in with GitHub** (5 minutes, once):
+   1. On GitHub: Settings → Developer settings → OAuth Apps → **New OAuth
+      App**.
+      - Application name: `Career Copilot`
+      - Homepage URL: `https://career-copilot-xxxx.onrender.com`
+      - Authorization callback URL:
+        `https://career-copilot-xxxx.onrender.com/auth/callback`
+   2. Click **Register application**, then **Generate a new client
+      secret**. Copy the Client ID and the secret.
+   3. In Render → career-copilot → **Environment**, set
+      `CAREER_COPILOT_GITHUB_CLIENT_ID` and
+      `CAREER_COPILOT_GITHUB_CLIENT_SECRET`. To keep it to people you
+      invite, set `CAREER_COPILOT_ALLOWED_GITHUB_USERS` to a
+      comma-separated list of GitHub usernames (yours first). Save, and
+      Render redeploys.
+5. Your connector URL is the plain address, the same for everyone:
    ```
-   https://career-copilot-xxxx.onrender.com/mcp?key=<CAREER_COPILOT_API_KEY>
+   https://career-copilot-xxxx.onrender.com/mcp
    ```
-   Add it to claude.ai or ChatGPT ([CONNECT.md](CONNECT.md)). Connectors
-   added on claude.ai also work in the Claude mobile app.
-5. Optional, but best before a demo: in GitHub, go to Settings → Secrets
+   Add it to claude.ai or ChatGPT ([CONNECT.md](CONNECT.md)) and sign in
+   with GitHub. Connectors added on claude.ai also work in the Claude
+   mobile app. The startup log line says `auth GitHub sign-in`.
+6. Optional, but best before a demo: in GitHub, go to Settings → Secrets
    and variables → Actions → **Variables** and add `HEALTH_URL` =
    `https://career-copilot-xxxx.onrender.com/health`. The **Keep awake**
    workflow then pings the server every 10 minutes, so it never falls
    asleep.
 
-**Giving demo access to other people:** give each person their own key, so
-their data stays separate. In Render → Environment, change
-`CAREER_COPILOT_API_KEY` to a comma-separated list, for example
-`<your-key>,demo-ana-7f3k,demo-ben-9x2q`, and save. Render redeploys by
-itself. Each person uses their own `?key=`. To remove someone, delete their
-key.
+**Giving demo access to other people:** add their GitHub username to
+`CAREER_COPILOT_ALLOWED_GITHUB_USERS` and send them the plain URL. Each
+person's data is kept apart by their sign-in. To remove someone, take their
+username out.
+
+Without GitHub sign-in, the server falls back to API keys
+(`CAREER_COPILOT_API_KEY`, comma-separated, one per person). If you used
+`?key=` URLs before, switch them off: once sign-in is on, keys stop
+working, so a shared old link is harmless.
 
 **Free plan limits:**
 
 | Limit | What it means |
 |---|---|
 | Sleeps after 15 idle minutes | The first request then takes 30–60 seconds. Keep awake (step 5) avoids this |
-| No persistent disk | Saved data is wiped on every redeploy or restart. Fine for demos, not for real users |
+| No persistent disk | Saved data is wiped on every redeploy or restart, and people may need to sign in again. Fine for demos, not for real users |
 | 750 hours a month | Enough for one service running all month |
 
 For real users, move to a paid plan with a disk, or to MCPHosting

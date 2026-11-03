@@ -15,6 +15,21 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.7"
+      # Sign in with GitHub (recommended): create a GitHub OAuth app with
+      # callback https://<your-service>.onrender.com/auth/callback and paste
+      # its id and secret here. When set, API keys are ignored.
+      - key: CAREER_COPILOT_GITHUB_CLIENT_ID
+        sync: false
+      - key: CAREER_COPILOT_GITHUB_CLIENT_SECRET
+        sync: false
+      # Optional invite list: comma-separated GitHub usernames.
+      - key: CAREER_COPILOT_ALLOWED_GITHUB_USERS
+        sync: false
+      - key: CAREER_COPILOT_JWT_KEY
+        generateValue: true
+      - key: CAREER_COPILOT_USER_SALT
+        generateValue: true
+      # Fallback when GitHub sign-in isn't set up.
       - key: CAREER_COPILOT_API_KEY
         generateValue: true
       - key: CAREER_COPILOT_INSIGHTS_SALT
