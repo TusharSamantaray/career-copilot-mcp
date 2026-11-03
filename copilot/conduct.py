@@ -9,8 +9,23 @@ from datetime import date
 
 from copilot import store
 
-TERMS_VERSION = "2026-11-03"
+TERMS_VERSION = "2026-11-03.1"
 DOCS = "https://github.com/TusharSamantaray/career-copilot-mcp/blob/main/docs"
+
+# How every reply sounds. People act on short, clear direction; long
+# answers get skimmed and dropped.
+REPLY_STYLE = [
+    "Short: 2 to 4 short sentences, under 80 words. No headings, no essays.",
+    "One step: give exactly one next thing to do, sized to their energy. "
+    "Keep the rest for later and mention it only if they ask.",
+    "One question: end with one question, with 2 to 4 options when that "
+    "helps. 'Not sure' and 'skip' are always fine answers.",
+    "Direction, not a lecture: say what to do and why in one line. Explain "
+    "more only when they ask ('tell me more').",
+    "Lists only for things they asked for (a draft, a short list), with at "
+    "most 3 items.",
+]
+MAX_CHAT_WORDS = 90
 
 PRIVACY = [
     "Career Copilot keeps only what you tell it: your goals, work history, "
@@ -45,6 +60,8 @@ TERMS = [
 ]
 
 CONDUCT = [
+    "Keep replies short and simple: one small step and one question at a "
+    "time.",
     "Stay on the person's career, work, money and life-planning goals. If "
     "asked about something else, say briefly that it's outside what Career "
     "Copilot does, and offer the next useful step.",
@@ -138,6 +155,42 @@ NUMBER = re.compile(r"\$?\d[\d,]*(?:\.\d+)?(?:%|(?:k|m|x)\b)?", re.I)
 SENT = {"resume", "message", "cover_letter", "linkedin"}
 
 
+LIST_ITEM = re.compile(r"^\s*(?:[-*•]|\d+[.)])\s+", re.M)
+HEADING = re.compile(r"^\s*(?:#+\s|\*\*[^*\n]+\*\*:?\s*$)", re.M)
+
+
+def _style_issues(text):
+    """Chat replies: short, one question, few list items, no headings."""
+    issues = []
+    words = len(text.split())
+    if words > MAX_CHAT_WORDS:
+        issues.append({"type": "too_long", "severity": "fix",
+                       "found": [f"{words} words"],
+                       "why": "Long replies get skimmed and not acted on.",
+                       "suggest": f"Cut to under {MAX_CHAT_WORDS} words: one "
+                                  "step, one reason, one question."})
+    questions = text.count("?")
+    if questions > 1:
+        issues.append({"type": "many_questions", "severity": "fix",
+                       "found": [f"{questions} questions"],
+                       "why": "Several questions at once are hard to answer.",
+                       "suggest": "Ask only the most useful one."})
+    items = len(LIST_ITEM.findall(text))
+    if items > 3:
+        issues.append({"type": "too_many_items", "severity": "fix",
+                       "found": [f"{items} list items"],
+                       "why": "A long list reads like a lecture.",
+                       "suggest": "Keep the first step; offer the rest "
+                                  "later."})
+    if HEADING.search(text):
+        issues.append({"type": "heading", "severity": "fix",
+                       "found": ["heading"],
+                       "why": "Headings make a chat reply feel like a "
+                              "document.",
+                       "suggest": "Write it as a short message."})
+    return issues
+
+
 def _norm(token):
     """Compare numbers by value: '40 minutes' backs '40', '$2M' is '2m'."""
     token = re.sub(r"[\s$,]", "", token.lower())
@@ -153,8 +206,9 @@ def _confirmed_numbers(user):
 def check(user, text, kind="chat"):
     """Flag wording to fix before the person reads, sends or relies on it.
 
-    kind: chat, plan, resume, message, cover_letter or linkedin. For text
-    the person sends (resume, message, cover_letter, linkedin), every
+    kind: chat, plan, resume, message, cover_letter or linkedin. Chat
+    replies must also be short, with one question and few list items. For
+    text the person sends (resume, message, cover_letter, linkedin), every
     number must appear in one of their confirmed experience facts.
     """
     text = text or ""
@@ -175,6 +229,8 @@ def check(user, text, kind="chat"):
                               "the education-not-advice note.",
                        "suggest": "Add: 'This is general education, not "
                                   "financial, tax or legal advice.'"})
+    if kind == "chat":
+        issues += _style_issues(text)
     if kind in SENT:
         allowed = _confirmed_numbers(user)
         years = re.compile(r"^(?:19|20)\d\d$")
@@ -210,6 +266,7 @@ def ground_rules(user, accept=False):
     return {"version": TERMS_VERSION, "accepted": bool(agreed),
             "accepted_on": agreed[-1]["accepted_on"] if agreed else None,
             "privacy": PRIVACY, "terms": TERMS, "how_we_talk": CONDUCT,
+            "reply_style": REPLY_STYLE,
             "full_text": {"privacy": f"{DOCS}/PRIVACY.md",
                           "terms": f"{DOCS}/TERMS.md"},
             "show_user": "In three short lines: your data stays yours and "

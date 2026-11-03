@@ -29,5 +29,7 @@
   folder (it's untracked). From: repo setup.
 
 ## Done
+- B-013 Replies too long and generic; host persona took over. Make
+  replies short, one step, one question. From: owner testing in Claude.
 - B-000 Ground rules (privacy, terms, conduct) and response_check.
   From: owner request, 2026-11-03.

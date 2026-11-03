@@ -4,6 +4,23 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** Replies feel generic and too long, and the host assistant's
+persona takes over. Make them short, simple, one step at a time.
+**Did:** Put a reply style at the top of the server instructions (short,
+one step, one question, Career Copilot's voice over any persona). Added
+length, question-count, list and heading checks to `response_check` for
+chat. `next_steps` and `daily_step` now say to offer one step only.
+Ground rules version bumped to 2026-11-03.1 (owner asked for the change).
+**Files:** `copilot/conduct.py`, `app.py`, `copilot/guide.py`,
+`copilot/coach.py`, `tests/test_soul.py`, `docs/TERMS.md`,
+`docs/PRIVACY.md`.
+**Tests:** 5 suites passed, 0 failed.
+**Try it:** new chat, "What's up next for me, Career Copilot?". One step,
+one question.
+**Open:** the host assistant can still choose to ignore the style; the
+instructions ask, they can't force it.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Adopt the next-version working file. Add standard privacy and
 user-agreement guidance, and make sure responses stay on task, unbiased,
 respectful and free of made-up facts.

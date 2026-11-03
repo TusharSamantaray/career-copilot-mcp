@@ -26,6 +26,15 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- Shorter, simpler replies (B-013). Career Copilot now answers in 2 to 4
+  short sentences, gives one step at a time and ends with one question.
+  It keeps its own voice even inside another assistant (like a custom
+  persona), and explains more only when you ask. The response check now
+  flags chat replies that are too long, ask several questions, list more
+  than 3 items or use headings. You'll be asked to OK the ground rules
+  once more, since they now include this.
+  **Try it:** in a new chat, say "What's up next for me, Career
+  Copilot?". You should get one step and one question, not a list.
 - How Career Copilot talks, for every assistant: it stays on career,
   work, money and planning, steers back politely when asked about other
   things, stays neutral, never comments on personal traits unless you

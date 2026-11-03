@@ -66,5 +66,7 @@ def next_steps(user, goals=None):
     done = [a for t, d, a, u in relevant if d]
     return {"goals": [TRACKS[g] for g in wanted],
             "next": todo[:3], "remaining": todo[3:], "done": done,
+            "say": "Offer only the first step, in one sentence, as a "
+                   "question. Keep the others for later unless they ask.",
             "tip": "Call nudges_due at the start of each session to see "
                    "what's due."}

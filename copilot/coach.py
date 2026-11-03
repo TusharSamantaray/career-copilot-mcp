@@ -85,8 +85,9 @@ def daily_step(user, energy="medium", mood="", today=None):
                                     f"{nxt[0]['use']})"
     return {"today": str(now), "energy": energy, "one_step": pick,
             **status,
-            "say": "Offer this one step warmly. If it feels too big, shrink "
-                   "it further. Call step_done when they finish."}
+            "say": "Offer this one step warmly, in a sentence or two. If it "
+                   "feels too big, shrink it further. Call step_done when "
+                   "they finish."}
 
 
 def step_done(user, note="", today=None):

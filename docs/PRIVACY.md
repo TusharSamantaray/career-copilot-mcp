@@ -1,6 +1,6 @@
 # Privacy notice
 
-Version 2026-11-03. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-03.1. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 Career Copilot is run by Tushar Samantaray ("we"). It's a connector that

@@ -243,6 +243,23 @@ async def conduct_checks(s):
     assert clean["ok"] and not clean["issues"], clean
     print("ground rules, terms consent and response_check: OK")
 
+    # Chat replies stay short: one step, one question, no lecture.
+    lecture = ("## How to make it land\n" + "Lead with what you built. " * 20
+               + "\n- one\n- two\n- three\n- four\nWant that? Or this?")
+    kinds = {i["type"] for i in (await call(s, "response_check", {
+        "text": lecture}))["issues"]}
+    assert {"too_long", "many_questions", "too_many_items",
+            "heading"} <= kinds, kinds
+    short = await call(s, "response_check", {
+        "text": "Add it as a Projects section under your latest job, with "
+                "the GitHub link. Want me to draft the first line?"})
+    assert short["ok"] and not short["issues"], short
+    plan = await call(s, "response_check", {"text": lecture.replace(
+        "Or this?", ""), "kind": "plan"})
+    assert not any(i["type"] == "too_long" for i in plan["issues"])
+    assert (await call(s, "ground_rules"))["reply_style"]
+    print("short chat replies enforced, plans may be longer: OK")
+
 
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)

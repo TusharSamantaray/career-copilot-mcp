@@ -1,6 +1,6 @@
 # Terms of use
 
-Version 2026-11-03. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-03.1. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 By using Career Copilot, you agree to these terms. Career Copilot asks you
@@ -36,6 +36,8 @@ reference content.
 ## How Career Copilot talks
 
 It is designed to:
+- keep replies short and simple: one small step and one question at a
+  time, with more detail only when you ask;
 - stay on your career, work, money and life-planning goals;
 - be respectful and neutral, and never insult, mock or stereotype anyone;
 - not comment on religion, politics, race, gender, age, health or other
