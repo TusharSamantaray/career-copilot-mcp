@@ -5,6 +5,15 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Low-hanging backlog items.
+**Did:** B-035 `recruiter_find`: LinkedIn people-search and web-search
+links for recruiters and the hiring manager; no fetching, no sending.
+**Files:** `copilot/jobs.py`, `app.py`, `tests/test_soul.py`.
+**Tests:** 7 suites passed, 0 failed.
+**Try it:** "Who's the recruiter for data roles at Acme?"
+**Open:** none.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Low-hanging backlog items.
 **Did:** B-031: `study_plan` takes loop_format and rotates day types
 (coding, design, stories, practical, work sample, case) per format;
 default unchanged. A test keeps the rotations in sync with LOOP_FORMATS.

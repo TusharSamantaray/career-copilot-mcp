@@ -6,6 +6,12 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Find a recruiter (B-035). Get ready-made search links for a company's
+  recruiters or hiring manager, then draft a short note to send
+  yourself. Links only: it never searches LinkedIn for you or messages
+  anyone.
+  **Try it:** say "Who's the recruiter for data roles at Acme?". You
+  should get three links and an offer to draft a note.
 - Lessons (B-033). Note what you learned after an interview or a
   search week, in your own words. Prep for your next round shows your
   three latest lessons.

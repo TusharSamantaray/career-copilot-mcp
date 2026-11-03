@@ -676,6 +676,14 @@ def job_search(companies: list[str] | None = None,
 
 
 @mcp.tool
+def recruiter_find(company: str, role: str = "", location: str = "") -> dict:
+    """Search links for finding a recruiter or hiring manager at a
+    company (LinkedIn people search and web searches). Links only: the
+    person opens them and decides whom to contact."""
+    return jobs.recruiter_find(company, role, location)
+
+
+@mcp.tool
 def jd_analyze(text: str, title: str = "", company: str = "",
                remember: bool = True) -> dict:
     """Read a job posting the person pasted: what the role is, level read,

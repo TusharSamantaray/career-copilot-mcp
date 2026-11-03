@@ -494,6 +494,13 @@ async def job_checks(s):
     assert not shown["new"], "excluded company shown"
     print("job_search: dated, filtered, deduped, silent when nothing new: OK")
 
+    found = await call(s, "recruiter_find", {"company": "Acme Corp",
+                                             "role": "Data Analyst"})
+    urls = [l["url"] for l in found["links"]]
+    assert urls[0].startswith("https://www.linkedin.com/search/results/")
+    assert all("Acme" in u for u in urls) and "Links only" in found["note"]
+    print("recruiter_find: links only: OK")
+
     posting = ("Senior Data Analyst at Acme. 5+ years with SQL and Python, "
                "dashboards in Tableau. Remote. Pay range $120k - $150k. We "
                "are unable to sponsor visas for this role.")

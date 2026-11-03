@@ -17,7 +17,6 @@
 - B-030 [P1] deadline_add (best case and conservative date) and
   fast_track mode; acceptance test B. From: spec v2.
 - B-034 [P2] Dashboard action strip. From: spec v2.
-- B-035 [P2] recruiter_find (public sources, links only). From: spec v2.
 - B-036 [P2] Local-first Markdown mirror of the data file. From: spec v2.
 - B-038 [P1] Acceptance test A as one scripted conversation. From:
   spec v2.
@@ -26,6 +25,7 @@
 
 
 ## Done
+- B-035 recruiter_find: search links only. From: spec v2.
 - B-031 study_plan loop_format (one rotation per LOOP_FORMATS entry,
   tested to stay in sync). From: spec v2.
 - B-037 pipeline_digest sponsorship column (overdue already existed);

@@ -194,6 +194,30 @@ def job_search(user, companies=None, keywords=None, locations=None,
     return result
 
 
+def recruiter_find(company, role="", location=""):
+    """Search links to find the right recruiter or hiring manager. Links
+    only: the person opens them; nothing is scraped or sent."""
+    from urllib.parse import quote_plus
+    words = " ".join(w for w in (role, location) if w)
+    people = quote_plus(f"{company} recruiter {words}".strip())
+    xray = quote_plus(f'site:linkedin.com/in "{company}" (recruiter OR '
+                      f'"talent acquisition") {words}'.strip())
+    manager = quote_plus(f'site:linkedin.com/in "{company}" "hiring '
+                         f'manager" OR "engineering manager" {role}'.strip())
+    return {"links": [
+        {"label": "LinkedIn people search",
+         "url": f"https://www.linkedin.com/search/results/people/?keywords="
+                f"{people}"},
+        {"label": "Web search for recruiters",
+         "url": f"https://www.google.com/search?q={xray}"},
+        {"label": "Web search for the hiring manager",
+         "url": f"https://www.google.com/search?q={manager}"},
+    ], "next": "Pick one person, then draft a short note with message_draft "
+               "kind=referral_request or recruiter_reply. You send it.",
+       "note": "Links only. Career Copilot doesn't search LinkedIn for you "
+               "or message anyone."}
+
+
 # ------------------------------------------------------------ jd_analyze
 
 LEVELS = [("principal", "principal"), ("staff", "staff"),
