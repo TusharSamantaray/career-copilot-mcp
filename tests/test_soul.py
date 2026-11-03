@@ -640,6 +640,25 @@ async def loop_checks(s):
     assert "overdue" in digest
     print("pipeline_digest: sponsorship column when it's a need: OK")
 
+    values = await call(s, "study_plan", {
+        "start": "2026-11-02", "interview_date": "2026-11-14",
+        "loop_format": "values_heavy"})
+    story_days = [d for d in values["plan"]
+                  if d["items"][0].startswith("Stories:")]
+    assert len(story_days) >= 4, values["plan"]
+    sample = await call(s, "study_plan", {
+        "start": "2026-11-02", "interview_date": "2026-11-14",
+        "loop_format": "non_technical"})
+    text = str(sample["plan"])
+    assert "Pattern:" not in text and "work sample" in text
+    assert "error" in await call(s, "study_plan", {
+        "start": "2026-11-02", "interview_date": "2026-11-14",
+        "loop_format": "chess"})
+    from copilot.knowledge.interview import LOOP_FORMATS
+    from copilot.prep import ROTATION
+    assert set(ROTATION) == set(LOOP_FORMATS), "a loop format has no plan"
+    print("study_plan follows the loop format: OK")
+
     grid = await call(s, "story_coverage")
     assert grid["stories"] >= 2
     conflict = grid["grid"]["conflict"][0]

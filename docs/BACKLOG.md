@@ -16,7 +16,6 @@
   as education. From: spec v2.
 - B-030 [P1] deadline_add (best case and conservative date) and
   fast_track mode; acceptance test B. From: spec v2.
-- B-031 [P1] study_plan aware of the loop format. From: spec v2.
 - B-034 [P2] Dashboard action strip. From: spec v2.
 - B-035 [P2] recruiter_find (public sources, links only). From: spec v2.
 - B-036 [P2] Local-first Markdown mirror of the data file. From: spec v2.
@@ -27,6 +26,8 @@
 
 
 ## Done
+- B-031 study_plan loop_format (one rotation per LOOP_FORMATS entry,
+  tested to stay in sync). From: spec v2.
 - B-037 pipeline_digest sponsorship column (overdue already existed);
   application_log takes sponsorship. From: spec v2.
 - B-033 lessons (add, list; latest three in next-round prep). From:

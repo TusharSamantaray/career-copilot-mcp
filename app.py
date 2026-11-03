@@ -1160,13 +1160,17 @@ def system_design(topic: str = "framework") -> dict:
 
 @mcp.tool
 def study_plan(start: str, interview_date: str, hours_per_day: float = 2.0,
-               save_as_nudges: bool = False) -> dict:
+               save_as_nudges: bool = False, loop_format: str = "") -> dict:
     """Build a day-by-day prep schedule up to an interview (YYYY-MM-DD).
 
-    Rotates coding patterns and system design topics, ends with mocks and
-    rest. save_as_nudges=True stores each day as a reminder (write action).
+    loop_format shapes the days: big_tech_algorithmic (default: coding
+    heavy), values_heavy (stories every other day), practical (applied
+    coding and design), enterprise, startup, or non_technical (work
+    sample, stories, case). Ends with mocks and rest. save_as_nudges=True
+    stores each day as a reminder (write action).
     """
-    result = prep.study_plan(start, interview_date, hours_per_day)
+    result = prep.study_plan(start, interview_date, hours_per_day,
+                             loop_format)
     if save_as_nudges and "plan" in result:
         result.update(nudges.plan_to_nudges(current_user(), result["plan"]))
     return result

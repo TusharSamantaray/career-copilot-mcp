@@ -179,8 +179,32 @@ def prep_checklist():
     return PREP_CHECKLIST
 
 
-def study_plan(start, interview_date, hours_per_day=2.0):
-    """Day-by-day plan from start to the day before the interview."""
+# Which kind of day comes next, by loop format (keys of LOOP_FORMATS).
+ROTATION = {
+    "big_tech_algorithmic": ["coding", "coding", "design"],
+    "values_heavy": ["coding", "stories", "design", "stories"],
+    "practical": ["practical", "design", "coding"],
+    "enterprise": ["coding", "design", "stories"],
+    "startup": ["practical", "stories", "design"],
+    "non_technical": ["work_sample", "stories", "case"],
+}
+DAY_ITEMS = {
+    "practical": ["Applied coding: build or debug a small service end to end",
+                  "Handle retries, idempotency and data consistency"],
+    "work_sample": ["Prepare the work sample like a real deliverable",
+                    "Present it out loud in 10 minutes"],
+    "case": ["Practise one case study out loud (30 minutes)",
+             "Structure: goal, options, numbers, recommendation"],
+}
+
+
+def study_plan(start, interview_date, hours_per_day=2.0, loop_format=""):
+    """Day-by-day plan from start to the day before the interview, shaped
+    by the loop format when one is given."""
+    if loop_format and loop_format not in ROTATION:
+        return {"error": f"loop_format must be one of {sorted(ROTATION)}"}
+    rotation = ROTATION.get(loop_format, ROTATION["big_tech_algorithmic"])
+    themes = list(STORY_THEMES)
     try:
         first = date.fromisoformat(start)
         last = date.fromisoformat(interview_date) - timedelta(days=1)
@@ -189,20 +213,31 @@ def study_plan(start, interview_date, hours_per_day=2.0):
     days = (last - first).days + 1
     if days < 1:
         return {"error": "interview_date must be after start"}
-    plan, p_i, d_i = [], 0, 0
+    plan, p_i, d_i, s_i = [], 0, 0, 0
     for n in range(days):
         day = first + timedelta(days=n)
         left = days - n
+        kind = rotation[n % len(rotation)]
         if left == 1:
             items = ["Light review of your cheat sheet", "Rest and sleep"]
         elif left <= 3:
-            items = ["Full mock interview (coding + design)",
-                     "Rehearse 3 behavioural stories out loud"]
-        elif n % 3 == 2:
+            items = (["Full mock: case or work sample, then a panel",
+                      "Rehearse 3 stories out loud"]
+                     if loop_format == "non_technical" else
+                     ["Full mock interview (coding + design)",
+                      "Rehearse 3 behavioural stories out loud"])
+        elif kind == "design":
             topic = DESIGN_ORDER[d_i % len(DESIGN_ORDER)]
             d_i += 1
             items = [f"System design: {COMPONENTS[topic]['name']}",
                      "One end-to-end design question using the framework"]
+        elif kind == "stories":
+            theme = themes[s_i % len(themes)]
+            s_i += 1
+            items = [f"Stories: write or polish a {theme} story",
+                     "Tell it out loud in 90 seconds, ending on the number"]
+        elif kind in DAY_ITEMS:
+            items = list(DAY_ITEMS[kind])
         else:
             pid = STUDY_ORDER[p_i % len(STUDY_ORDER)]
             p_i += 1
@@ -210,8 +245,9 @@ def study_plan(start, interview_date, hours_per_day=2.0):
             items = [f"Pattern: {pat['name']}",
                      "Solve: " + ", ".join(pat["examples"][:2]),
                      "Say the approach out loud before coding"]
-        if hours_per_day >= 3 and left > 3:
+        if hours_per_day >= 3 and left > 3 and kind != "stories":
             items.append("Behavioural: write or polish one story")
         plan.append({"date": str(day), "hours": hours_per_day,
                      "items": items})
-    return {"days": days, "plan": plan}
+    return {"days": days, "loop_format": loop_format or "big_tech_algorithmic",
+            "plan": plan}

@@ -5,6 +5,16 @@ Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Low-hanging backlog items.
+**Did:** B-031: `study_plan` takes loop_format and rotates day types
+(coding, design, stories, practical, work sample, case) per format;
+default unchanged. A test keeps the rotations in sync with LOOP_FORMATS.
+**Files:** `copilot/prep.py`, `app.py`, `tests/test_soul.py`.
+**Tests:** 7 suites passed, 0 failed.
+**Try it:** "Plan my prep for a values-heavy loop on the 14th".
+**Open:** none.
+
+### 2026-11-03 | v0.3.0-dev
+**Asked:** Low-hanging backlog items.
 **Did:** B-037: `application_log` takes sponsorship (yes, no, unknown);
 `pipeline_digest` adds a sponsorship block (unknown, says no) only when
 the profile's dealbreakers mention sponsorship. Overdue was already

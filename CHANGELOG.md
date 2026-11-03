@@ -144,6 +144,13 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- Study plans fit the interview format (B-031). Tell it the kind of loop
+  (coding-heavy, values-heavy, practical, enterprise, startup or
+  non-technical) and the daily plan shifts to match: more story practice
+  for values-heavy loops, applied builds for practical ones, work samples
+  and case practice for non-technical roles.
+  **Try it:** say "Plan my prep for a values-heavy loop on the 14th, 2
+  hours a day". Story practice should show up every other day.
 - Sponsorship in your pipeline (B-037). If needing visa sponsorship is
   one of your hard no's, the daily pipeline view lists applications where
   sponsorship is still unknown and flags any that said no, so you can ask
