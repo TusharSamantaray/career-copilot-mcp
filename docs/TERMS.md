@@ -1,6 +1,6 @@
 # Terms of use
 
-Version 2026-11-03.9. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-03.10. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 By using Career Copilot, you agree to these terms. Career Copilot asks you
@@ -53,8 +53,10 @@ and tell us when something is wrong (ask your assistant to call
 
 ## The service
 
-The free demo can change, pause or lose data at any time, without notice.
-Paid plans, when offered, will state their own limits.
+The free demo keeps your data in a managed database, but as a free
+service it can change or pause without notice, and no backup is
+promised. Keep your own copy with `data_export`. Paid plans, when
+offered, will state their own limits.
 
 ## Ownership
 

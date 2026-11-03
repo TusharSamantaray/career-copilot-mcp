@@ -254,6 +254,13 @@ Every Added or Changed line has a **Try it:** line.
   politely say that's outside what it does and offer a career step.
 
 ### Fixed
+- The privacy notice and terms no longer say the demo is wiped on every
+  restart: data now lives in a managed database. They still suggest
+  keeping your own copy, since it's a free service. You'll be asked to
+  OK the ground rules once more.
+  **Try it:** in a new chat, say "get started". After you accept, ask
+  "what happens to my data if the server restarts?". It should say the
+  data stays, and suggest an export now and then.
 - Neon's pooled connection works reliably: Career Copilot no longer uses
   prepared statements, which the pooler can't keep between requests. The
   health check now says which storage is in use (`"storage":

@@ -4,6 +4,18 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** Owner OK'd correcting the privacy text; asked whether Neon's
+free plan deletes data after 6 hours.
+**Did:** Explained: "history retention 6 hours" is the point-in-time
+restore window, not deletion. Updated the demo-server lines in
+PRIVACY.md, TERMS.md and conduct.TERMS (data in a managed database;
+still free, keep a copy). Ground rules version 2026-11-03.10.
+**Files:** `docs/PRIVACY.md`, `docs/TERMS.md`, `copilot/conduct.py`.
+**Tests:** 8 suites passed, 0 failed.
+**Try it:** "what happens to my data if the server restarts?"
+**Open:** none.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Owner reset the Neon password and set the new pooled
 DATABASE_URL in Render.
 **Did:** Confirmed the live server reports `"storage": "postgres"`.

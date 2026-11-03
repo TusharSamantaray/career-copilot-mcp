@@ -1,6 +1,6 @@
 # Privacy notice
 
-Version 2026-11-03.9. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-03.10. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 Career Copilot is run by Tushar Samantaray ("we"). It's a connector that
@@ -83,8 +83,10 @@ We don't sell your data, and we don't use it for ads.
 
 ## The demo server
 
-The free demo server is wiped every time it restarts or updates. Keep your
-own copy with `data_export`.
+The hosted demo keeps your data in a managed Postgres database (Neon),
+encrypted, so restarts and updates don't erase it. It is still a free
+service that can change or pause, so keep your own copy with
+`data_export` now and then.
 
 ## Age
 
