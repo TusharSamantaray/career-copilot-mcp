@@ -101,6 +101,7 @@ sequenceDiagram
 | "Is this posting worth it? (paste)" | Level, pay against your floor, sponsorship, fit and gaps, and a verdict |
 | "I just lost my job." | Key dates (pay, any visa grace period), then a 72-hour plan |
 | "Here are my old resumes." | The best bullets merged, with questions on the weak ones |
+| "Draft a cover letter for the analyst role at Acme." | A short letter built only from facts you've confirmed |
 | "Draft a thank-you note to Acme." | A draft for you to edit and send, checked for promises and made-up numbers |
 | "Here are my job emails. Update my pipeline." | Applications, interviews and deadlines sorted, after you say yes |
 | "Round 1 at Acme went OK. Prep me for round 2." | What round 1 covered, which story to bring next (and whether that panel heard it already), and one thing to do today |
@@ -197,7 +198,7 @@ flowchart LR
 | Language | Python 3.11+ |
 | Framework | [FastMCP](https://gofastmcp.com) 2.x |
 | Protocol | Model Context Protocol: stdio (local) or streamable HTTP at `/mcp` |
-| Surface | 78 tools, 8 resources, 16 starter prompts |
+| Surface | 85 tools, 8 resources, 16 starter prompts |
 | Storage | SQLite, one file per person, optionally encrypted per person (AES-GCM); Postgres planned |
 | Auth (hosted) | Sign in with GitHub (OAuth, `read:user` only, optional invite list), or API keys as a fallback. Local mode needs none |
 | Network calls out | GitHub (sign-in), public job boards (Greenhouse, Lever, Ashby; read-only, cached), World Bank API |
@@ -218,6 +219,7 @@ copilot/
   loops.py             Interview rounds and next-round prep
   evidence.py          Skill gaps from analyzed postings and the outcome log
   watch.py             Watches and the outbox read at the next chat
+  deadlines.py         Deadlines with two dates, fast-track mode
   coach.py             Daily step, momentum, crisis safety
   careers.py           Resumes, contributions, LinkedIn, roles, career moves
   places.py            Where to move for a role

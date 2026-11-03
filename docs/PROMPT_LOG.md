@@ -4,6 +4,18 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** Trim the backlog down.
+**Did:** Refreshed counts (85 tools, 8 resources, 16 prompts) in README
+and CLAUDE.md, and the build-status table in docs/SPEC.md. Open now:
+B-008 (owner: paid disk), B-010 (owner: lawyer), B-012 (owner: delete
+server.py), B-026 resume_tailor, B-029 sponsorship_verify, B-034
+dashboard action strip.
+**Files:** `README.md`, `CLAUDE.md`, `docs/SPEC.md`.
+**Tests:** 8 suites passed, 0 failed (docs only).
+**Try it:** open docs/SPEC.md section 7.
+**Open:** the six items above.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Low-hanging backlog items.
 **Did:** B-030: `deadline_add` (refuses a conservative date later than
 the best case), `copilot/deadlines.py` fast-track (on within 60 days of

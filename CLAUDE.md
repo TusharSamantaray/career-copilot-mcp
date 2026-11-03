@@ -184,11 +184,13 @@ person may send or rely on passes response_check.
 
 ### What exists today (verified in code on 2026-11-03)
 
-78 tools, 8 resources, 16 prompts. Watches: watch_create, watches,
+85 tools, 8 resources, 16 prompts. Watches: watch_create, watches,
 digest_get. Facts: fact_add, fact_conflicts,
 fact_resolve. Discovery: job_search, jd_analyze, ats_profile_check,
-skill_gap_evidence. Loops:
-loop_round_log, loop_next_round_prep, story_coverage. Orient: journey_state, life_compass,
+skill_gap_evidence, ats_keyword_check, recruiter_find. Truth:
+ownership_check, cover_letter_draft. Loops: loop_round_log,
+loop_next_round_prep, story_coverage, lessons. Pressure: deadline_add
+(fast-track). Data: data_mirror. Orient: journey_state, life_compass,
 direction_options, profile_from_text, career_move,
 where_to_move, role_match, skills_gap, next_steps. Foundation:
 profile_save, resume_import, resume_merge, resume_score,

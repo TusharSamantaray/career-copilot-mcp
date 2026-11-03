@@ -119,13 +119,13 @@ mirror is the goal (B-036). Full text: [PRIVACY.md](PRIVACY.md) and
 | Step | Pieces | Status |
 |---|---|---|
 | 1. Zero-start spine | journey_state, relaxed profile_save, persisted life_compass, profile_from_text, direction_options, server instructions, starter prompts | **Done** |
-| 2. Foundation integrity | Fact record, fact_conflicts, outcome log | **Done** |
-| | ownership_check (B-025), resume_tailor with guardrails (B-026), ats_keyword_check (B-027) | Open |
-| 3. Search loop | job_search, jd_analyze, rejection matching, round log (loop_enrich) | **Done** |
-| | cover_letter_draft (B-028), sponsorship_verify (B-029) | Open |
-| 4. Pressure mode | deadline_add and fast_track (B-030), format-aware study_plan (B-031), message_draft voice (B-032), lessons (B-033) | Open |
-| 5. Hardening | GitHub sign-in, encryption at rest | **Done** |
-| | Persistent disk (B-008, owner), dashboard action strip (B-034), recruiter_find (B-035), local Markdown mirror (B-036), pipeline_digest sponsorship and overdue columns (B-037) | Open |
+| 2. Foundation integrity | Fact record, fact_conflicts, outcome log, ownership_check, ats_keyword_check | **Done** |
+| | resume_tailor with guardrails (B-026) | Open |
+| 3. Search loop | job_search, jd_analyze, rejection matching, round log (loop_enrich), cover_letter_draft | **Done** |
+| | sponsorship_verify (B-029) | Open |
+| 4. Pressure mode | deadline_add and fast_track, format-aware study_plan, message_draft voice, lessons | **Done** |
+| 5. Hardening | GitHub sign-in, encryption at rest, recruiter_find, Markdown mirror (data_mirror), pipeline_digest sponsorship column | **Done** |
+| | Persistent disk (B-008, owner), dashboard action strip (B-034) | Open |
 
 Extra pieces from the blueprint, all built: ats_profile_check,
 skill_gap_evidence, story_coverage, loop_next_round_prep, watches.
