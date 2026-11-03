@@ -28,6 +28,10 @@ without reading code.
    - Every Added or Changed line ends with **Try it:** an exact thing
      to say to the connector and what should happen.
 3. Add an entry to the top of `docs/PROMPT_LOG.md` (template below).
+   When the change fixes a problem someone hit, also add a row to the
+   table in `docs/ENGINEERING.md` (what we saw, root cause, fix, the test
+   that guards it). Diagrams use the colour legend in
+   `docs/ARCHITECTURE.md`, and each one answers one stated question.
 4. Commit with a Conventional Commit prefix: feat, fix, docs, test,
    refactor, chore. Put the changelog line in the commit body.
 

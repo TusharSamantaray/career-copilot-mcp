@@ -1686,15 +1686,16 @@ def should_i_move() -> str:
 @mcp.prompt
 def tour() -> str:
     """Starter chip: a 2-minute guided tour of Career Copilot."""
-    return ("Give me a short guided tour of Career Copilot in five stops, "
-            "one at a time, waiting for me after each: 1) the daily step "
-            "(try daily_step), 2) finding my direction (role_match, "
-            "career_move, where_to_move), 3) the job search autopilot "
-            "(application_log, inbox_triage, nudges_due), 4) interview prep "
-            "(story_add, interview_questions, coding_pattern), 5) money and "
-            "the future (finance_dashboard, goal_set, future_projection). "
-            "Keep each stop under 4 sentences and end each with a tiny "
-            "try-it.")
+    return ("Give me a short guided tour of Career Copilot in six stops, "
+            "one at a time, waiting for me after each: 1) starting without "
+            "a form (journey_state), 2) finding a direction "
+            "(direction_options, life_compass), 3) a truthful resume "
+            "(fact_conflicts, ownership_check, ats_keyword_check), 4) "
+            "search (job_search, jd_analyze, watch_create), 5) interviews "
+            "round by round (loop_round_log, loop_next_round_prep, "
+            "story_coverage), 6) steadying the ground (deadline_add, "
+            "runway_calc, finance_dashboard). Keep each stop under 4 "
+            "sentences and end each with a tiny try-it.")
 
 
 @mcp.prompt

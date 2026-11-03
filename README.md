@@ -63,23 +63,32 @@ share. Step by step: [docs/SETUP.md](docs/SETUP.md#6-free-demo-hosting-render).
 
 ## 2. Your first chat
 
+*What the first few minutes look like:*
+
 ```mermaid
 sequenceDiagram
-  participant Y as You
-  participant A as Your assistant
-  participant C as Career Copilot
+  autonumber
+  box rgb(220,235,247) Your side
+    participant Y as You
+    participant A as Your assistant
+  end
+  box rgb(223,242,233) Career Copilot
+    participant C as Career Copilot
+  end
   Y->>A: "get started"
   A->>C: ground_rules
-  A->>Y: Three lines: your data is yours, this is education not advice, you send everything. OK?
+  A->>Y: Three lines: your data is yours, education not advice, you send everything. OK?
   Y->>A: "OK"
   A->>C: journey_state
-  A->>Y: "Want to tell me what's on your mind, or should I ask a few quick questions?"
+  A->>Y: "Tell me what's on your mind, or should I ask a few quick questions?"
   Y->>A: "ask me"
-  A->>Y: "Where are you right now? Starting out, between jobs, working but want a change, or interviewing?"
+  A->>Y: "Where are you right now?" (4 options, or your own words)
   Y->>A: "working, want a change"
   A->>C: profile_save (saved at once)
-  Note over A,C: Two more questions, then it gives something back
-  A->>Y: Your profile so far (confirmed / unsure), and one step to take
+  rect rgb(243,230,240)
+    Note over A,C: Two more questions at most, then something useful back
+  end
+  A->>Y: Your profile so far (confirmed or unsure) and one step to take
 ```
 
 - **Two ways in.** Talk it out in your own words, or answer one question
@@ -145,17 +154,38 @@ tabs. See a demo built from test data:
 
 ## 6. Your data and privacy
 
+*Where your information goes, and where it never goes:*
+
 ```mermaid
 flowchart LR
-  you(["You"]) -- "sign in with GitHub<br/>(public profile only)" --> cc["Career Copilot"]
-  src["Your email, calendar, bank<br/>(through your own connectors)"] -- "only the needed facts" --> cc
-  cc --> store[("Your private file<br/>export or delete any time")]
-  cc -- "anonymous counts only" --> sig[("Usage signals<br/>5+ people before anything shows")]
-  cc -. "never" .-> x["Passwords · account numbers ·<br/>raw emails · selling data"]
+  classDef person fill:#DCEBF7,stroke:#0072B2,color:#0B2540,stroke-width:1.5px
+  classDef copilot fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
+  classDef store fill:#FFF1D6,stroke:#E69F00,color:#3D2A00,stroke-width:1.5px
+  classDef ext fill:#EEF0F2,stroke:#6B7280,color:#1F2937,stroke-width:1.5px
+  classDef never fill:#FBE3D6,stroke:#D55E00,color:#4A1A00,stroke-width:1.5px,stroke-dasharray:4 3
+
+  you(["You"]):::person
+  src["Your email, calendar, bank<br/>through your own connectors"]:::person
+  gh["GitHub<br/>public profile only"]:::ext
+  cc["Career Copilot"]:::copilot
+  store[("Your records<br/>encrypted with your own key")]:::store
+  sig[("Usage counts<br/>anonymous, 5+ people")]:::store
+  x["Never: passwords · account numbers ·<br/>raw emails · selling data"]:::never
+
+  you -- "sign in once" --> gh --> cc
+  src -- "only the needed facts" --> cc
+  cc --> store
+  cc -- "no names or text" --> sig
+  cc -.- x
 ```
 
-- **Yours alone.** Each person has one private file. Say "export my data"
-  to see everything, or "delete my data" to erase it.
+Colours mean the same thing in every diagram: blue is you, green is
+Career Copilot, amber is stored data, grey is an outside service, orange
+is something it never does ([full legend](docs/ARCHITECTURE.md#how-to-read-the-diagrams)).
+
+- **Yours alone.** Your records are kept apart from everyone else's and
+  encrypted with your own key. Say "export my data" to see everything,
+  or "delete my data" to erase it for good.
 - **No passwords, ever.** GitHub handles sign-in, and Career Copilot
   stores only a scrambled id. It never logs in anywhere for you.
 - **Masked logs.** Your words, emails, money figures and keys never reach
@@ -168,15 +198,27 @@ Full text: [privacy notice](docs/PRIVACY.md) and
 
 ## 7. How it works
 
+*Who does what when you ask something:*
+
 ```mermaid
 flowchart LR
-  you(["You"]) <--> ai["Your AI assistant<br/>Claude · ChatGPT · Muse"]
-  ai <--> others["Your other connectors<br/>Gmail · Calendar · Drive"]
-  ai -- "MCP" --> cc["Career Copilot"]
-  cc --> journey["Journey<br/>where you are · next question"]
-  cc --> rules["Ground rules<br/>truth · conduct · response_check"]
-  cc --> mem[("Your data<br/>one private file per person")]
-  cc --> kb[("Knowledge<br/>roles · prep · money · cities")]
+  classDef person fill:#DCEBF7,stroke:#0072B2,color:#0B2540,stroke-width:1.5px
+  classDef copilot fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
+  classDef store fill:#FFF1D6,stroke:#E69F00,color:#3D2A00,stroke-width:1.5px
+  classDef guard fill:#F3E6F0,stroke:#CC79A7,color:#3B1230,stroke-width:1.5px
+
+  you(["You"]):::person
+  ai["Your AI assistant<br/>does the talking"]:::person
+  journey["Journey<br/>where you are · next question"]:::copilot
+  rules["Ground rules<br/>truth · conduct · response_check"]:::guard
+  mem[("Your records<br/>Neon Postgres, encrypted")]:::store
+  kb[("Knowledge<br/>roles · prep · money · cities")]:::store
+
+  you <--> ai
+  ai -- "MCP" --> journey
+  journey --> rules
+  journey --> mem
+  journey --> kb
 ```
 
 1. **Your assistant does the talking.** Career Copilot runs no AI model
@@ -269,6 +311,7 @@ The ground rules sit outside that folder on purpose.
 [Connect any assistant](docs/CONNECT.md) ·
 [Setup and hosting](docs/SETUP.md) · [Spec](docs/SPEC.md) ·
 [Blueprint](docs/BLUEPRINT.md) · [Architecture](docs/ARCHITECTURE.md) ·
+[Testing, problems and fixes](docs/ENGINEERING.md) ·
 [Backlog](docs/BACKLOG.md) · [Changelog](CHANGELOG.md) ·
 [Why we built it](docs/WHY.md) · [All docs](docs/README.md)
 

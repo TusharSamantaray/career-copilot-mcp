@@ -116,6 +116,28 @@ mirror is the goal (B-036). Full text: [PRIVACY.md](PRIVACY.md) and
 
 ## 7. Build order and status
 
+*What's built (green) and what's still open (grey, with its backlog id):*
+
+```mermaid
+flowchart LR
+  classDef built fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
+  classDef pending fill:#EEF0F2,stroke:#6B7280,color:#1F2937,stroke-width:1.5px,stroke-dasharray:4 3
+
+  s1["1 · Zero-start spine<br/>journey_state · profile_from_text<br/>direction_options"]:::built
+  s2["2 · Foundation integrity<br/>facts · conflicts · ownership<br/>keyword check"]:::built
+  s2o["resume_tailor<br/>B-026"]:::pending
+  s3["3 · Search loop<br/>job_search · jd_analyze<br/>cover letters · rounds"]:::built
+  s3o["sponsorship_verify<br/>B-029"]:::pending
+  s4["4 · Pressure mode<br/>deadlines · fast-track<br/>study plans · lessons"]:::built
+  s5["5 · Hardening<br/>sign-in · encryption<br/>Neon storage · mirror"]:::built
+  s5o["dashboard action strip<br/>B-034"]:::pending
+
+  s1 --> s2 --> s3 --> s4 --> s5
+  s2 -.- s2o
+  s3 -.- s3o
+  s5 -.- s5o
+```
+
 | Step | Pieces | Status |
 |---|---|---|
 | 1. Zero-start spine | journey_state, relaxed profile_save, persisted life_compass, profile_from_text, direction_options, server instructions, starter prompts | **Done** |

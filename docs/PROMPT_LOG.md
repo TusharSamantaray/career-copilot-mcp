@@ -4,6 +4,27 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-03 | v0.3.0-dev
+**Asked:** Make testing, problems and fixes easy to find; bring all docs
+up to date with meaningful Mermaid diagrams and a proper colour scheme.
+**Did:** New `docs/ENGINEERING.md` (test flow, suite table, acceptance
+tests, test hygiene, timeline, before/after of the free-host problems,
+16 problems with cause, fix and guard, engineer FAQ). Rewrote
+`docs/ARCHITECTURE.md` (legend plus 8 diagrams, each with its question).
+Coloured and refreshed the README diagrams; added diagrams to CONNECT
+(which way to connect), SETUP (free hosting pieces), SPEC (build
+status), TOUR (rewritten for current features). Updated the `tour`
+prompt to match. Okabe-Ito palette with dark text on light fills.
+Working agreement now asks for an ENGINEERING row per fixed problem.
+**Files:** `docs/ENGINEERING.md`, `docs/ARCHITECTURE.md`, `README.md`,
+`docs/CONNECT.md`, `docs/SETUP.md`, `docs/SPEC.md`, `docs/TOUR.md`,
+`docs/README.md`, `app.py`, `CLAUDE.md`.
+**Tests:** 8 suites passed, 0 failed.
+**Try it:** open docs/ENGINEERING.md on GitHub.
+**Open:** couldn't render-check the diagrams locally (running the Mermaid
+CLI was blocked); syntax reviewed by hand. PRIVACY.md wording left as is
+to avoid another ground-rules version.
+
+### 2026-11-03 | v0.3.0-dev
 **Asked:** Owner OK'd correcting the privacy text; asked whether Neon's
 free plan deletes data after 6 hours.
 **Did:** Explained: "history retention 6 hours" is the point-in-time
