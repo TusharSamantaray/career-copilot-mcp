@@ -348,9 +348,23 @@ mcp.add_middleware(AuthAndAudit())
 async def health(request: Request) -> JSONResponse:
     """Unauthenticated liveness check for the host. storage names the
     backend (sqlite or postgres) so the owner can confirm data will
-    survive restarts; it never includes the database address."""
+    survive restarts; it never includes the database address.
+    auth_mode tells a new client what the server expects before it
+    ever calls a tool: "github-oauth", "api-key", "open", or
+    "off (stdio)"."""
+    if STDIO:
+        auth_mode = "off (stdio)"
+    elif OAUTH:
+        auth_mode = "github-oauth"
+    elif API_KEYS:
+        auth_mode = "api-key"
+    else:
+        auth_mode = "open"
+    tools = await mcp.get_tools()
     return JSONResponse({"status": "ok", "version": VERSION,
-                         "storage": store.BACKEND.name})
+                         "storage": store.BACKEND.name,
+                         "auth_mode": auth_mode,
+                         "tool_count": len(tools)})
 
 
 @mcp.custom_route("/insights", methods=["GET"])
