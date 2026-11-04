@@ -5,18 +5,35 @@ one question, stated above it. The diagrams render on GitHub.
 
 ## How to read the diagrams
 
-Colours mean the same thing on every page in these docs. The palette is
-Okabe-Ito, chosen to stay readable with colour blindness and in both
-light and dark mode.
+Colours mean the same thing on every page in these docs. Each box has a
+coloured outline and a faint tint of the same colour; the text keeps the
+page's own colour, so diagrams read on white and black backgrounds alike.
+Shape and line style carry meaning too, so the diagrams still work
+without colour.
 
 | Colour | Means | Examples |
 |---|---|---|
 | 🟦 Blue | The person and their own tools | You, your AI assistant, your Gmail or calendar connector |
 | 🟩 Green | Career Copilot itself | Tools, rules, the server |
-| 🟨 Amber | Stored data | Postgres on Neon, local SQLite files, the knowledge base |
+| 🟨 Amber | Stored data (cylinders) | Postgres on Neon, local SQLite files, the knowledge base |
 | ⬜ Grey | Outside services Career Copilot talks to | GitHub sign-in, job boards, World Bank |
-| 🟪 Pink | Safety and truth checks | `response_check`, encryption, the invite list |
-| 🟧 Orange, dashed | Things it never does | Ask for passwords, apply or message for you |
+| 🟪 Purple | Safety and truth checks | `response_check`, encryption, the invite list |
+| 🟥 Red, dashed | Things it never does | Ask for passwords, apply or message for you |
+
+For anyone adding a diagram, copy these lines:
+
+```text
+classDef person  fill:#3B82F61A,stroke:#3B82F6,stroke-width:1.5px
+classDef copilot fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
+classDef store   fill:#F59E0B1A,stroke:#F59E0B,stroke-width:1.5px
+classDef ext     fill:#94A3B81A,stroke:#94A3B8,stroke-width:1.5px
+classDef guard   fill:#A855F71A,stroke:#A855F7,stroke-width:1.5px
+classDef never   fill:#EF44441A,stroke:#EF4444,stroke-width:1.5px,stroke-dasharray:4 3
+```
+
+Don't set a text `color`; leaving it out is what keeps text readable in
+both themes. Sequence diagrams use `box rgba(…, 0.08)` with the same
+colours.
 
 ## 1. What talks to what
 
@@ -24,12 +41,12 @@ light and dark mode.
 
 ```mermaid
 flowchart LR
-  classDef person fill:#DCEBF7,stroke:#0072B2,color:#0B2540,stroke-width:1.5px
-  classDef copilot fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
-  classDef store fill:#FFF1D6,stroke:#E69F00,color:#3D2A00,stroke-width:1.5px
-  classDef ext fill:#EEF0F2,stroke:#6B7280,color:#1F2937,stroke-width:1.5px
-  classDef guard fill:#F3E6F0,stroke:#CC79A7,color:#3B1230,stroke-width:1.5px
-  classDef never fill:#FBE3D6,stroke:#D55E00,color:#4A1A00,stroke-width:1.5px,stroke-dasharray:4 3
+  classDef person fill:#3B82F61A,stroke:#3B82F6,stroke-width:1.5px
+  classDef copilot fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
+  classDef store fill:#F59E0B1A,stroke:#F59E0B,stroke-width:1.5px
+  classDef ext fill:#94A3B81A,stroke:#94A3B8,stroke-width:1.5px
+  classDef guard fill:#A855F71A,stroke:#A855F7,stroke-width:1.5px
+  classDef never fill:#EF44441A,stroke:#EF4444,stroke-width:1.5px,stroke-dasharray:4 3
 
   you(["You"]):::person
   ai["Your AI assistant<br/>Claude · ChatGPT · Muse"]:::person
@@ -73,15 +90,15 @@ flowchart LR
 ```mermaid
 sequenceDiagram
   autonumber
-  box rgb(220,235,247) Your side
+  box rgba(59,130,246,0.08) Your side
     participant A as Your assistant
   end
-  box rgb(223,242,233) Career Copilot
+  box rgba(16,185,129,0.08) Career Copilot
     participant S as Sign-in check
     participant M as Audit middleware
     participant T as Tool
   end
-  box rgb(255,241,214) Storage
+  box rgba(245,158,11,0.08) Storage
     participant D as Neon Postgres
   end
   A->>S: call tool, with your sealed token
@@ -105,13 +122,13 @@ key kept in the host's settings, which survive restarts.
 ```mermaid
 sequenceDiagram
   autonumber
-  box rgb(220,235,247) Your side
+  box rgba(59,130,246,0.08) Your side
     participant A as Your assistant
   end
-  box rgb(223,242,233) Career Copilot
+  box rgba(16,185,129,0.08) Career Copilot
     participant C as Sign-in endpoints
   end
-  box rgb(238,240,242) Outside
+  box rgba(148,163,184,0.08) Outside
     participant G as GitHub
   end
   A->>C: register (first connect)
@@ -139,10 +156,10 @@ delete it?*
 
 ```mermaid
 flowchart LR
-  classDef copilot fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
-  classDef store fill:#FFF1D6,stroke:#E69F00,color:#3D2A00,stroke-width:1.5px
-  classDef guard fill:#F3E6F0,stroke:#CC79A7,color:#3B1230,stroke-width:1.5px
-  classDef ext fill:#EEF0F2,stroke:#6B7280,color:#1F2937,stroke-width:1.5px
+  classDef copilot fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
+  classDef store fill:#F59E0B1A,stroke:#F59E0B,stroke-width:1.5px
+  classDef guard fill:#A855F71A,stroke:#A855F7,stroke-width:1.5px
+  classDef ext fill:#94A3B81A,stroke:#94A3B8,stroke-width:1.5px
 
   rec["A record<br/>e.g. one fact"]:::copilot
   key["Your data key<br/>random, one per person"]:::guard
@@ -170,10 +187,10 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  classDef person fill:#DCEBF7,stroke:#0072B2,color:#0B2540,stroke-width:1.5px
-  classDef copilot fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
-  classDef store fill:#FFF1D6,stroke:#E69F00,color:#3D2A00,stroke-width:1.5px
-  classDef guard fill:#F3E6F0,stroke:#CC79A7,color:#3B1230,stroke-width:1.5px
+  classDef person fill:#3B82F61A,stroke:#3B82F6,stroke-width:1.5px
+  classDef copilot fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
+  classDef store fill:#F59E0B1A,stroke:#F59E0B,stroke-width:1.5px
+  classDef guard fill:#A855F71A,stroke:#A855F7,stroke-width:1.5px
 
   said["You said it"]:::person
   resume["Old resumes"]:::person
@@ -224,11 +241,11 @@ stateDiagram-v2
 
 ```mermaid
 flowchart LR
-  classDef ext fill:#EEF0F2,stroke:#6B7280,color:#1F2937,stroke-width:1.5px
-  classDef copilot fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
-  classDef guard fill:#F3E6F0,stroke:#CC79A7,color:#3B1230,stroke-width:1.5px
-  classDef store fill:#FFF1D6,stroke:#E69F00,color:#3D2A00,stroke-width:1.5px
-  classDef never fill:#FBE3D6,stroke:#D55E00,color:#4A1A00,stroke-width:1.5px,stroke-dasharray:4 3
+  classDef ext fill:#94A3B81A,stroke:#94A3B8,stroke-width:1.5px
+  classDef copilot fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
+  classDef guard fill:#A855F71A,stroke:#A855F7,stroke-width:1.5px
+  classDef store fill:#F59E0B1A,stroke:#F59E0B,stroke-width:1.5px
+  classDef never fill:#EF44441A,stroke:#EF4444,stroke-width:1.5px,stroke-dasharray:4 3
 
   boards["Greenhouse · Lever · Ashby<br/>public, read-only"]:::ext
   norm["One shape<br/>title · place · remote · posted"]:::copilot
@@ -257,10 +274,10 @@ breaking it?*
 
 ```mermaid
 flowchart LR
-  classDef copilot fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
-  classDef store fill:#FFF1D6,stroke:#E69F00,color:#3D2A00,stroke-width:1.5px
-  classDef guard fill:#F3E6F0,stroke:#CC79A7,color:#3B1230,stroke-width:1.5px
-  classDef person fill:#DCEBF7,stroke:#0072B2,color:#0B2540,stroke-width:1.5px
+  classDef copilot fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
+  classDef store fill:#F59E0B1A,stroke:#F59E0B,stroke-width:1.5px
+  classDef guard fill:#A855F71A,stroke:#A855F7,stroke-width:1.5px
+  classDef person fill:#3B82F61A,stroke:#3B82F6,stroke-width:1.5px
 
   use["Tool errors, missing roles, ratings"]:::copilot
   sig[("Anonymous signals<br/>salted, 5+ people")]:::store

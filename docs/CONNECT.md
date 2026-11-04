@@ -6,9 +6,9 @@
 
 ```mermaid
 flowchart TD
-  classDef person fill:#DCEBF7,stroke:#0072B2,color:#0B2540,stroke-width:1.5px
-  classDef copilot fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
-  classDef store fill:#FFF1D6,stroke:#E69F00,color:#3D2A00,stroke-width:1.5px
+  classDef person fill:#3B82F61A,stroke:#3B82F6,stroke-width:1.5px
+  classDef copilot fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
+  classDef store fill:#F59E0B1A,stroke:#F59E0B,stroke-width:1.5px
 
   q1{"Where do you use<br/>your assistant?"}:::person
   web["claude.ai, ChatGPT,<br/>Muse or your phone"]:::person

@@ -3,6 +3,20 @@
 What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
+### 2026-11-04 | v0.3.0-dev
+**Asked:** The diagrams look washed out and ugly; use a simple, elegant
+palette that's visible on both white and black backgrounds.
+**Did:** Replaced the light-fill, dark-text classes with translucent
+tints (10% alpha) and mid-tone outlines, and removed forced text colours
+so each theme keeps its own text colour. Sequence diagram boxes use 8%
+tints. Pink became purple and orange became red. The legend in
+ARCHITECTURE.md now includes copy-paste class lines for new diagrams.
+**Files:** `README.md`, `docs/ARCHITECTURE.md`, `docs/ENGINEERING.md`,
+`docs/CONNECT.md`, `docs/SETUP.md`, `docs/SPEC.md`, `docs/TOUR.md`.
+**Tests:** see commit; docs only.
+**Try it:** open docs/ARCHITECTURE.md on GitHub in light, then dark theme.
+**Open:** no local Mermaid renderer available, so check the look on GitHub.
+
 ### 2026-11-03 | v0.3.0-dev
 **Asked:** Make testing, problems and fixes easy to find; bring all docs
 up to date with meaningful Mermaid diagrams and a proper colour scheme.

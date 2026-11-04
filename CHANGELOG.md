@@ -172,9 +172,16 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- Diagrams are easier to read in light and dark mode. Boxes now have a
+  coloured outline with a faint tint, and the text uses the page's own
+  colour, so nothing is pale-on-white or dark-on-black. Safety checks
+  are purple and "never does" items are red and dashed.
+  **Try it:** open `docs/ARCHITECTURE.md` on GitHub, then switch GitHub
+  between light and dark theme. The text in every box should stay sharp
+  in both.
 - Documentation brought up to date, with diagrams in one colour scheme
   (blue is you, green is Career Copilot, amber is stored data, grey is an
-  outside service, pink is a safety check, orange is something it never
+  outside service, purple is a safety check, red is something it never
   does). Each diagram answers one stated question. New page,
   `docs/ENGINEERING.md`: how it's tested, the acceptance tests, a
   timeline of every problem found during testing, and for each one the

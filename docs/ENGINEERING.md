@@ -14,10 +14,10 @@ Nothing is committed with a failing test (see the working agreement in
 
 ```mermaid
 flowchart LR
-  classDef copilot fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
-  classDef guard fill:#F3E6F0,stroke:#CC79A7,color:#3B1230,stroke-width:1.5px
-  classDef store fill:#FFF1D6,stroke:#E69F00,color:#3D2A00,stroke-width:1.5px
-  classDef person fill:#DCEBF7,stroke:#0072B2,color:#0B2540,stroke-width:1.5px
+  classDef copilot fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
+  classDef guard fill:#A855F71A,stroke:#A855F7,stroke-width:1.5px
+  classDef store fill:#F59E0B1A,stroke:#F59E0B,stroke-width:1.5px
+  classDef person fill:#3B82F61A,stroke:#3B82F6,stroke-width:1.5px
 
   change["A change"]:::person
   local["Local run<br/>8 suites"]:::copilot
@@ -98,10 +98,10 @@ happened dozens of times, because every push redeploys.
 
 ```mermaid
 flowchart TB
-  classDef store fill:#FFF1D6,stroke:#E69F00,color:#3D2A00,stroke-width:1.5px
-  classDef never fill:#FBE3D6,stroke:#D55E00,color:#4A1A00,stroke-width:1.5px,stroke-dasharray:4 3
-  classDef copilot fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
-  classDef guard fill:#F3E6F0,stroke:#CC79A7,color:#3B1230,stroke-width:1.5px
+  classDef store fill:#F59E0B1A,stroke:#F59E0B,stroke-width:1.5px
+  classDef never fill:#EF44441A,stroke:#EF4444,stroke-width:1.5px,stroke-dasharray:4 3
+  classDef copilot fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
+  classDef guard fill:#A855F71A,stroke:#A855F7,stroke-width:1.5px
 
   subgraph old_way["Before"]
     r1["Restart or deploy"]:::never --> d1[("Server disk wiped")]:::never

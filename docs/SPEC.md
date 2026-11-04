@@ -120,8 +120,8 @@ mirror is the goal (B-036). Full text: [PRIVACY.md](PRIVACY.md) and
 
 ```mermaid
 flowchart LR
-  classDef built fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
-  classDef pending fill:#EEF0F2,stroke:#6B7280,color:#1F2937,stroke-width:1.5px,stroke-dasharray:4 3
+  classDef built fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
+  classDef pending fill:#94A3B81A,stroke:#94A3B8,stroke-width:1.5px,stroke-dasharray:4 3
 
   s1["1 · Zero-start spine<br/>journey_state · profile_from_text<br/>direction_options"]:::built
   s2["2 · Foundation integrity<br/>facts · conflicts · ownership<br/>keyword check"]:::built

@@ -8,8 +8,8 @@ purpose: one step and one question at a time.
 
 ```mermaid
 flowchart LR
-  classDef copilot fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
-  classDef guard fill:#F3E6F0,stroke:#CC79A7,color:#3B1230,stroke-width:1.5px
+  classDef copilot fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
+  classDef guard fill:#A855F71A,stroke:#A855F7,stroke-width:1.5px
 
   a["1 · Start<br/>two ways in"]:::copilot
   b["2 · Direction<br/>2-3 options"]:::copilot

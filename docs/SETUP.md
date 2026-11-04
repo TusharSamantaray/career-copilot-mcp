@@ -159,11 +159,11 @@ your phone. It's free and needs no credit card.
 
 ```mermaid
 flowchart LR
-  classDef person fill:#DCEBF7,stroke:#0072B2,color:#0B2540,stroke-width:1.5px
-  classDef copilot fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
-  classDef store fill:#FFF1D6,stroke:#E69F00,color:#3D2A00,stroke-width:1.5px
-  classDef ext fill:#EEF0F2,stroke:#6B7280,color:#1F2937,stroke-width:1.5px
-  classDef guard fill:#F3E6F0,stroke:#CC79A7,color:#3B1230,stroke-width:1.5px
+  classDef person fill:#3B82F61A,stroke:#3B82F6,stroke-width:1.5px
+  classDef copilot fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
+  classDef store fill:#F59E0B1A,stroke:#F59E0B,stroke-width:1.5px
+  classDef ext fill:#94A3B81A,stroke:#94A3B8,stroke-width:1.5px
+  classDef guard fill:#A855F71A,stroke:#A855F7,stroke-width:1.5px
 
   repo["GitHub repo<br/>push to main"]:::ext
   render["Render web service<br/>free plan, sleeps when idle"]:::copilot

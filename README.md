@@ -68,11 +68,11 @@ share. Step by step: [docs/SETUP.md](docs/SETUP.md#6-free-demo-hosting-render).
 ```mermaid
 sequenceDiagram
   autonumber
-  box rgb(220,235,247) Your side
+  box rgba(59,130,246,0.08) Your side
     participant Y as You
     participant A as Your assistant
   end
-  box rgb(223,242,233) Career Copilot
+  box rgba(16,185,129,0.08) Career Copilot
     participant C as Career Copilot
   end
   Y->>A: "get started"
@@ -158,11 +158,11 @@ tabs. See a demo built from test data:
 
 ```mermaid
 flowchart LR
-  classDef person fill:#DCEBF7,stroke:#0072B2,color:#0B2540,stroke-width:1.5px
-  classDef copilot fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
-  classDef store fill:#FFF1D6,stroke:#E69F00,color:#3D2A00,stroke-width:1.5px
-  classDef ext fill:#EEF0F2,stroke:#6B7280,color:#1F2937,stroke-width:1.5px
-  classDef never fill:#FBE3D6,stroke:#D55E00,color:#4A1A00,stroke-width:1.5px,stroke-dasharray:4 3
+  classDef person fill:#3B82F61A,stroke:#3B82F6,stroke-width:1.5px
+  classDef copilot fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
+  classDef store fill:#F59E0B1A,stroke:#F59E0B,stroke-width:1.5px
+  classDef ext fill:#94A3B81A,stroke:#94A3B8,stroke-width:1.5px
+  classDef never fill:#EF44441A,stroke:#EF4444,stroke-width:1.5px,stroke-dasharray:4 3
 
   you(["You"]):::person
   src["Your email, calendar, bank<br/>through your own connectors"]:::person
@@ -202,10 +202,10 @@ Full text: [privacy notice](docs/PRIVACY.md) and
 
 ```mermaid
 flowchart LR
-  classDef person fill:#DCEBF7,stroke:#0072B2,color:#0B2540,stroke-width:1.5px
-  classDef copilot fill:#DFF2E9,stroke:#009E73,color:#0B2E22,stroke-width:1.5px
-  classDef store fill:#FFF1D6,stroke:#E69F00,color:#3D2A00,stroke-width:1.5px
-  classDef guard fill:#F3E6F0,stroke:#CC79A7,color:#3B1230,stroke-width:1.5px
+  classDef person fill:#3B82F61A,stroke:#3B82F6,stroke-width:1.5px
+  classDef copilot fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
+  classDef store fill:#F59E0B1A,stroke:#F59E0B,stroke-width:1.5px
+  classDef guard fill:#A855F71A,stroke:#A855F7,stroke-width:1.5px
 
   you(["You"]):::person
   ai["Your AI assistant<br/>does the talking"]:::person
