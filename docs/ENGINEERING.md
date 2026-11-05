@@ -85,7 +85,15 @@ timeline
                             : Keep-awake job barely ran
   Moving to Neon : Pooler and prepared statements
                  : One bad encrypted row hid a whole list
+  First outside tester (Nov 4) : Assistant refused an unexplained 401
+                               : Sign-in callback could crash on a bad GitHub reply
 ```
+
+One decision from the tester incident, kept so it isn't relitigated:
+**the server never deploys code changes on its own.** Config and data
+fixes can ship after tests pass; code changes stay a pull request a
+person merges. A server holding resumes and job-search data must not
+rewrite and ship itself.
 
 ## 3. The two that mattered most
 
@@ -140,6 +148,9 @@ Ids in brackets are backlog items ([BACKLOG.md](BACKLOG.md)).
 | 14 | A test wrote to the real home folder | The data mirror saves to `~/CareerCopilot` in local mode | Tests set `CAREER_COPILOT_HOME`; the test asserts the path | `mirror_checks` |
 | 15 | Tests passed or failed for the wrong reason | Shared state between checks (a confirmed "40 minutes" made "40%" look backed; a saved voice made the "first visit" check see a profile) | Distinct values per check; reset the profile after checks that change it | The checks themselves |
 | 16 | Local Claude Code showed "Failed to connect" once | First start downloaded the new version and timed out | Retry; no code change | Not needed |
+| 17 | A tester's assistant refused to connect: 401 with no explanation (B-041) | Not a bug: the server correctly asks for GitHub sign-in. The invite message said "no API key needed" and never mentioned GitHub | Corrected tester message in [OWNER.md](OWNER.md); `/health` reports `auth_mode`, `invite_only`, `tool_count` so an assistant can check before connecting | `test_oauth.py` `/health` check |
+| 18 | The same probe saw `initialize` time out after 75 s and 150 s | Not reproduced: locally it answers in about 5 ms, and production returns 401 in under a second. The probe client's own behaviour | None; reopen with the client's name and version if a real assistant hangs | Monitor |
+| 19 | `test_oauth.py` invite check got a 500 in another environment (B-044) | Not reproduced here or in CI. Found two ways the sign-in callback could crash: GitHub unreachable, or a reply that isn't JSON (a proxy's error page is one) | Callback catches both and shows "Couldn't reach GitHub" (502), logging only the error kind; the test's fake GitHub bypasses proxies | `test_oauth.py`: garbled GitHub reply |
 
 ## 5. What engineers usually ask
 

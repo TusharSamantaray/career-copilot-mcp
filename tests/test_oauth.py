@@ -51,7 +51,13 @@ class FakeGitHub(BaseHTTPRequestHandler):
         form = parse_qs(self.rfile.read(length).decode())
         code = form.get("code", [""])[0]
         assert form.get("client_secret") == ["fake-client-secret"]
-        if code in USERS:
+        if code == "garbled-code":              # e.g. an outage or a proxy page
+            data = b"<html>upstream error</html>"
+            self.send_response(200)
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
+        elif code in USERS:
             self._send(200, {"access_token": f"gho_{code}"})
         else:
             self._send(200, {"error": "bad_verification_code"})
@@ -76,6 +82,8 @@ def start_server(console):
            "CAREER_COPILOT_GITHUB_BASE": f"http://127.0.0.1:{GH_PORT}",
            "CAREER_COPILOT_GITHUB_API": f"http://127.0.0.1:{GH_PORT}",
            "CAREER_COPILOT_API_KEY": "key-old-style",
+           # The fake GitHub is local: never send it through a proxy.
+           "NO_PROXY": "127.0.0.1,localhost", "no_proxy": "127.0.0.1,localhost",
            "COPILOT_DATA_DIR": TEST_DIR,
            "CAREER_COPILOT_LOG_DIR": os.path.join(TEST_DIR, "logs")}
     server = subprocess.Popen([sys.executable, "app.py"], env=env,
@@ -143,7 +151,11 @@ async def use(access_token, save=None):
 
 
 def first_run():
-    assert httpx.get(f"{BASE}/health").json()["status"] == "ok"
+    health = httpx.get(f"{BASE}/health").json()
+    assert health["status"] == "ok" and health["auth_mode"] == "github-oauth"
+    assert health["invite_only"] is True and health["tool_count"] > 0
+    assert "octo" not in json.dumps(health).lower(), "invitees leaked"
+    print("/health says GitHub sign-in, invite-only, no names: OK")
     anon = httpx.post(f"{BASE}/mcp", json=INIT, headers=MCP_HEADERS)
     assert anon.status_code == 401
     assert "resource_metadata" in anon.headers.get("www-authenticate", "")
@@ -158,6 +170,11 @@ def first_run():
     _, _, denied = sign_in("stranger-code")
     assert denied.status_code == 403 and "invite-only" in denied.text
     print("GitHub user not on the invite list is turned away: OK")
+
+    _, _, garbled = sign_in("garbled-code")
+    assert garbled.status_code == 502, garbled.status_code
+    assert "Couldn't reach GitHub" in garbled.text
+    print("GitHub answering with garbage gives a clear page, not a crash: OK")
 
     app_client, tokens, _ = sign_in("good-code")
     profile = asyncio.run(use(tokens["access_token"], save="Staff SRE"))

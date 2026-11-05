@@ -4,6 +4,23 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-04 | v0.3.0-dev
+**Asked:** Build the next tasks from the gap spec (sections 1-6 were
+already built; section 7 is the tester incident).
+**Did:** Issue 6: test_oauth passes here and in CI, so not reproduced,
+but found the callback could crash on an unreachable GitHub or a non-JSON
+reply; now a 502 page, error kind logged. Test adds a garbled-reply case
+and keeps its fake GitHub off any proxy. Issue 5: /health reports
+invite_only (never names). Issue 2: tester message in OWNER.md (repo is
+private, so it offers access instead of a link). Issues 1, 3, 10 recorded
+as decisions in ENGINEERING.md; 7, 8, 9 added as B-043, B-045, B-046.
+**Files:** `copilot/signin.py`, `app.py`, `tests/test_oauth.py`,
+`docs/OWNER.md`, `docs/ENGINEERING.md`, `docs/BACKLOG.md`.
+**Tests:** see commit.
+**Try it:** open /health on the live server and look for invite_only.
+**Open:** B-042 (who may sign in) and B-043 (public or private source,
+ground_rules rewrite) are owner decisions.
+
+### 2026-11-04 | v0.3.0-dev
 **Asked:** The diagrams look washed out and ugly; use a simple, elegant
 palette that's visible on both white and black backgrounds.
 **Did:** Replaced the light-fill, dark-text classes with translucent

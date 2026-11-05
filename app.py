@@ -351,7 +351,8 @@ async def health(request: Request) -> JSONResponse:
     survive restarts; it never includes the database address.
     auth_mode tells a new client what the server expects before it
     ever calls a tool: "github-oauth", "api-key", "open", or
-    "off (stdio)"."""
+    "off (stdio)". invite_only says whether sign-in is limited to the
+    owner's list (never who is on it)."""
     if STDIO:
         auth_mode = "off (stdio)"
     elif OAUTH:
@@ -364,6 +365,7 @@ async def health(request: Request) -> JSONResponse:
     return JSONResponse({"status": "ok", "version": VERSION,
                          "storage": store.BACKEND.name,
                          "auth_mode": auth_mode,
+                         "invite_only": bool(OAUTH and ALLOWED_GITHUB),
                          "tool_count": len(tools)})
 
 

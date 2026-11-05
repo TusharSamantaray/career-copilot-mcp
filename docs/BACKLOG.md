@@ -11,10 +11,29 @@
 - B-034 [P2] Dashboard action strip. From: spec v2.
 - B-012 [P2] Delete the old prototype server.py from the project
   folder (it's untracked). From: repo setup.
-
-
+- B-042 [P0, owner] Decide who may sign in: keep the invite list, or
+  open to any GitHub user. /health now shows `invite_only`. From: gap
+  spec issue 5.
+- B-043 [P1, owner] Trust pack: keep the source private with invites or
+  make it public; a machine-readable data-handling statement shown before
+  the first save; ground_rules as disclosure, not directions to the host
+  assistant (needs owner OK and a new TERMS_VERSION). From: gap spec
+  issue 7.
+- B-045 [P1] report_issue tool (error code, tool name, time, client
+  hint; no personal data) returning a known-issue match and workaround,
+  plus stable error codes on every tool error and client retry guidance.
+  From: gap spec issue 8.
+- B-046 [P2] Triage Action on reported issues that proposes a fix as a
+  PR (human merges), and tools/list_changed after deploys. From: gap spec
+  issue 9.
 
 ## Done
+- B-044 Sign-in callback crashed (500) when GitHub couldn't be reached or
+  answered with something unreadable; now a clear "Couldn't reach GitHub"
+  page (502), error kind logged only. test_oauth's fake GitHub also
+  bypasses proxies. From: gap spec issue 6.
+- B-041 Tester message said "no API key needed" without saying sign-in
+  is GitHub. Corrected message in docs/OWNER.md. From: gap spec issue 2.
 - B-040 Neon password reset and the new pooled DATABASE_URL set in
   Render by the owner; live /health reports postgres. From: Neon setup.
 - B-008 Free persistent storage: Postgres backend (DATABASE_URL, Neon

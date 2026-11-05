@@ -172,6 +172,14 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- The health check now says whether sign-in is invite-only (B-042), next
+  to the sign-in method and tool count, so you or a tester's assistant
+  can check the server before connecting. It never shows who is invited.
+  A ready-to-send tester message that explains GitHub sign-in is in
+  `docs/OWNER.md` (B-041).
+  **Try it:** open https://career-copilot-cg2k.onrender.com/health. You
+  should see `"auth_mode": "github-oauth"` and `"invite_only": true` or
+  `false`.
 - Diagrams are easier to read in light and dark mode. Boxes now have a
   coloured outline with a faint tint, and the text uses the page's own
   colour, so nothing is pale-on-white or dark-on-black. Safety checks
@@ -273,6 +281,9 @@ Every Added or Changed line has a **Try it:** line.
   politely say that's outside what it does and offer a career step.
 
 ### Fixed
+- If GitHub is down or answers oddly while you sign in, you now get a
+  clear "Couldn't reach GitHub, try again in a minute" page instead of a
+  server error (B-044).
 - The privacy notice and terms no longer say the demo is wiped on every
   restart: data now lives in a managed database. They still suggest
   keeping your own copy, since it's a free service. You'll be asked to

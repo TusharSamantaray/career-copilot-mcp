@@ -17,6 +17,7 @@ import base64
 import hashlib
 import hmac
 import json
+import logging
 import secrets
 import time
 from urllib.parse import urlencode
@@ -40,6 +41,11 @@ ACCESS_SECONDS = 30 * 24 * 3600
 REFRESH_SECONDS = 365 * 24 * 3600
 KEPT_METADATA = ("redirect_uris", "grant_types", "response_types",
                  "token_endpoint_auth_method", "scope", "client_name")
+log = logging.getLogger("career_copilot.signin")
+
+
+class GitHubUnreachable(Exception):
+    """GitHub didn't answer, or answered with something unreadable."""
 
 
 class _Code(AuthorizationCode):
@@ -137,22 +143,28 @@ class StatelessGitHubProvider(OAuthProvider):
         return f"{self.gh_base}/login/oauth/authorize?{query}"
 
     async def _github_user(self, code):
-        async with httpx.AsyncClient(timeout=10) as http:
-            token = await http.post(
-                f"{self.gh_base}/login/oauth/access_token",
-                headers={"Accept": "application/json"},
-                data={"client_id": self.gh_id,
-                      "client_secret": self.gh_secret, "code": code})
-            gh_token = token.json().get("access_token") \
-                if token.status_code == 200 else None
-            if not gh_token:
-                return None
-            user = await http.get(f"{self.gh_api}/user", headers={
-                "Authorization": f"Bearer {gh_token}",
-                "Accept": "application/vnd.github+json",
-                "User-Agent": "CareerCopilot"})
-        # The GitHub token is dropped here: only the identity is kept.
-        return user.json() if user.status_code == 200 else None
+        try:
+            async with httpx.AsyncClient(timeout=10) as http:
+                token = await http.post(
+                    f"{self.gh_base}/login/oauth/access_token",
+                    headers={"Accept": "application/json"},
+                    data={"client_id": self.gh_id,
+                          "client_secret": self.gh_secret, "code": code})
+                gh_token = token.json().get("access_token") \
+                    if token.status_code == 200 else None
+                if not gh_token:
+                    return None
+                user = await http.get(f"{self.gh_api}/user", headers={
+                    "Authorization": f"Bearer {gh_token}",
+                    "Accept": "application/vnd.github+json",
+                    "User-Agent": "CareerCopilot"})
+                # The GitHub token is dropped here: only the identity is kept.
+                return user.json() if user.status_code == 200 else None
+        except (httpx.HTTPError, ValueError, AttributeError) as error:
+            # Only the error's kind is logged: never codes, tokens or bodies.
+            log.warning("GitHub sign-in step failed: %s",
+                        type(error).__name__)
+            raise GitHubUnreachable from None
 
     async def callback(self, request: Request):
         state = self._open("state", request.query_params.get("state", ""))
@@ -160,7 +172,12 @@ class StatelessGitHubProvider(OAuthProvider):
             return _page("Sign-in expired", "Please go back to your "
                          "assistant and click Connect again.", 400)
         code = request.query_params.get("code")
-        user = await self._github_user(code) if code else None
+        try:
+            user = await self._github_user(code) if code else None
+        except GitHubUnreachable:
+            return _page("Couldn't reach GitHub", "GitHub didn't answer "
+                         "properly just now. Wait a minute, then click "
+                         "Connect again.", 502)
         if not user or "id" not in user:
             return _page("Sign-in didn't finish", "GitHub didn't confirm "
                          "the sign-in. Please try Connect again.", 400)

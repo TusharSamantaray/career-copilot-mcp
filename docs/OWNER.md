@@ -44,6 +44,37 @@ The values are in Render → career-copilot → Environment.
   words.
 - **Test as a stranger:** sign in with a second GitHub account, added to
   the invite list.
+- **Is it invite-only right now?** Open the health check. `"invite_only":
+  true` means only people on your list can sign in; `false` means anyone
+  with a GitHub account can. It never shows who is on the list.
+
+## Message to send a tester
+
+Add their GitHub username to the invite list first, then send this.
+It says exactly what happens, so a careful assistant can check it before
+connecting.
+
+> Hi! I'd love your help testing Career Copilot, a career coach that
+> plugs into your AI assistant (Claude, ChatGPT and others).
+>
+> 1. In your assistant, add a custom connector with this address:
+>    `https://career-copilot-cg2k.onrender.com/mcp`
+> 2. When you connect, you'll be asked to **sign in with GitHub**. It
+>    only reads your public GitHub profile (username and id), to keep
+>    your data separate from everyone else's. No API key, no password.
+>    It's invite-only, and I've added your GitHub username.
+> 3. Say "Show me the ground rules", then "I don't know what I want".
+>
+> Want to check it first? `https://career-copilot-cg2k.onrender.com/health`
+> shows the version, the sign-in method (`github-oauth`), and whether
+> it's invite-only. The source code is private for now; ask me if you'd
+> like read access, and I can send the privacy notice. The free server
+> sleeps when idle, so the first connect can take up to a minute.
+>
+> If something breaks, tell me what you said and what you saw.
+
+If you make the repository public (B-043), swap the source line for its
+link.
 
 ## Working with Claude on it
 
