@@ -19,15 +19,15 @@
   the first save; ground_rules as disclosure, not directions to the host
   assistant (needs owner OK and a new TERMS_VERSION). From: gap spec
   issue 7.
-- B-045 [P1] report_issue tool (error code, tool name, time, client
-  hint; no personal data) returning a known-issue match and workaround,
-  plus stable error codes on every tool error and client retry guidance.
-  From: gap spec issue 8.
 - B-046 [P2] Triage Action on reported issues that proposes a fix as a
   PR (human merges), and tools/list_changed after deploys. From: gap spec
   issue 9.
 
 ## Done
+- B-045 Stable error codes on every tool error (copilot/errors.py),
+  report_issue (code, tool, ref, app family; anonymous counts only),
+  client retry guidance in docs/CONNECT.md. Unknown tools and bad values
+  no longer show as crashes. From: gap spec issue 8.
 - B-044 Sign-in callback crashed (500) when GitHub couldn't be reached or
   answered with something unreadable; now a clear "Couldn't reach GitHub"
   page (502), error kind logged only. test_oauth's fake GitHub also

@@ -47,7 +47,10 @@ def _get(url):
                              headers={"User-Agent": USER_AGENT})
     except httpx.HTTPError:
         return None
-    data = response.json() if response.status_code == 200 else None
+    try:
+        data = response.json() if response.status_code == 200 else None
+    except ValueError:                  # an outage page instead of JSON
+        data = None
     _cache[url] = (time.time(), data)
     return data
 

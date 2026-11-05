@@ -6,6 +6,15 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Errors now explain themselves (B-045). Every error starts with a short
+  code, like `[UNKNOWN_TOOL]`, and a new `report_issue` tool says what it
+  means and what to do: reconnect, fix a value, or try again once. Only
+  an anonymous count is kept. Calling an out-of-date tool or sending a
+  wrong value no longer shows as "Internal error". The codes are listed
+  in `docs/CONNECT.md`.
+  **Try it:** say "Call the tool no_such_tool". You should see an
+  `[UNKNOWN_TOOL]` error. Then say "What does that error mean?" and get
+  "disconnect and reconnect, or start a new chat".
 - Deadlines and fast-track mode (B-030). A hard date, like the end of a
   grace period, is saved with a best case and a safer, earlier date, and
   plans use the safer one. When it's under 60 days away, Career Copilot

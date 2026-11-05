@@ -188,7 +188,7 @@ person may send or rely on passes response_check.
 
 ### What exists today (verified in code on 2026-11-03)
 
-85 tools, 8 resources, 16 prompts. Watches: watch_create, watches,
+86 tools, 8 resources, 16 prompts. Watches: watch_create, watches,
 digest_get. Facts: fact_add, fact_conflicts,
 fact_resolve. Discovery: job_search, jd_analyze, ats_profile_check,
 skill_gap_evidence, ats_keyword_check, recruiter_find. Truth:
@@ -205,7 +205,8 @@ Prepare: interview_questions, coding_pattern, system_design,
 study_plan, prep_checklist, nudge_add. Steady: layoff_playbook,
 runway_calc, layoff_fund_plan, finance tools. Glue: daily_step,
 step_done, dashboard, companions, ground_rules, response_check,
-data_export, data_delete, feedback.
+data_export, data_delete, feedback, report_issue (stable error codes
+in `copilot/errors.py`).
 
 Verified:
 - profile_save no longer requires target_role; it merges answers one at

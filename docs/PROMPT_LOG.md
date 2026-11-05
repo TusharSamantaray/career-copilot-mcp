@@ -4,6 +4,23 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-04 | v0.3.0-dev
+**Asked:** Continue the gap spec: self-healing v1 (issue 8).
+**Did:** Stable error codes (`copilot/errors.py`) on every tool and
+resource error: AUTH_REQUIRED, NOT_INVITED, UNKNOWN_TOOL,
+UNKNOWN_RESOURCE, BAD_ARGUMENTS (field names, never values),
+INTERNAL_ERROR (with a ref also written to the log). Found and fixed:
+unknown tools and validation errors were logged as crashes and shown as
+"Internal error". New `report_issue` tool (anonymous counts of code, tool
+and app family). Job boards answering with non-JSON no longer break a
+search. Error code table and retry rule in CONNECT.md. error_code and
+client_hint are masked in logs. 86 tools.
+**Files:** `copilot/errors.py`, `app.py`, `copilot/jobs.py`,
+`tests/test_soul.py`, `tests/test_http.py`, `docs/CONNECT.md`.
+**Tests:** see commit.
+**Try it:** "Call the tool no_such_tool", then "What does that error mean?"
+**Open:** B-046 (triage Action, list_changed) waits on real reports.
+
+### 2026-11-04 | v0.3.0-dev
 **Asked:** Build the next tasks from the gap spec (sections 1-6 were
 already built; section 7 is the tester incident).
 **Did:** Issue 6: test_oauth passes here and in CI, so not reproduced,

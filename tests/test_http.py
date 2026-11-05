@@ -31,7 +31,8 @@ async def main():
             raise
         except Exception as exc:
             assert "Unauthorized" in str(exc), exc
-    print("no key rejected: OK")
+            assert "[AUTH_REQUIRED]" in str(exc), exc
+    print("no key rejected, with a stable error code: OK")
 
     async with client("wrong-key") as bad:
         try:

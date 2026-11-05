@@ -15,6 +15,7 @@ import asyncio
 import hashlib
 import hmac
 import os
+import re
 import sys
 import time
 from datetime import date, timedelta
@@ -30,7 +31,8 @@ if STDIO:
 
 import fastmcp
 from fastmcp import FastMCP
-from fastmcp.exceptions import ResourceError, ToolError
+from fastmcp.exceptions import NotFoundError, ResourceError, ToolError
+from pydantic import ValidationError
 from fastmcp.server.dependencies import (get_access_token, get_http_headers,
                                          get_http_request)
 from fastmcp.server.middleware import Middleware, MiddlewareContext
@@ -47,6 +49,7 @@ from copilot import conduct
 from copilot import dashboard as dash
 from copilot import deadlines
 from copilot import economy
+from copilot import errors
 from copilot import evidence
 from copilot import facts as fact_record
 from copilot import finance
@@ -105,7 +108,9 @@ SENSITIVE_ARGS = {"api_key", "token", "password", "authorization",
                   # raw emails, calendar events and moods stay out of logs
                   "emails", "events", "mood", "note", "text", "statement",
                   # people's own words: lessons, resume lines, answers
-                  "add", "bullet", "answer", "posting_text", "resume_text"}
+                  "add", "bullet", "answer", "posting_text", "resume_text",
+                  # pasted error text and app names in report_issue
+                  "error_code", "client_hint"}
 MAX_LOGGED_CHARS = 80
 
 
@@ -175,17 +180,20 @@ def authorize():
     if OAUTH:
         claims = _github_claims()
         if not claims.get("sub"):
-            raise PermissionError("Unauthorized: sign in with GitHub.")
+            raise PermissionError(errors.message(
+                "AUTH_REQUIRED", "Unauthorized: sign in with GitHub."))
         if ALLOWED_GITHUB and \
                 str(claims.get("login", "")).lower() not in ALLOWED_GITHUB:
-            raise PermissionError("This Career Copilot is invite-only. Ask "
-                                  "its owner to add your GitHub username.")
+            raise PermissionError(errors.message(
+                "NOT_INVITED", "This Career Copilot is invite-only. Ask "
+                "its owner to add your GitHub username."))
         return
     key = _presented_key(get_http_headers(include_all=True))
     if not key or not any(hmac.compare_digest(key, valid)
                           for valid in API_KEYS):
-        raise PermissionError("Unauthorized: send a valid API key as "
-                              "'Authorization: Bearer <key>'.")
+        raise PermissionError(errors.message(
+            "AUTH_REQUIRED", "Unauthorized: send a valid API key as "
+            "'Authorization: Bearer <key>'."))
 
 
 def current_user() -> str:
@@ -237,12 +245,31 @@ class AuthAndAudit(Middleware):
                            f"{exc}")
             self._signal(kind, name, user, False, elapsed)
             raise
+        except NotFoundError:
+            # Usually a tool list cached from before a deploy.
+            code = "UNKNOWN_TOOL" if kind == "tool" else "UNKNOWN_RESOURCE"
+            logger.warning(f"{kind} not found: {name} ({code})")
+            raise error_cls(errors.message(
+                code, f"This server has no {kind} called '{name}'. "
+                "Refresh the tool list: reconnect, or start a new chat."
+            )) from None
+        except ValidationError as exc:
+            # Field names only: the values sent can be personal.
+            fields = errors.field_errors(exc)
+            logger.warning(f"{kind} bad arguments: {name}: {fields}")
+            self._signal(kind, name, user, False,
+                         (time.perf_counter() - start) * 1000)
+            raise error_cls(errors.message(
+                "BAD_ARGUMENTS", f"Check these values: {fields}.")) from None
         except Exception:
             elapsed = (time.perf_counter() - start) * 1000
+            ref = errors.new_ref()
             logger.exception(f"{kind} crashed: {name} after "
-                             f"{elapsed:.1f} ms")
+                             f"{elapsed:.1f} ms (ref {ref})")
             self._signal(kind, name, user, False, elapsed)
-            raise error_cls("Internal error. It has been logged.") from None
+            raise error_cls(errors.message(
+                "INTERNAL_ERROR", f"Something went wrong on the server "
+                f"(ref {ref}). It has been logged.")) from None
         elapsed = (time.perf_counter() - start) * 1000
         logger.info(f"{kind} done: {name} in {elapsed:.1f} ms")
         self._signal(kind, name, user, True, elapsed)
@@ -950,6 +977,42 @@ def feedback(tool: str, helpful: bool, reason: str = "",
         insights.record("unmet_role", missing_role, user, ok=False)
     return {"thanks": True,
             "privacy": "Stored as an anonymous count; no text is kept."}
+
+
+@mcp.tool
+def report_issue(error_code: str, tool_name: str = "", ref: str = "",
+                 client_hint: str = "") -> dict:
+    """Look up an error from Career Copilot and say what to do next.
+
+    Call this when a Career Copilot tool returns an error. error_code: the
+    code in brackets at the start of the error (e.g. INTERNAL_ERROR), or
+    the error text itself. tool_name: the tool that failed. ref: the
+    reference in an INTERNAL_ERROR, so the owner can find it in the log.
+    client_hint: the assistant app, e.g. "Claude desktop". Never pass
+    resume text, messages or personal details. Only anonymous counts of
+    the code, tool and app family are kept.
+    """
+    code = errors.lookup(error_code)
+    tool = tool_name if re.fullmatch(r"[a-z_]{1,40}", tool_name or "") \
+        else "other"
+    user = current_user()
+    insights.record(f"issue:{code or 'unknown'}", tool, user, ok=False)
+    insights.record("issue_client", errors.client_family(client_hint), user,
+                    ok=False)
+    safe_ref = ref if re.fullmatch(r"[0-9a-f]{6}", ref or "") else ""
+    if safe_ref:
+        logger.warning(f"issue reported: {code or 'unknown'} {tool} "
+                       f"(ref {safe_ref})")
+    if not code:
+        return {"known": False, "codes": sorted(errors.CODES),
+                "say": "I don't recognise that error. Tell the owner what "
+                       "you asked and what you saw; try another step for "
+                       "now."}
+    meaning, retry, fix = errors.CODES[code]
+    return {"known": True, "code": code, "meaning": meaning,
+            "retry": retry, "what_to_do": fix,
+            "ref": safe_ref or None,
+            "say": fix if not retry else "That was a server hiccup. " + fix}
 
 
 # ----------------------------------------------------------------- coach

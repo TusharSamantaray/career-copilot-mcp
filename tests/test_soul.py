@@ -752,6 +752,32 @@ async def mirror_checks(s):
     print("data_mirror: readable Markdown, saved on the device: OK")
 
 
+async def error_checks(s):
+    stale = await s.call_tool("no_such_tool", {})
+    assert stale.isError and \
+        stale.content[0].text.startswith("[UNKNOWN_TOOL]"), stale.content
+    bad = await s.call_tool("finance_dashboard",
+                            {"monthly_burn": "Zanzibar-secret-77"})
+    text = bad.content[0].text
+    assert bad.isError and text.startswith("[BAD_ARGUMENTS]"), text
+    assert "monthly_burn" in text and "Zanzibar" not in text, text
+    print("stale tool and bad values get stable codes, not a crash: OK")
+
+    known = await call(s, "report_issue", {
+        "error_code": "[INTERNAL_ERROR] Something went wrong (ref a1b2c3).",
+        "tool_name": "job_search", "ref": "a1b2c3",
+        "client_hint": "Claude desktop on Jordan's laptop"})
+    assert known["known"] and known["code"] == "INTERNAL_ERROR"
+    assert known["retry"] is True and known["ref"] == "a1b2c3"
+    reconnect = await call(s, "report_issue", {"error_code": "UNKNOWN_TOOL"})
+    assert reconnect["retry"] is False and "reconnect" in \
+        reconnect["what_to_do"].lower()
+    odd = await call(s, "report_issue", {"error_code": "WAT",
+                                         "ref": "not a ref; DROP"})
+    assert odd["known"] is False and "AUTH_REQUIRED" in odd["codes"]
+    print("report_issue: known codes get a fix, unknown ones a fallback: OK")
+
+
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     fresh_database()
@@ -784,6 +810,7 @@ async def main():
             await evidence_checks(s)
             await watch_checks(s)
             await mirror_checks(s)
+            await error_checks(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
               encoding="utf-8") as handle:
         log = handle.read()
@@ -795,6 +822,12 @@ async def main():
     assert "Lead with the number" not in log, "lesson text leaked into logs"
     assert "billing platform" not in log, "resume line leaked into logs"
     print("text sent to response_check kept out of logs: OK")
+    assert "Zanzibar" not in log, "a bad argument's value leaked into logs"
+    assert "Jordan's laptop" not in log, "client hint leaked into logs"
+    assert "bad arguments: finance_dashboard: monthly_burn" in log, \
+        "field name not logged"
+    assert "issue reported: INTERNAL_ERROR job_search (ref a1b2c3)" in log
+    print("errors log field names and refs only, never values: OK")
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     print("ALL PASSED")
 

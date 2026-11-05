@@ -145,6 +145,29 @@ No connector? Just paste or type the facts.
 | "This Career Copilot is invite-only" | Your GitHub username isn't on the owner's list | Ask the owner to add it |
 | An empty account | You signed in with a different GitHub account, or data was saved before the hosted database was set up | Check which GitHub account you used; otherwise re-enter it once |
 | The first answer is slow | The free server or database was asleep | Wait a few seconds; it wakes on the first request |
+| "Couldn't reach GitHub" while signing in | GitHub didn't answer properly | Wait a minute and click **Connect** again |
+| An error starting with a code in brackets | See the table below | Or say "What does this error mean?" and your assistant will look it up |
+
+### Error codes (for assistants and developers)
+
+Every error from a tool starts with a stable code, like
+`[AUTH_REQUIRED] Unauthorized: sign in with GitHub.` The words after it
+may change; the code won't. The `report_issue` tool returns the same
+advice, and counts how often each code happens (anonymously) so the owner
+can see what's breaking.
+
+| Code | Meaning | Retry? | What to do |
+|---|---|---|---|
+| `AUTH_REQUIRED` | No valid sign-in | No | Reconnect and sign in with GitHub |
+| `NOT_INVITED` | Signed in, not on the invite list | No | Ask the owner to add your username |
+| `UNKNOWN_TOOL` / `UNKNOWN_RESOURCE` | The assistant's tool list is from before an update | No | Disconnect and reconnect, or start a new chat |
+| `BAD_ARGUMENTS` | A value was missing or the wrong type; the message names the fields, never the values | No | Fix the named fields and call again |
+| `INTERNAL_ERROR` | A server fault, logged with a 6-character `ref` | Yes, once | Retry after 2 to 5 seconds. If it fails again, stop retrying, call `report_issue` with the code and ref, and try another step |
+
+Retry rule for clients: only `INTERNAL_ERROR` is worth retrying, at most
+twice, waiting longer each time (for example 2 s, then 8 s). Network
+errors and timeouts can be retried the same way: the free server can take
+up to a minute to wake.
 
 ## First things to try
 
