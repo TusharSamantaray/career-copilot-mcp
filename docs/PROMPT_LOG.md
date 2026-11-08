@@ -4,6 +4,21 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-08 | v0.3.0-dev
+**Asked:** Check the timeline against the owner's own resume proof.
+**Did:** Compared the proof's checks with resume_snapshot. Changed the
+summary check to "leads with a number" (the proof's own measure), added
+avoid_terms for internal names, stopped counting education as roles,
+added role count and percent change to the proof. The proof itself
+stays out of the repo (it has contact details).
+**Files:** `copilot/timeline.py`, `app.py`, `tests/test_soul.py`,
+`docs/ENGINEERING.md`.
+**Tests:** see commit.
+**Try it:** snapshot two versions with avoid_terms, then "Show how my
+resume improved".
+**Open:** story arc and "pinned first bullet" from the proof aren't
+measured; they're judgment calls.
+
+### 2026-11-08 | v0.3.0-dev
 **Asked:** Model sending like Muse: draft, review, then send only on
 the person's yes, from their own linked apps; store nothing. Also:
 keep sign-in invite-only and the source private; fold the recruiter

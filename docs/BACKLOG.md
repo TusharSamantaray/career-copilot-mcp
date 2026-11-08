@@ -28,6 +28,10 @@
   issue.
 
 ## Done
+- B-059 Resume timeline checks matched to the owner's hand-made proof:
+  numbers-led summary, education not counted as roles, internal names
+  the person lists, role count and percent change in the proof. From:
+  owner testing, 2026-11-08.
 - B-056 Email, calendar and LinkedIn sending (GitHub #8, #9, #10):
   outreach_review checks the exact text (response_check plus no
   performance plan, urgency or visa deadline) and seals it;

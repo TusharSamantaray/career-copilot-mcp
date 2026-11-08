@@ -1250,18 +1250,22 @@ def resume_merge() -> dict:
 @mcp.tool
 def resume_snapshot(text: str = "", label: str = "", note: str = "",
                     from_version: str = "", rendered_file: str = "",
-                    parent: str = "") -> dict:
+                    parent: str = "",
+                    avoid_terms: list[str] | None = None) -> dict:
     """Save a dated snapshot of the resume as it is now (write action).
     Append-only: never replaces an earlier snapshot, so a step back stays
     visible. Give the text, or from_version (an id from resume_versions).
     note: what the person says changed. rendered_file: a path or link to
     the PDF or image of this version, if they have one. parent: the
-    snapshot this was built from, when not the latest (a branch). Returns
-    the computed checks (internal level tags, numbers no confirmed fact
-    holds, summary issues) and any regressions: problems an earlier
-    version had fixed that came back."""
+    snapshot this was built from, when not the latest (a branch).
+    avoid_terms: internal team or org nicknames the person says recruiters
+    won't know (kept for later snapshots until changed). Returns the
+    computed checks (level tags, internal names, numbers no confirmed
+    fact holds, a summary that doesn't lead with a number) and any
+    regressions: problems an earlier version had fixed that came back."""
     return timeline.snapshot(current_user(), text, label, note,
-                             from_version, rendered_file, parent)
+                             from_version, rendered_file, parent,
+                             avoid_terms)
 
 
 @mcp.tool

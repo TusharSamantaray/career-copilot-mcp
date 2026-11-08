@@ -865,11 +865,15 @@ async def outreach_checks(s):
 
 async def timeline_checks(s):
     head = ("Data Engineer | Python, SQL\n"
-            "Data engineer who builds reliable ETL pipelines for analytics "
-            "teams across the business.\n"
-            "Hooli, Data Engineer, 2022 - 2026\n")
-    old = (head.replace("Data engineer who", "I am a passionate L5 "
-                        "engineer who") +
+            "Summary\n"
+            "Data engineer who cut report lag by 25% with reliable ETL "
+            "pipelines for analytics teams.\n"
+            "Experience\n"
+            "Hooli Data Platform, Data Engineer, 2022 - 2026\n")
+    tail = "Education\nB.S. Statistics, State University, 2018 - 2022\n"
+    old = (head.replace("Data engineer who cut report lag by 25% with",
+                        "I am a passionate L5 engineer who builds")
+           .replace("Hooli Data Platform", "Hooli Blue Hub") +
            "- Built Python ETL jobs that cut report lag by 25%\n"
            "- Grew revenue by 300% with a new data platform\n"
            "- Wrote runbooks for ETL jobs\n")
@@ -880,13 +884,16 @@ async def timeline_checks(s):
     none = await call(s, "resume_timeline")
     assert none["count"] == 0
     first = await call(s, "resume_snapshot", {
-        "text": old, "label": "Sep pre-rebuild",
+        "text": old + tail, "label": "Sep pre-rebuild",
+        "avoid_terms": ["Blue Hub"],
         "rendered_file": "C:/Users/Wombat/cv-sep.pdf"})
     assert first["checks"]["level_tags"] == ["L5"], first
+    assert first["checks"]["internal_names"] == ["Blue Hub"], first
     assert first["checks"]["unsupported_numbers"] == [
         "Grew revenue by 300% with a new data platform"], first
-    assert {"first person", "passionate"} <= set(
-        first["checks"]["summary_issues"]), first
+    assert set(first["checks"]["summary_issues"]) == {
+        "no numbers up front", "passionate"}, first
+    assert len(first["roles"]) == 1, first["roles"]   # education isn't a role
     second = await call(s, "resume_snapshot", {
         "text": fixed, "label": "Oct accuracy rebuild",
         "note": "Removed the invented bullet and level tags"})

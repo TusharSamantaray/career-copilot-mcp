@@ -8,8 +8,10 @@ computed from the stored text, never claimed:
 - level_tags: internal level labels (L5, E4, IC3, SDE II) that mean
   nothing outside one company;
 - unsupported_numbers: numbers no confirmed fact holds (likely invented);
-- summary: the opening paragraph in first person, over 60 words, or
-  full of filler words.
+- summary_issues: the summary doesn't lead with a number, or uses
+  filler words;
+- internal_names: shorthand the person listed as internal-only (team or
+  org nicknames), which recruiters won't recognise.
 """
 import difflib
 import hashlib
@@ -24,7 +26,8 @@ YEAR = re.compile(r"\b(?:19|20)\d\d\b")
 FILLER = ("passionate", "results-driven", "results driven", "dynamic",
           "go-getter", "self-starter", "rockstar", "ninja", "synergy",
           "hard-working", "detail-oriented") + tuple(BANNED_WORDS)
-FIRST_PERSON = re.compile(r"\b(?:I|I'm|I've|my|me)\b")
+NOT_ROLES = re.compile(r"educat|certif|award|honou?r|publication|course",
+                       re.I)
 CHANGED = 0.6          # bullets this similar count as edited, not new
 
 
@@ -32,25 +35,52 @@ def _words(text):
     return len(text.split())
 
 
+def _heading(line):
+    return (0 < _words(line) <= 4 and not YEAR.search(line)
+            and not line.startswith(("-", "*", "•")) and "|" not in line
+            and "@" not in line)
+
+
 def _roles(text):
-    """Role lines: not bullets, short, and carrying a year."""
-    return [ln.strip() for ln in text.splitlines()
-            if ln.strip() and not ln.strip().startswith(("-", "*", "•"))
-            and YEAR.search(ln) and _words(ln) <= 16]
+    """Role lines: not bullets, short, carrying a year, and not under an
+    Education, Certifications or Awards heading."""
+    roles, skip = [], False
+    for ln in text.splitlines():
+        line = ln.strip()
+        if _heading(line):
+            skip = bool(NOT_ROLES.search(line))
+            continue
+        if (line and not skip and not line.startswith(("-", "*", "•"))
+                and YEAR.search(line) and _words(line) <= 16):
+            roles.append(line)
+    return roles
 
 
 def _summary(text):
-    lines = []
-    for ln in text.splitlines():
-        stripped = ln.strip()
-        if stripped.startswith(("-", "*", "•")) or YEAR.search(stripped):
+    """The paragraph under a Summary heading, else the first long lines
+    before any bullet or dated line. Contact lines are skipped."""
+    lines = [ln.strip() for ln in text.splitlines()]
+    for i, line in enumerate(lines):
+        if _heading(line) and re.search(r"summary|profile|about", line,
+                                        re.I):
+            body = []
+            for nxt in lines[i + 1:]:
+                if body and (_heading(nxt) or YEAR.search(nxt)
+                             or nxt.startswith(("-", "*", "•"))):
+                    break
+                if nxt:
+                    body.append(nxt)
+            return " ".join(body)
+    body = []
+    for line in lines:
+        if line.startswith(("-", "*", "•")) or YEAR.search(line):
             break
-        if _words(stripped) >= 8:
-            lines.append(stripped)
-    return " ".join(lines)
+        if _words(line) >= 8 and "@" not in line and line.count("|") < 2:
+            body.append(line)
+    return " ".join(body)
 
 
-def checks(user, text):
+def checks(user, text, avoid_terms=()):
     """Problems in one version, computed from its text."""
     held = {(m["value"], m["unit"]) for f in facts.confirmed_facts(user)
             for m in f.get("metrics") or facts.parse_metrics(
@@ -61,14 +91,14 @@ def checks(user, text):
     summary = _summary(text)
     style = []
     if summary:
-        if FIRST_PERSON.search(summary):
-            style.append("first person")
-        if _words(summary) > 60:
-            style.append(f"{_words(summary)} words")
+        if not facts.parse_metrics(LEVEL_TAG.sub("", summary)):
+            style.append("no numbers up front")
         style += [w for w in FILLER if w in summary.lower()]
+    low = text.lower()
     return {"level_tags": sorted(set(LEVEL_TAG.findall(text))),
             "unsupported_numbers": invented,
-            "summary_issues": style}
+            "summary_issues": style,
+            "internal_names": [t for t in avoid_terms if t.lower() in low]}
 
 
 def _problems(found):
@@ -76,7 +106,7 @@ def _problems(found):
 
 
 def snapshot(user, text="", label="", note="", from_version="",
-             rendered_file="", parent=""):
+             rendered_file="", parent="", avoid_terms=None):
     """Save one version. Append-only: never replaces an earlier one."""
     if from_version:
         version = store.get(user, from_version)
@@ -96,13 +126,17 @@ def snapshot(user, text="", label="", note="", from_version="",
     if parent and not any(s["id"] == parent for s in earlier):
         return {"error": "parent must be the id of an earlier snapshot."}
     parent = parent or (earlier[-1]["id"] if earlier else "")
-    found = checks(user, text)
+    if avoid_terms is None:          # keep the list from the last snapshot
+        avoid_terms = earlier[-1].get("avoid_terms", []) if earlier else []
+    avoid_terms = [t.strip() for t in avoid_terms if t and t.strip()][:30]
+    found = checks(user, text, avoid_terms)
     body = {"label": label or f"Version {len(earlier) + 1}",
             "text": text, "note": note.strip(),
             "sha256": hashlib.sha256(text.encode()).hexdigest(),
             "words": _words(text), "roles": _roles(text),
             "bullets": len(_bullets(text)), "parent": parent,
             "rendered_file": rendered_file.strip(), "checks": found,
+            "avoid_terms": avoid_terms,
             "seq": len(earlier) + 1}
     duplicate = next((s for s in earlier if s["sha256"] == body["sha256"]),
                      None)
@@ -222,10 +256,17 @@ def diff(user, a="", b=""):
         return {"error": "No snapshot with that id or label. Call "
                          "resume_timeline."}
     result = {"from": old["label"], "to": new["label"], **_diff(old, new),
-              "words": {"before": old["words"], "after": new["words"]}}
+              "words": {"before": old["words"], "after": new["words"]},
+              "roles": {"before": len(old.get("roles", [])),
+                        "after": len(new.get("roles", []))}}
+    if old["words"]:
+        result["word_change_pct"] = round(
+            100 * (new["words"] - old["words"]) / old["words"])
     before, after = old["checks"], new["checks"]
-    result["checks"] = {k: {"before": len(before[k]), "after": len(after[k]),
-                            "now": after[k]} for k in after}
+    result["checks"] = {k: {"before": len(before.get(k, [])),
+                            "after": len(after.get(k, [])),
+                            "now": after.get(k, [])}
+                        for k in set(before) | set(after)}
     result["summary"] = _summary_line(result)
     return result
 
@@ -264,11 +305,16 @@ def proof(user, a="", b=""):
             f"| Check | {_cell(change['from'])} | {_cell(change['to'])} |",
             "|---|---|---|",
             f"| Words | {change['words']['before']} | "
-            f"{change['words']['after']} |"]
+            f"{change['words']['after']}"
+            + (f" ({change['word_change_pct']:+d}%)"
+               if "word_change_pct" in change else "") + " |",
+            f"| Roles | {change['roles']['before']} | "
+            f"{change['roles']['after']} |"]
     for key, label in (("level_tags", "Internal level tags"),
+                       ("internal_names", "Internal names"),
                        ("unsupported_numbers", "Numbers no fact backs"),
                        ("summary_issues", "Summary issues")):
-        c = change["checks"][key]
+        c = change["checks"].get(key, {"before": 0, "after": 0})
         out.append(f"| {label} | {c['before']} | {c['after']} |")
     out += ["", f"Bullets: {len(change['added'])} added, "
             f"{len(change['removed'])} removed, {len(change['changed'])} "

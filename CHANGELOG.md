@@ -240,6 +240,16 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- The resume timeline now checks what a real rebuild proof checks
+  (B-059): a summary is flagged when it doesn't lead with a number, not
+  for using "I"; education lines no longer count as roles; and you can
+  list internal team names recruiters won't know, so each version is
+  checked for them. The proof shows the role count and how much tighter
+  the resume got.
+  **Try it:** say "Snapshot my resume as October, and flag these internal
+  names: <your team nickname>". The checks should list that name if it's
+  still there, and "Show how my resume improved" should show roles and a
+  percent change in words.
 - The terms now say how sending works: nothing goes out without your yes
   to the exact text, and your own app does the sending (version
   2026-11-08.11). You'll be asked to agree once more.
