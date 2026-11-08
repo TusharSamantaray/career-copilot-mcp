@@ -14,6 +14,9 @@
   persona. Confirm it stays in scope. From: GitHub #16 open question.
 
 ## Done
+- B-064 Demand digest counted one recruiter twice (survey and search as
+  separate rows); now once per skill with all sources. From: the
+  simulation, 2026-11-08.
 - B-063 Local simulation: 5 made-up job seekers, 2 made-up recruiters,
   real server, one key each; 9 privacy and ranking checks; REPORT.md;
   --serve to chat as any of them. From: owner request, 2026-11-08.

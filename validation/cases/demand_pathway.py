@@ -34,7 +34,14 @@ def run(user, measure):
     measure("who said it: named companies, the rest counted",
             spark["who"], ["Contoso", "Northwind", "1 unnamed"])
     measure("every signal names its source and version",
-            all(s["source"] == "survey v1" for s in digest["signals"]), True)
+            all(s["sources"] == ["survey v1"] for s in digest["signals"]),
+            True)
+    demand.note_search(f"{user}-r0", "Data Engineer", ["spark"])
+    again = next(s for s in demand.digest("data engineer")["signals"]
+                 if s["skill"] == "spark")
+    measure("a recruiter who surveyed and searched counts once",
+            (again["said_by"], again["sources"]),
+            (3, ["persona searches", "survey v1"]))
     measure("candidate's data in the digest",
             "fabrikam" in json.dumps(digest).lower(), False)
     path = demand.build(me, "data engineer")

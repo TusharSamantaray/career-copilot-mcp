@@ -458,6 +458,10 @@ Every Added or Changed line has a **Try it:** line.
   politely say that's outside what it does and offer a career step.
 
 ### Fixed
+- The demand digest counted one recruiter twice for the same skill when
+  they both answered the survey and searched (B-064). Now each person
+  counts once per skill, and every source is listed together, like
+  "1 recruiter named Spark (persona searches, survey v1)".
 - The anonymous usage counts that drive the weekly improvements were
   wiped every time the free server restarted (B-049). The owner can now
   keep them in the database instead (`CAREER_COPILOT_INSIGHTS_STORE=

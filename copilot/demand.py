@@ -111,9 +111,12 @@ def digest(direction="", today=None):
     tally = {}
 
     def count(role, skill, who, label, source):
-        key = (role, skill, source)
-        row = tally.setdefault(key, {"who": {}, "source": source})
-        row["who"][who] = label
+        # One row per role and skill: a person counts once however many
+        # ways they said it; every source is listed.
+        row = tally.setdefault((role, skill), {"who": {}, "sources": set()})
+        if label != "a recruiter" or who not in row["who"]:
+            row["who"][who] = label
+        row["sources"].add(source)
 
     seen = {}
     for user in store.users():
@@ -138,7 +141,7 @@ def digest(direction="", today=None):
                     count(row["role"], skill, user, "a recruiter",
                           "persona searches")
     signals = []
-    for (role, skill, source), row in tally.items():
+    for (role, skill), row in tally.items():
         if want and role != want:
             continue
         names = sorted({n for n in row["who"].values() if n !=
@@ -148,7 +151,7 @@ def digest(direction="", today=None):
                         "skill": skill, "said_by": len(row["who"]),
                         "who": names + ([f"{others} unnamed"] if others
                                         else []),
-                        "source": source})
+                        "sources": sorted(row["sources"])})
     signals.sort(key=lambda s: (-s["said_by"], s["direction"], s["skill"]))
     roles_seen = sorted(({"direction": ROLES[r]["title"],
                           "said_by": len(who)} for r, who in seen.items()
@@ -157,7 +160,7 @@ def digest(direction="", today=None):
     return {"since": since, "survey_version": CURRENT,
             "signals": signals, "roles_seen": roles_seen,
             "say": "Report each signal as who said it and how many, with "
-                   "its source, e.g. '3 recruiters named Spark (survey v1)'. "
+                   "its sources, e.g. '3 recruiters named Spark (survey v1)'. "
                    "Never say 'the market wants'." if signals else
                    "No demand signals yet. Say so; don't guess."}
 
@@ -170,7 +173,7 @@ def _verified_skills(user):
 def _signal_reason(direction, signal):
     return (f"{direction}: {signal['said_by']} "
             f"{'recruiter' if signal['said_by'] == 1 else 'recruiters'} "
-            f"named {signal['skill']} ({signal['source']})")
+            f"named {signal['skill']} ({', '.join(signal['sources'])})")
 
 
 def build(user, direction="", mode="guided"):

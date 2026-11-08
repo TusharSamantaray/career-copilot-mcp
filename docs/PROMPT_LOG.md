@@ -4,6 +4,17 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-08 | v0.3.0-dev
+**Asked:** (Found by the simulation.) The digest listed the same
+recruiter twice for one skill.
+**Did:** demand.digest groups by role and skill; a person counts once;
+sources listed as a sorted list; pathway reasons name all sources.
+**Files:** `copilot/demand.py`, `app.py`, `tests/test_http.py`,
+`validation/cases/demand_pathway.py`, `simulation/run.py`.
+**Tests:** see commit.
+**Try it:** "What are recruiters asking for in data engineering?"
+**Open:** nothing.
+
+### 2026-11-08 | v0.3.0-dev
 **Asked:** A simulation of 5 users creating profiles and 2 recruiters
 with a dummy job description finding them; a way to test it locally.
 **Did:** simulation/run.py starts the real server with one API key per

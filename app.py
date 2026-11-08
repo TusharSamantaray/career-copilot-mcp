@@ -1312,8 +1312,8 @@ def recruiter_survey(answers: dict[str, str] | None = None,
 def demand_digest(direction: str = "") -> dict:
     """What people hiring on Career Copilot asked for in the last 90 days,
     from survey answers and persona searches: each skill per direction
-    with how many said it, who (company if they gave one) and the
-    source. Report counts, never 'the market wants'."""
+    with how many people said it (each counted once), who (company if
+    they gave one) and the sources. Report counts, never 'the market wants'."""
     return demand.digest(direction)
 
 

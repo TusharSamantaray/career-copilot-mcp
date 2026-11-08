@@ -140,9 +140,10 @@ async def main():
         digest = (await alice.call_tool("demand_digest",
                                         {"direction": "backend"})).data
         kafka = [d for d in digest["signals"] if d["skill"] == "kafka"]
-        sources = {d["source"] for d in kafka}
-        assert sources == {"survey v1", "persona searches"}, digest
-        assert any("Globex" in d["who"] for d in kafka), kafka
+        # Bob surveyed and searched: counted once. Alice searched once too.
+        assert len(kafka) == 1 and kafka[0]["said_by"] == 2, kafka
+        assert kafka[0]["sources"] == ["persona searches", "survey v1"]
+        assert kafka[0]["who"] == ["Globex", "1 unnamed"], kafka
         assert "alice" not in str(digest).lower()
         path = (await alice.call_tool("pathway_build",
                                       {"direction": "backend"})).data

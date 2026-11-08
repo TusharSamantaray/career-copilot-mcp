@@ -319,8 +319,13 @@ async def pathway(run):
     async with client("sim-alex") as c:
         digest = await call(c, "demand_digest", {"direction":
                                                  "data engineer"})
-        top = ", ".join(f"{s['skill']} ({s['said_by']}, {s['source']})"
+        top = ", ".join(f"{s['skill']} ({s['said_by']}: "
+                        f"{', '.join(s['sources'])})"
                         for s in digest["signals"][:5])
+        pairs = [(s["role"], s["skill"]) for s in digest["signals"]]
+        run.check("the digest counts each recruiter once per skill",
+                  len(pairs) == len(set(pairs)) and all(
+                      s["said_by"] == 1 for s in digest["signals"]))
         run.say("Alex", '"What are recruiters asking for in data '
                 'engineering?"')
         run.say("Career Copilot", f"from people hiring here: {top}.")
