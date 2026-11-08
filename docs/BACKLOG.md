@@ -9,13 +9,15 @@
   Render so anonymous counts survive restarts? If yes, the privacy notice
   gets a line saying Neon also holds them (new TERMS_VERSION). From:
   B-049.
-- B-061 [P1] Recruiter survey, demand digest and pathways (from GitHub
-  #14, folded into #13 by the owner on 2026-11-08). From: GitHub issue.
 - B-055 [P2, owner] Identity reveal after both sides agree (GitHub #16);
   agency lane still to confirm. Depends on B-052 and B-053. From: GitHub
   issue.
 
 ## Done
+- B-061 Recruiter survey (versioned, company optional), demand digest
+  (who and how many, per source, 90 days, no candidate data), pathways
+  (guided and immediate; every step cites its reason). From GitHub #14.
+  Terms 2026-11-08.15.
 - B-053 Recruiter view (GitHub #13): persona_search (top 5 by verified
   evidence, must-haves filter) and persona_chat (verified answers only;
   identity and salary refused). Recruiters use the same connector, on

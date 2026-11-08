@@ -124,6 +124,42 @@ async def main():
     print("persona search and chat across people: work shown, identity and "
           "salary refused, unpublish works: OK")
 
+    # Demand: Bob's survey and searches feed Alice's pathway.
+    async with client(KEYS[1]) as bob:
+        questions = (await bob.call_tool("recruiter_survey", {})).data
+        assert questions["version"] == "1" and len(
+            questions["questions"]) == 3
+        saved = (await bob.call_tool("recruiter_survey", {
+            "company": "Globex", "answers": {
+                "seeing_roles": "Lots of backend and data engineer roles",
+                "skills_by_role": "Backend engineer: Kafka, Go and Postgres",
+                "expectations": "Clear writing and on-call experience"}}
+        )).data
+        assert saved["role"] == "backend" and "go" in saved["skills"], saved
+    async with client(KEYS[0]) as alice:
+        digest = (await alice.call_tool("demand_digest",
+                                        {"direction": "backend"})).data
+        kafka = [d for d in digest["signals"] if d["skill"] == "kafka"]
+        sources = {d["source"] for d in kafka}
+        assert sources == {"survey v1", "persona searches"}, digest
+        assert any("Globex" in d["who"] for d in kafka), kafka
+        assert "alice" not in str(digest).lower()
+        path = (await alice.call_tool("pathway_build",
+                                      {"direction": "backend"})).data
+        assert path["steps"] and all(
+            "recruiter" in st["reason"] and "Backend" in st["reason"]
+            for st in path["steps"]), path
+        assert "kafka" in path["steps"][0]["step"]       # proves it already
+        assert any("go" in st["step"] for st in path["steps"][1:]), path
+        first = (await alice.call_tool("pathway_next", {})).data
+        after = (await alice.call_tool("pathway_next", {"done": True})).data
+        assert after["next"] != first["next"] and after["left"] ==             first["left"] - 1
+        now = (await alice.call_tool("pathway_build",
+                                     {"mode": "immediate"})).data
+        assert now["options"][0]["direction"].startswith("Backend"), now
+    print("survey, demand digest and pathways: counted, attributed, every "
+          "step cites its reason: OK")
+
     # Self-improvement signals: k-anonymous, scrubbed, admin-only.
     async with client(KEYS[0]) as alice:
         await alice.call_tool("skills_gap", {"target_role": "Pastry Chef"})

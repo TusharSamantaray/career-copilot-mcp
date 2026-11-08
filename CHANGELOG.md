@@ -6,6 +6,20 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Pathways built on what people hiring actually ask for (B-061, from
+  GitHub #14). People hiring can answer a short survey (three questions,
+  versioned so questions can change later), and their searches count
+  too. The demand digest shows each skill asked for per role, with how
+  many said it, who (a company name only if they gave one) and the
+  source, never "the market wants". Pick a direction and your pathway
+  gives a few small steps, one at a time, each with its reason: the
+  direction and the demand behind it. "Immediate" mode lists roles
+  asking for what you already prove, with nothing new to learn.
+  **Try it:** from a hiring account say "I'd like to answer the hiring
+  survey". Then, as a job seeker, say "What are recruiters asking for
+  in backend roles?" and "Build my pathway to backend engineer". Each
+  step should end with a reason like "2 recruiters named Kafka (survey
+  v1)". Also try "What job could I start right now?".
 - Find candidates by their verified work, with no new website (B-053,
   GitHub #13). Someone hiring connects the same Career Copilot in their
   own AI assistant (invite-only, like everyone), pastes a job posting

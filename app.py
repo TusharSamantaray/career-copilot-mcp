@@ -48,6 +48,7 @@ from copilot import coach
 from copilot import conduct
 from copilot import dashboard as dash
 from copilot import deadlines
+from copilot import demand
 from copilot import economy
 from copilot import errors
 from copilot import evidence
@@ -1263,6 +1264,43 @@ def persona_chat(persona_id: str, question: str) -> dict:
     Answers come only from the persona's verified evidence; identity and
     salary questions are refused. Answer from answer_from only."""
     return recruiter.chat(current_user(), persona_id, question)
+
+
+@mcp.tool
+def recruiter_survey(answers: dict[str, str] | None = None,
+                     company: str = "", role: str = "") -> dict:
+    """For someone hiring: a short, versioned survey on what they see in
+    hiring. No answers: returns the current questions; ask one at a time.
+    answers: {question id: their words}. company is optional and, if
+    given, is shown with their answers in the demand digest (write
+    action)."""
+    return demand.survey(current_user(), answers, company, role)
+
+
+@mcp.tool
+def demand_digest(direction: str = "") -> dict:
+    """What people hiring on Career Copilot asked for in the last 90 days,
+    from survey answers and persona searches: each skill per direction
+    with how many said it, who (company if they gave one) and the
+    source. Report counts, never 'the market wants'."""
+    return demand.digest(direction)
+
+
+@mcp.tool
+def pathway_build(direction: str = "", mode: str = "guided") -> dict:
+    """A short path for the direction the person picked, from their
+    verified skills and the demand digest; every step cites its reason
+    (write action). mode: guided (steps toward the direction) or
+    immediate (roles asking for what they already prove, no new
+    learning; no direction needed). Never pick the direction for them."""
+    return demand.build(current_user(), direction, mode)
+
+
+@mcp.tool
+def pathway_next(done: bool = False) -> dict:
+    """The one next step on the person's pathway, with its reason.
+    done=true marks the current step done first (write action)."""
+    return demand.next_step(current_user(), done)
 
 
 # ------------------------------------------------------------- guidance

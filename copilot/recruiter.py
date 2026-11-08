@@ -10,6 +10,7 @@ shown, stored or negotiated, and nobody is contacted automatically.
 import re
 from datetime import date
 
+from copilot import demand
 from copilot import facts
 from copilot import persona
 from copilot import store
@@ -75,6 +76,7 @@ def search(user, posting_text, title="", must_have=None, nice_to_have=None,
     if not wanted:
         return {"error": "No skills found in the posting. Paste the full "
                          "posting, or say what the role must have."}
+    demand.note_search(user, title or posting_text[:200], wanted)
     place = (location or "").strip().lower()
     cards, out = [], {"missing_a_must_have": 0, "location": 0}
     for owner, record in persona.published():

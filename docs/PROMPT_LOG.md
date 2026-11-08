@@ -4,6 +4,27 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-08 | v0.3.0-dev
+**Asked:** Wrap up the remaining issues; the survey, demand digest and
+pathways from #14 (folded into #13).
+**Did:** copilot/demand.py: versioned SURVEYS (v1, three questions);
+recruiter_survey saves answers in the recruiter's own file, company
+optional; persona_search notes role and skills asked; demand_digest
+counts distinct people per role and skill over 90 days, with who and
+source, never candidate data; pathway_build guided (proof of demanded
+skills already held first, then up to 4 demanded gaps, every step with
+its reason, no step without one) or immediate (roles asking for what
+they already prove); pathway_next one step at a time.
+TERMS_VERSION 2026-11-08.15.
+**Files:** `copilot/demand.py`, `copilot/recruiter.py`, `app.py`,
+`copilot/conduct.py`, `docs/PRIVACY.md`, `tests/test_http.py`,
+`validation/cases/demand_pathway.py`.
+**Tests:** see commit.
+**Try it:** "Build my pathway to backend engineer".
+**Open:** inbox_triage patterns aren't a demand source yet (email text
+isn't stored, so only counts could be used). A minimum count before a
+signal shows could be added once there are more recruiters.
+
+### 2026-11-08 | v0.3.0-dev
 **Asked:** Wrap up the remaining issues; recruiter search (#13).
 **Did:** copilot/recruiter.py: persona_search (skills from the posting
 plus must_have and nice_to_have; must_have filters, ranked by coverage

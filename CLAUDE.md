@@ -192,7 +192,7 @@ person may send or rely on passes response_check.
 
 ### What exists today (verified in code on 2026-11-03)
 
-98 tools, 9 resources, 17 prompts. Watches: watch_create, watches,
+102 tools, 9 resources, 17 prompts. Watches: watch_create, watches,
 digest_get. Facts: fact_add, fact_conflicts,
 fact_resolve. Discovery: job_search, jd_analyze, ats_profile_check,
 skill_gap_evidence, ats_keyword_check, recruiter_find,
@@ -213,7 +213,8 @@ runway_calc, layoff_fund_plan, finance tools. Glue: daily_step,
 step_done, dashboard, companions, ground_rules, response_check,
 data_export, data_delete, feedback, report_issue, outreach_review,
 outreach_approve. Persona: persona_publish, persona_unpublish, persona_search,
-persona_chat (stable error codes
+persona_chat, recruiter_survey, demand_digest, pathway_build,
+pathway_next (stable error codes
 in `copilot/errors.py`).
 
 Verified:

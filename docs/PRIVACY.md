@@ -1,6 +1,6 @@
 # Privacy notice
 
-Version 2026-11-08.14. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-08.15. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 Career Copilot is run by Tushar Samantaray ("we"). It's a connector that
@@ -18,7 +18,9 @@ Only what you or your assistant give it:
 | Money | Account names, types and balances you enter or import |
 | Coaching | Daily check-ins, energy level, steps done |
 | Persona | Only if you publish it: the anonymous view described below |
-| Hiring searches | If you search for candidates: how many questions you asked each persona and when (never the questions or the postings you paste) |
+| Hiring searches | If you search for candidates: how many questions you asked each persona and when, and the role and skills each search asked for (never the questions or the postings you paste) |
+| Hiring survey | If you answer it: your answers and the company name you chose to give |
+| Pathway | The direction you picked and its steps |
 | Agreement | The date you agreed to these terms |
 
 Each person's data is in **its own private file**, linked to their
@@ -59,6 +61,15 @@ published only after you say yes to that view.
 - **Be aware:** someone who already knows your work well might
   recognise it from the facts themselves. Leave out any line that feels
   too specific.
+
+## The demand digest
+
+People hiring can answer a short survey, and their persona searches
+count as well. The demand digest shows signed-in people which skills
+were asked for, per role, over the last 90 days, with how many people
+said each one and the source. A survey answer shows the company name
+the person chose to give; searches are counted without names. The
+digest never includes anything from job seekers' files.
 
 ## Signing in with GitHub
 
