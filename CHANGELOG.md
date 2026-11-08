@@ -6,6 +6,16 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- A `validation/` folder that proves each improvement with numbers
+  (B-060). Each case replays one improvement with made-up people and
+  measures it, like the before and after table in a resume proof.
+  `RESULTS.md` shows the latest scoreboard; `HISTORY.md` gets a dated
+  row whenever a score changes, so you can see when each improvement
+  landed. It runs before every commit and on every push. First two
+  cases: the resume rebuild and the send-with-your-yes flow.
+  **Try it:** open `validation/RESULTS.md` on GitHub. You should see
+  both cases with every measure marked pass, and `validation/HISTORY.md`
+  with today's rows.
 - Send emails, add or cancel calendar events, and post to LinkedIn, only
   with your yes (B-056). Your assistant drafts it, Career Copilot checks
   the exact text (no invented numbers, and nothing about a performance

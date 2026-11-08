@@ -247,6 +247,7 @@ flowchart LR
 | AI model costs | None: the person's own assistant runs the model |
 | Health check | `GET /health` |
 | Tests | 9 suites, run on every push (the main one twice: plain and encrypted) |
+| Validation | [validation/](validation/README.md): each improvement measured with made-up people; scoreboard in `RESULTS.md`, dated `HISTORY.md` |
 
 ### Layout
 

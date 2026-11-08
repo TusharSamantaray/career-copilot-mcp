@@ -41,6 +41,7 @@ flowchart LR
 | `test_crypto.py` | Records encrypted on disk, bound to person and record, delete destroys the key | Store directly |
 | `test_acceptance.py` | Spec acceptance tests A (Lost) and B (On a clock) as scripted conversations with a fresh person | Server over stdio |
 | `test_triage.py` | The weekly error report: quiet on a healthy week, lists codes, tools, people and the fix otherwise | Script only |
+| `validation/run.py` | Each improvement measured (expected against measured), with made-up people; writes `validation/RESULTS.md` and a dated row in `HISTORY.md` when a score changes | CI (`--check`) and before every commit |
 | `test_postgres.py` | Postgres backend: per-person rows, encryption, a fresh process after a wiped disk still sees the data, URL never printed | Real Postgres (skips without one) |
 
 ### Acceptance tests from the spec

@@ -24,6 +24,8 @@ jobs:
       - run: uv run tests/test_crypto.py
       - run: uv run tests/test_acceptance.py
       - run: uv run tests/test_triage.py
+      - name: Validation cases (improvements still hold)
+        run: uv run validation/run.py --check
       - name: Everything again with encryption on
         run: uv run tests/test_soul.py
         env:

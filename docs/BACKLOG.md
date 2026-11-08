@@ -28,6 +28,10 @@
   issue.
 
 ## Done
+- B-060 validation/ folder: one measured case per improvement,
+  RESULTS.md scoreboard, dated HISTORY.md, run before every commit and
+  in CI. First cases: resume_rebuild (B-051, B-059), outreach_gate
+  (B-056). From: owner request, 2026-11-08.
 - B-059 Resume timeline checks matched to the owner's hand-made proof:
   numbers-led summary, education not counted as roles, internal names
   the person lists, role count and percent change in the proof. From:

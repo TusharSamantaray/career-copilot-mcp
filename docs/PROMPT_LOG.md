@@ -4,6 +4,20 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-08 | v0.3.0-dev
+**Asked:** A place in the repo to track improvements: validation or
+benchmarking.
+**Did:** validation/ with run.py, cases/ (resume_rebuild modelled on
+the owner's rebuild with invented text; outreach_gate), RESULTS.md
+scoreboard and HISTORY.md (row only when a score changes). Added to CI
+and to the working agreement in CLAUDE.md.
+**Files:** `validation/`, `.github/workflows/ci.yml`, `CLAUDE.md`,
+`README.md`, `docs/ENGINEERING.md`.
+**Tests:** see commit.
+**Try it:** open validation/RESULTS.md.
+**Open:** older improvements (resume_tailor, sponsorship_verify,
+job_search) can get cases too; added as needed.
+
+### 2026-11-08 | v0.3.0-dev
 **Asked:** Check the timeline against the owner's own resume proof.
 **Did:** Compared the proof's checks with resume_snapshot. Changed the
 summary check to "leads with a number" (the proof's own measure), added

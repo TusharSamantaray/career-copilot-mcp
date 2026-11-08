@@ -1,0 +1,10 @@
+# Validation history
+
+One row each time a case's score changes. Added by
+`uv run validation/run.py`; never edit by hand. Git history shows the
+commit behind each row.
+
+| Date | Version | Case | Backlog | Score |
+|---|---|---|---|---|
+| 2026-11-08 | 0.3.0 | outreach_gate | B-056 | 7/7 |
+| 2026-11-08 | 0.3.0 | resume_rebuild | B-051 | 10/10 |

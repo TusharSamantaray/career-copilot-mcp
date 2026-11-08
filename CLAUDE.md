@@ -20,8 +20,10 @@ without reading code.
 
 ### After every change set, before every commit
 
-1. Run the full test suite. Never commit with a failing test.
-   Report pass and fail counts to the owner.
+1. Run the full test suite and `uv run validation/run.py`. Never
+   commit with a failing test or case. Report pass and fail counts to
+   the owner. When an improvement lands, add a case to `validation/`
+   that measures it (made-up people only).
 2. Update `CHANGELOG.md` under `## [Unreleased]`:
    - Group under Added, Changed, Fixed, Removed, Security, Knowledge.
    - Write for someone who never reads code: what they will notice.
