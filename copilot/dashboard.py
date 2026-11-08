@@ -6,7 +6,7 @@ import os
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-from copilot import coach, finance, guide, nudges, prep, store
+from copilot import coach, finance, guide, nudges, prep, sponsorship, store
 
 TEMPLATE = Path(__file__).with_name("dashboard.html")
 STATUS_COLUMNS = [("applied", "Applied"), ("assessment", "Assessment"),
@@ -28,6 +28,48 @@ def _pipeline(user):
             for k, label in STATUS_COLUMNS]
 
 
+LIVE = {"saved", "applied", "assessment", "interviewing", "offer"}
+MAX_ACTIONS = 5
+
+
+def action_strip(user, now, needs_sponsorship=False):
+    """Live loops that need something now, most urgent first: overdue,
+    due within two days, no next step, or sponsorship still unknown for
+    someone who needs it. One action per loop."""
+    found = []
+    for row in store.list_kind(user, "application"):
+        if row.get("status") not in LIVE:
+            continue
+        item = {"id": row["id"], "company": row["company"],
+                "role": row.get("role", ""), "status": row["status"]}
+        try:
+            due = date.fromisoformat(row.get("due_date") or "")
+        except ValueError:
+            due = None
+        step = row.get("next_action") or ""
+        if due and due < now:
+            found.append({**item, "rank": 0, "tone": "alert",
+                          "why": f"{(now - due).days}d overdue",
+                          "do": step or "Decide the next step or close it"})
+        elif due and (due - now).days <= 2:
+            found.append({**item, "rank": 1, "tone": "warm",
+                          "why": "today" if due == now else f"due {due}",
+                          "do": step or "Plan the next step"})
+        elif not step and row["status"] != "saved":
+            found.append({**item, "rank": 2, "tone": "calm",
+                          "why": "no next step",
+                          "do": "Set one next step and a date"})
+        elif needs_sponsorship and row.get("sponsorship",
+                                            "unknown") == "unknown":
+            found.append({**item, "rank": 3, "tone": "calm",
+                          "why": "sponsorship unknown",
+                          "do": "Ask the recruiter once, plainly"})
+    found.sort(key=lambda a: (a["rank"], a["company"].lower()))
+    return {"items": [{k: v for k, v in a.items() if k != "rank"}
+                      for a in found[:MAX_ACTIONS]],
+            "more": max(0, len(found) - MAX_ACTIONS)}
+
+
 def build_data(user, today=None):
     now = today or date.today()
     profile_rows = store.list_kind(user, "profile")
@@ -47,6 +89,8 @@ def build_data(user, today=None):
         "step": coach.daily_step(user, "medium", "", now),
         "due": nudges.nudges_due(user, now, within_days=3),
         "pipeline": _pipeline(user),
+        "actions": action_strip(user, now,
+                                sponsorship.needs_sponsorship(profile)),
         "stories": {"count": stories["story_count"],
                     "missing": stories["missing_themes"]},
         "money": money and {k: money.get(k) for k in (

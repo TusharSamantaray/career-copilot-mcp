@@ -204,6 +204,18 @@ async def dashboard_checks(s):
     assert {"Acme", "Globex", "Initech", "Hooli"} <= companies, companies
     assert data["money"]["net_worth"] == 28400       # 13200 + 16000 - 800
     assert data["stories"]["count"] == 1
+    acts = data["actions"]["items"]
+    named = {a["company"]: a for a in acts}
+    assert "Globex" not in named, "a closed loop asked for action"
+    assert named["Hooli"]["why"] == "no next step", acts
+    assert 'id="view"' in html and "Loops needing action" in html
+    later = await call(s, "dashboard", {"today": "2026-11-12",
+                                        "save_local": False})
+    raw = later["html"].split('id="cc-data" type="application/json">')[1]
+    first = json.loads(raw.split("</script>")[0])["actions"]["items"][0]
+    assert first["tone"] == "alert" and first["why"].endswith("overdue"), \
+        first
+    print("dashboard action strip: live loops only, overdue first: OK")
     path = out["saved_to"]
     assert os.path.exists(path) and path.endswith("dashboard.html")
     demo = os.environ.get("CC_DEMO_OUT")

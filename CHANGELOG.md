@@ -6,6 +6,13 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Your dashboard now shows which applications need you (B-034): up to
+  five cards at the top of Today and Pipeline, most urgent first:
+  overdue, due within two days, no next step yet, or (if you need visa
+  sponsorship) still unknown. Each card says the one thing to do.
+  Closed applications never appear.
+  **Try it:** say "Show my dashboard". Under "Loops needing action" you
+  should see your most urgent application first, with what to do next.
 - Check what a company actually says about visa sponsorship (B-029).
   You get yes, no or "not stated", how sure that is, and the exact
   sentences it's based on, plus what you logged from recruiters. If the

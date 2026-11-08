@@ -3,7 +3,6 @@
 ## Open
 - B-010 [P2] Lawyer review of docs/PRIVACY.md and docs/TERMS.md before
   paid users. From: ground rules work.
-- B-034 [P2] Dashboard action strip. From: spec v2.
 - B-012 [P2] Delete the old prototype server.py from the project
   folder (it's untracked). From: repo setup.
 - B-042 [P0, owner] Decide who may sign in: keep the invite list, or
@@ -19,6 +18,9 @@
   issue 9.
 
 ## Done
+- B-034 Dashboard action strip: live loops needing action (overdue, due
+  within two days, no next step, sponsorship unknown when needed), most
+  urgent first, on Today and Pipeline. From: spec v2 and gap spec.
 - B-029 sponsorship_verify: yes, no or unstated with confidence, quoted
   posting sentences and the person's own application log, conflicts
   raised, public H-1B filing links as education; never assumes yes.

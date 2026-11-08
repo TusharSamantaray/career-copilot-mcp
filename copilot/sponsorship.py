@@ -38,8 +38,8 @@ def _sentences(text):
 
 
 def needs_sponsorship(profile):
-    said = " ".join([profile.get("work_authorization", "")] +
-                    profile.get("dealbreakers", [])).lower()
+    said = " ".join([profile.get("work_authorization") or ""] +
+                    (profile.get("dealbreakers") or [])).lower()
     return bool(re.search(r"sponsor|h-?1b|visa", said))
 
 

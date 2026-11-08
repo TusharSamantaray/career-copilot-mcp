@@ -116,22 +116,20 @@ mirror is the goal (B-036). Full text: [PRIVACY.md](PRIVACY.md) and
 
 ## 7. Build order and status
 
-*What's built (green) and what's still open (grey, with its backlog id):*
+*Is every step of the build order done? Yes, as of 2026-11-07. What comes
+next is in [BLUEPRINT.md](BLUEPRINT.md) and [BACKLOG.md](BACKLOG.md).*
 
 ```mermaid
 flowchart LR
   classDef built fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
-  classDef pending fill:#94A3B81A,stroke:#94A3B8,stroke-width:1.5px,stroke-dasharray:4 3
 
   s1["1 · Zero-start spine<br/>journey_state · profile_from_text<br/>direction_options"]:::built
   s2["2 · Foundation integrity<br/>facts · conflicts · ownership<br/>keyword check · resume_tailor"]:::built
   s3["3 · Search loop<br/>job_search · jd_analyze · cover letters<br/>rounds · sponsorship_verify"]:::built
   s4["4 · Pressure mode<br/>deadlines · fast-track<br/>study plans · lessons"]:::built
-  s5["5 · Hardening<br/>sign-in · encryption<br/>Neon storage · mirror"]:::built
-  s5o["dashboard action strip<br/>B-034"]:::pending
+  s5["5 · Hardening<br/>sign-in · encryption · Neon storage<br/>mirror · dashboard action strip"]:::built
 
   s1 --> s2 --> s3 --> s4 --> s5
-  s5 -.- s5o
 ```
 
 | Step | Pieces | Status |
@@ -140,8 +138,7 @@ flowchart LR
 | 2. Foundation integrity | Fact record, fact_conflicts, outcome log, ownership_check, ats_keyword_check, resume_tailor with guardrails (B-026) | **Done** |
 | 3. Search loop | job_search, jd_analyze, rejection matching, round log (loop_enrich), cover_letter_draft, sponsorship_verify (B-029) | **Done** |
 | 4. Pressure mode | deadline_add and fast_track, format-aware study_plan, message_draft voice, lessons | **Done** |
-| 5. Hardening | GitHub sign-in, encryption at rest, recruiter_find, Markdown mirror (data_mirror), pipeline_digest sponsorship column | **Done** |
-| | Persistent disk (B-008, owner), dashboard action strip (B-034) | Open |
+| 5. Hardening | GitHub sign-in, encryption at rest, Neon storage (B-008), recruiter_find, Markdown mirror (data_mirror), pipeline_digest sponsorship column, dashboard action strip (B-034) | **Done** |
 
 Extra pieces from the blueprint, all built: ats_profile_check,
 skill_gap_evidence, story_coverage, loop_next_round_prep, watches.

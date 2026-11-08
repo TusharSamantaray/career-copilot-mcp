@@ -4,6 +4,21 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-07 | v0.3.0-dev
+**Asked:** Keep resolving open issues (B-034 next).
+**Did:** Dashboard action strip: `action_strip` in copilot/dashboard.py
+ranks live applications (overdue, due in two days, no next step,
+sponsorship unknown when the person needs it), five at most with a
+"+N more" line; rendered at the top of Today and Pipeline. A "no reply
+in N days" rule was left out: applications don't record when they were
+sent, so it couldn't be computed honestly. Spec build order now fully
+done; stale "persistent disk" line removed.
+**Files:** `copilot/dashboard.py`, `copilot/dashboard.html`,
+`copilot/sponsorship.py`, `tests/test_soul.py`, `docs/SPEC.md`.
+**Tests:** see commit.
+**Try it:** "Show my dashboard".
+**Open:** B-046 next.
+
+### 2026-11-07 | v0.3.0-dev
 **Asked:** Keep resolving open issues (B-029 next).
 **Did:** sponsorship_verify: classifies each posting sentence as no, yes
 or unclear and quotes it; adds what the person logged on applications;

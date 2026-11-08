@@ -84,6 +84,13 @@ main{max-width:1040px;margin:0 auto;padding-block:22px 64px}
 .empty code{font-family:var(--m);font-size:12.5px;background:var(--surface);padding:2px 6px;border-radius:4px}
 .ask{display:inline-flex;gap:6px;align-items:center;background:var(--calm);color:var(--surface);border:0;border-radius:99px;padding:7px 14px;font-size:13px;font-weight:600}
 .foot{margin-top:28px;font-size:12.5px;color:var(--muted)}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:14px}
+.act{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--calm);border-radius:10px;padding:10px 12px;min-width:0}
+.act.warm{border-left-color:var(--warm)}
+.act.alert{border-left-color:var(--alert)}
+.act b{font-family:var(--d);font-size:14px;display:block}
+.act .why{font-family:var(--m);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.act p{margin:4px 0 0;font-size:13px;color:var(--ink2)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -144,8 +151,25 @@ function kpis() {
   }
 }
 
+/* Loops needing action: most urgent first, one thing to do on each. */
+function actionStrip(v) {
+  const a = D.actions || {items: [], more: 0};
+  if (!a.items.length) return;
+  v.appendChild(label("Loops needing action"));
+  const s = $("div", "strip");
+  for (const it of a.items) {
+    const c = $("div", "act " + it.tone);
+    c.appendChild($("span", "why", it.why));
+    c.appendChild($("b", null, it.company + (it.role ? " · " + it.role : "")));
+    c.appendChild($("p", null, it.do)); s.appendChild(c);
+  }
+  v.appendChild(s);
+  if (a.more) v.appendChild($("p", "label", "+" + a.more + " more in Pipeline"));
+}
+
 const VIEWS = {
   today(v) {
+    actionStrip(v);
     const m = D.momentum || {}, step = (D.step || {}).one_step;
     const hero = $("div", "card hero");
     hero.appendChild(ring(m.active_days_this_week || 0, 7));
@@ -171,6 +195,7 @@ const VIEWS = {
   pipeline(v) {
     const total = (D.pipeline || []).reduce((n, c) => n + c.items.length, 0);
     if (!total) { v.appendChild(empty("No applications yet.", "here are my job emails, update my pipeline")); return; }
+    actionStrip(v);
     const cols = $("div", "cols");
     for (const col of D.pipeline) {
       const box = $("div", "col"); box.appendChild($("h3", null, col.label + " · " + col.items.length));
