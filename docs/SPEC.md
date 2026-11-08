@@ -100,7 +100,7 @@ them, with the reason stated. Dealbreakers filter; preferences rank.
 | Watch, outbox | What to watch, cadence, findings waiting to be read | Built |
 | Application | Status, next action, due date, req id, resume version sent (outcome log) | Built |
 | Deadline | Best case and conservative date; fast-track when near | Built |
-| Lesson | What the person learned from a loop | B-033 |
+| Lesson | What the person learned from a loop | Built |
 
 Every person's file can be encrypted with their own key; deleting their
 data destroys the key.
@@ -124,8 +124,7 @@ flowchart LR
   classDef pending fill:#94A3B81A,stroke:#94A3B8,stroke-width:1.5px,stroke-dasharray:4 3
 
   s1["1 · Zero-start spine<br/>journey_state · profile_from_text<br/>direction_options"]:::built
-  s2["2 · Foundation integrity<br/>facts · conflicts · ownership<br/>keyword check"]:::built
-  s2o["resume_tailor<br/>B-026"]:::pending
+  s2["2 · Foundation integrity<br/>facts · conflicts · ownership<br/>keyword check · resume_tailor"]:::built
   s3["3 · Search loop<br/>job_search · jd_analyze<br/>cover letters · rounds"]:::built
   s3o["sponsorship_verify<br/>B-029"]:::pending
   s4["4 · Pressure mode<br/>deadlines · fast-track<br/>study plans · lessons"]:::built
@@ -133,7 +132,6 @@ flowchart LR
   s5o["dashboard action strip<br/>B-034"]:::pending
 
   s1 --> s2 --> s3 --> s4 --> s5
-  s2 -.- s2o
   s3 -.- s3o
   s5 -.- s5o
 ```
@@ -141,8 +139,7 @@ flowchart LR
 | Step | Pieces | Status |
 |---|---|---|
 | 1. Zero-start spine | journey_state, relaxed profile_save, persisted life_compass, profile_from_text, direction_options, server instructions, starter prompts | **Done** |
-| 2. Foundation integrity | Fact record, fact_conflicts, outcome log, ownership_check, ats_keyword_check | **Done** |
-| | resume_tailor with guardrails (B-026) | Open |
+| 2. Foundation integrity | Fact record, fact_conflicts, outcome log, ownership_check, ats_keyword_check, resume_tailor with guardrails (B-026) | **Done** |
 | 3. Search loop | job_search, jd_analyze, rejection matching, round log (loop_enrich), cover_letter_draft | **Done** |
 | | sponsorship_verify (B-029) | Open |
 | 4. Pressure mode | deadline_add and fast_track, format-aware study_plan, message_draft voice, lessons | **Done** |

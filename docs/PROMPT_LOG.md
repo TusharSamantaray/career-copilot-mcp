@@ -3,6 +3,23 @@
 What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
+### 2026-11-07 | v0.3.0-dev
+**Asked:** Keep resolving open issues, with docs and logs in each commit.
+**Did:** resume_tailor (B-026): the assistant proposes lines with the
+fact ids they rest on; the server blocks unconfirmed or missing facts,
+unsupported numbers, ownership inflation, merged claims across jobs,
+honest gaps and invented keywords, runs response_check on accepted
+lines, and can save them as a resume version. Found while testing: tool
+crashes skipped INTERNAL_ERROR (B-047), and a date-dependent test
+(B-048: today on inbox_triage and calendar_interviews). Spec status,
+counts (87 tools) and the engineering table updated.
+**Files:** `copilot/tailor.py`, `app.py`, `tests/test_soul.py`,
+`docs/SPEC.md`, `docs/ENGINEERING.md`, `docs/BACKLOG.md`.
+**Tests:** see commit.
+**Try it:** paste a posting and say "Tailor my resume for this and save
+it as Acme v1".
+**Open:** B-029, B-034, B-046 next; B-042 and B-043 wait on the owner.
+
 ### 2026-11-04 | v0.3.0-dev
 **Asked:** Continue the gap spec: self-healing v1 (issue 8).
 **Did:** Stable error codes (`copilot/errors.py`) on every tool and

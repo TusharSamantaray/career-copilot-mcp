@@ -6,6 +6,17 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Tailor your resume to a posting without stretching the truth (B-026).
+  Your assistant suggests lines for the role, and each one must rest on
+  facts you've confirmed. A line is held back, with the reason, if it has
+  a number you never gave, says you led something you only took part in,
+  mixes two jobs into one claim, names one of your honest gaps, or adds a
+  posting keyword your facts don't back. Lines that pass can be saved as
+  a named resume version, so you can see later which version got replies.
+  **Try it:** paste a job posting and say "Tailor my resume for this and
+  save it as Acme v1". You should get lines built from your confirmed
+  facts, a short reason for anything held back, and "Acme v1" in your
+  resume versions.
 - Errors now explain themselves (B-045). Every error starts with a short
   code, like `[UNKNOWN_TOOL]`, and a new `report_issue` tool says what it
   means and what to do: reconnect, fix a value, or try again once. Only
@@ -290,6 +301,11 @@ Every Added or Changed line has a **Try it:** line.
   politely say that's outside what it does and offer a career step.
 
 ### Fixed
+- If something breaks inside a tool, you now see a short code and a
+  reference (`[INTERNAL_ERROR] … (ref a1b2c3)`) instead of a technical
+  error message (B-047).
+- Reminders made from your emails and calendar now land on your dates,
+  even when your assistant passes your local date (B-048).
 - If GitHub is down or answers oddly while you sign in, you now get a
   clear "Couldn't reach GitHub, try again in a minute" page instead of a
   server error (B-044).

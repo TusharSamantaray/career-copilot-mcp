@@ -90,13 +90,14 @@ async def autopilot_checks(s):
                    if p["company"] == "Initech")
     assert initech["due_date"] == "2026-11-05"
     applied = await call(s, "inbox_triage", {"emails": EMAILS,
-                                             "apply": True})
+                                             "apply": True, "today": TODAY})
     assert len(applied["applied"]) == 3
     again = await call(s, "inbox_triage", {"emails": EMAILS})
     assert again["proposals"] == [], "re-running must not duplicate"
     print("inbox triage: classify, propose, apply, idempotent: OK")
 
-    cal = await call(s, "calendar_interviews", {"apply": True, "events": [
+    cal = await call(s, "calendar_interviews", {
+        "apply": True, "today": TODAY, "events": [
         {"subject": "Acme hiring manager interview",
          "start": {"dateTime": "2026-11-06T10:00:00"}},
         {"subject": "Dentist", "start": "2026-11-04T09:00:00"}]})
@@ -752,6 +753,55 @@ async def mirror_checks(s):
     print("data_mirror: readable Markdown, saved on the device: OK")
 
 
+async def tailor_checks(s):
+    hooli = {"employer": "Hooli", "title": "Platform Engineer",
+             "confirmed": True, "apply": True}
+    owned = (await call(s, "fact_add", {
+        **hooli, "ownership": "contributed",
+        "statement": "Built Python ETL jobs that cut report lag by 25%"}))
+    other = (await call(s, "fact_add", {
+        "employer": "Pied Piper", "title": "Analyst", "confirmed": True,
+        "apply": True, "statement": "Built SQL dashboards for 12 teams"}))
+    unsure = (await call(s, "fact_add", {
+        "employer": "Hooli", "statement": "Ran the on-call rotation"}))
+    await call(s, "profile_save", {"honest_gaps": ["kafka"]})
+    posting = ("Senior Data Engineer. Python, ETL, SQL, Kafka and "
+               "Databricks. Build reliable pipelines.")
+    oid = owned["fact_id"]
+    result = await call(s, "resume_tailor", {
+        "posting_text": posting, "company": "Globex",
+        "save_as": "Globex data eng", "edits": [
+            {"line": "Built Python ETL jobs that cut report lag by 25%",
+             "fact_ids": [oid]},
+            {"line": "Built Python ETL jobs that cut report lag by 40%",
+             "fact_ids": [oid]},
+            {"line": "Led Python ETL jobs that cut report lag by 25%",
+             "fact_ids": [oid]},
+            {"line": "Built Python ETL and SQL dashboards for 12 teams",
+             "fact_ids": [oid, other["fact_id"]]},
+            {"line": "Built Python ETL jobs feeding Kafka",
+             "fact_ids": [oid]},
+            {"line": "Built Python ETL jobs in Databricks",
+             "fact_ids": [oid]},
+            {"line": "Ran the on-call rotation", "fact_ids": [
+                unsure.get("fact_id", "missing")]},
+            {"line": "Shipped Python ETL jobs"}]})
+    assert [a["line"] for a in result["accepted"]] == [
+        "Built Python ETL jobs that cut report lag by 25%"], result
+    rules = [{p["rule"] for p in b["problems"]} for b in result["blocked"]]
+    assert rules == [{"unsupported_number"}, {"ownership"}, {"merged_claim"},
+                     {"honest_gap"}, {"invented_keyword"},
+                     {"unconfirmed_fact"}, {"no_fact"}], rules
+    assert result["honest_gaps"] == ["kafka"], result["honest_gaps"]
+    assert result["invented_claims_blocked"] == ["databricks"], result
+    assert result["saved"]["label"] == "Globex data eng"
+    assert result["check"]["ok"], result["check"]
+    versions = await call(s, "resume_versions")
+    assert any(v["label"] == "Globex data eng" for v in versions)
+    print("resume_tailor: only fact-backed lines pass, each block has a "
+          "reason, accepted lines saved as a version: OK")
+
+
 async def error_checks(s):
     stale = await s.call_tool("no_such_tool", {})
     assert stale.isError and \
@@ -762,6 +812,13 @@ async def error_checks(s):
     assert bad.isError and text.startswith("[BAD_ARGUMENTS]"), text
     assert "monthly_burn" in text and "Zanzibar" not in text, text
     print("stale tool and bad values get stable codes, not a crash: OK")
+    crash = await s.call_tool("calendar_interviews",
+                              {"events": [], "today": "31/12/Quokka"})
+    text = crash.content[0].text
+    assert crash.isError and text.startswith("[INTERNAL_ERROR]"), text
+    assert "(ref " in text and "Quokka" not in text, text
+    print("a fault inside a tool comes back as INTERNAL_ERROR with a ref, "
+          "raw error hidden: OK")
 
     known = await call(s, "report_issue", {
         "error_code": "[INTERNAL_ERROR] Something went wrong (ref a1b2c3).",
@@ -810,6 +867,7 @@ async def main():
             await evidence_checks(s)
             await watch_checks(s)
             await mirror_checks(s)
+            await tailor_checks(s)
             await error_checks(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
               encoding="utf-8") as handle:

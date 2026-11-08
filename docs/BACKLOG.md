@@ -3,9 +3,6 @@
 ## Open
 - B-010 [P2] Lawyer review of docs/PRIVACY.md and docs/TERMS.md before
   paid users. From: ground rules work.
-- B-026 [P1] resume_tailor (resume_patch): edits cite fact ids; server
-  rejects unsupported numbers, ownership inflation, merged claims,
-  honest-gap hits. From: spec v2 and blueprint.
 - B-029 [P1] sponsorship_verify: posting text plus public filing data,
   as education. From: spec v2.
 - B-034 [P2] Dashboard action strip. From: spec v2.
@@ -24,6 +21,15 @@
   issue 9.
 
 ## Done
+- B-026 resume_tailor: each tailored line cites confirmed facts; blocks
+  unsupported numbers, ownership inflation, merged claims across jobs,
+  honest gaps and invented keywords; accepted lines save as a resume
+  version for the outcome log. From: spec v2 and blueprint.
+- B-047 A crash inside a tool skipped the INTERNAL_ERROR code and showed
+  the raw error text; now coded, with a ref. From: B-026 testing.
+- B-048 inbox_triage and calendar_interviews take the person's `today`,
+  so reminders land on their dates (the test broke once real time passed
+  its fixed dates). From: test run on 2026-11-07.
 - B-045 Stable error codes on every tool error (copilot/errors.py),
   report_issue (code, tool, ref, app family; anonymous counts only),
   client retry guidance in docs/CONNECT.md. Unknown tools and bad values

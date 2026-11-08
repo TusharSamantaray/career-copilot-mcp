@@ -62,6 +62,7 @@ from copilot import nudges
 from copilot import places
 from copilot import prep
 from copilot import store
+from copilot import tailor
 from copilot import watch
 from copilot.knowledge.money import (DISCLAIMER, ECONOMY_GUIDES, INVEST_GUIDES,
                              LAYOFF_PLAYBOOK)
@@ -240,6 +241,9 @@ class AuthAndAudit(Middleware):
         try:
             result = await call_next(context)
         except (ToolError, ResourceError) as exc:
+            if exc.__cause__ is not None:
+                # FastMCP wraps a crashing tool's exception: a real fault.
+                self._crash(kind, name, user, start, error_cls, exc.__cause__)
             elapsed = (time.perf_counter() - start) * 1000
             logger.warning(f"{kind} error: {name} after {elapsed:.1f} ms: "
                            f"{exc}")
@@ -261,19 +265,23 @@ class AuthAndAudit(Middleware):
                          (time.perf_counter() - start) * 1000)
             raise error_cls(errors.message(
                 "BAD_ARGUMENTS", f"Check these values: {fields}.")) from None
-        except Exception:
-            elapsed = (time.perf_counter() - start) * 1000
-            ref = errors.new_ref()
-            logger.exception(f"{kind} crashed: {name} after "
-                             f"{elapsed:.1f} ms (ref {ref})")
-            self._signal(kind, name, user, False, elapsed)
-            raise error_cls(errors.message(
-                "INTERNAL_ERROR", f"Something went wrong on the server "
-                f"(ref {ref}). It has been logged.")) from None
+        except Exception as exc:
+            self._crash(kind, name, user, start, error_cls, exc)
         elapsed = (time.perf_counter() - start) * 1000
         logger.info(f"{kind} done: {name} in {elapsed:.1f} ms")
         self._signal(kind, name, user, True, elapsed)
         return result
+
+    def _crash(self, kind, name, user, start, error_cls, exc):
+        """Log a fault with a ref; the caller sees only the code and ref."""
+        elapsed = (time.perf_counter() - start) * 1000
+        ref = errors.new_ref()
+        logger.opt(exception=exc).error(f"{kind} crashed: {name} after "
+                                        f"{elapsed:.1f} ms (ref {ref})")
+        self._signal(kind, name, user, False, elapsed)
+        raise error_cls(errors.message(
+            "INTERNAL_ERROR", f"Something went wrong on the server "
+            f"(ref {ref}). It has been logged.")) from None
 
     @staticmethod
     def _signal(kind, name, user, ok, elapsed):
@@ -766,6 +774,29 @@ def ats_keyword_check(posting_text: str, resume_text: str = "",
     (never add these)."""
     return ats.ats_keyword_check(current_user(), posting_text, resume_text,
                                  resume_label)
+
+
+@mcp.tool
+def resume_tailor(posting_text: str, edits: list[dict], save_as: str = "",
+                  company: str = "") -> dict:
+    """Check tailored resume lines for one posting before the person uses
+    them. You write each line; the server only lets through what the
+    person's confirmed facts support. edits: [{"line": "...",
+    "fact_ids": ["..."]}], each line naming the confirmed facts it rests
+    on (from fact_add or profile_get). Blocks lines with numbers no cited
+    fact holds, verbs bigger than the person's part, work from two jobs
+    merged into one claim, honest gaps, or posting keywords the facts
+    don't back. save_as: a label to save accepted lines as a resume
+    version (write action); log applications with it as resume_label.
+    Comes with check, the response_check result."""
+    user = current_user()
+    result = tailor.resume_tailor(user, posting_text, edits, save_as,
+                                  company)
+    if result["accepted"]:
+        result["check"] = conduct.check(
+            user, "\n".join(a["line"] for a in result["accepted"]),
+            "resume")
+    return result
 
 
 @mcp.tool
@@ -1426,7 +1457,8 @@ def message_draft(kind: str, company: str = "", role: str = "",
 # ---------------------------------------------------------- inbox & calendar
 
 @mcp.tool
-def inbox_triage(emails: list[dict], apply: bool = False) -> dict:
+def inbox_triage(emails: list[dict], apply: bool = False,
+                 today: str = "") -> dict:
     """Turn job-search emails into pipeline updates and reminders.
 
     emails: [{from, subject, date, snippet}], taken from the user's own
@@ -1436,19 +1468,26 @@ def inbox_triage(emails: list[dict], apply: bool = False) -> dict:
     with apply=true. A rejection closes an application only when its role
     or req id matches; otherwise it comes back as a "confirm" proposal for
     the person to settle (apply skips it). Email text is never stored.
+    today: the user's local date (YYYY-MM-DD), so reminders land on their
+    days.
     """
-    return autopilot.triage_emails(current_user(), emails, apply)
+    now = date.fromisoformat(today) if today else None
+    return autopilot.triage_emails(current_user(), emails, apply, now)
 
 
 @mcp.tool
-def calendar_interviews(events: list[dict], apply: bool = False) -> dict:
+def calendar_interviews(events: list[dict], apply: bool = False,
+                        today: str = "") -> dict:
     """Find interviews in calendar events (Outlook, Google, Zoom) and set up
     prep, thank-you and follow-up reminders.
 
     events: [{subject, start, organizer, join_url}]. apply=true updates the
-    matching applications and creates the reminders.
+    matching applications and creates the reminders. today: the user's
+    local date (YYYY-MM-DD), so reminders land on their days.
     """
-    return autopilot.interviews_from_calendar(current_user(), events, apply)
+    now = date.fromisoformat(today) if today else None
+    return autopilot.interviews_from_calendar(current_user(), events, apply,
+                                              now)
 
 
 # --------------------------------------------------------- nudges & calendar
