@@ -4,6 +4,27 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-08 | v0.3.0-dev
+**Asked:** Wrap up the remaining issues; recruiter search (#13).
+**Did:** copilot/recruiter.py: persona_search (skills from the posting
+plus must_have and nice_to_have; must_have filters, ranked by coverage
+then evidence weighted by ownership; location keeps matches there or
+remote; top 5; the searcher's own persona left out; no pay echoed) and
+persona_chat (answers only from evidence lines; identity and salary
+questions refused; counts questions per persona in the asker's file,
+never the text). No new website: recruiters are invited users of the
+same connector; find_candidates starter prompt; owner runbook has the
+recruiter message. Terms line on fair use of personas;
+TERMS_VERSION 2026-11-08.14.
+**Files:** `copilot/recruiter.py`, `app.py`, `copilot/conduct.py`,
+`docs/PRIVACY.md`, `docs/TERMS.md`, `docs/OWNER.md`,
+`tests/test_http.py`, `validation/cases/recruiter_search.py`.
+**Tests:** see commit.
+**Try it:** from a second invited account, "I'm hiring", paste a
+posting, "it must have Python".
+**Open:** a job link isn't fetched; the recruiter pastes the posting
+text. Survey, demand digest and pathways follow (B-061).
+
+### 2026-11-08 | v0.3.0-dev
 **Asked:** Wrap up the remaining issues; persona v1 (#12).
 **Did:** copilot/persona.py: a view over confirmed facts and confirmed
 profile fields; employer names (from facts, experience, company lists

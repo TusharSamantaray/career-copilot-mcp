@@ -1,6 +1,6 @@
 # Terms of use
 
-Version 2026-11-08.13. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-08.14. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 By using Career Copilot, you agree to these terms. Career Copilot asks you
@@ -37,6 +37,9 @@ reference content.
 - Keep your own copy of anything important (`data_export`).
 - If you publish an anonymous persona, it must describe your own real
   work. You can take it down at any time.
+- If you search for candidates, use what a persona shows only to judge
+  their work. Don't try to work out who someone is, or contact them
+  outside an introduction they agree to.
 
 ## How Career Copilot talks
 

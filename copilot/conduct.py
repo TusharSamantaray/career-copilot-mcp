@@ -10,7 +10,7 @@ from datetime import date
 from copilot import facts as fact_record
 from copilot import store
 
-TERMS_VERSION = "2026-11-08.13"
+TERMS_VERSION = "2026-11-08.14"
 DOCS = "https://github.com/TusharSamantaray/career-copilot-mcp/blob/main/docs"
 
 # How every reply sounds. People act on short, clear direction; long
@@ -62,6 +62,9 @@ TERMS = [
     "Only put true things on your resume and in messages. It won't help "
     "invent experience, numbers or credentials.",
     "Don't use it to harass, deceive or discriminate against anyone.",
+    "If you search for candidates, use what a persona shows only to judge "
+    "their work. Don't try to work out who they are or reach them outside "
+    "an introduction they agree to.",
     "The free demo keeps data in a managed database, but it can change or "
     "pause without notice and no backup is promised. Keep your own copy "
     "with data_export.",
@@ -126,6 +129,11 @@ DATA_HANDLING = {
          "where": YOURS, "kept_for": "until you unpublish or delete it",
          "who_can_read": "only you until you publish; then signed-in "
                          "people searching for candidates"},
+        {"what": "If you search for candidates: how many questions you "
+                 "asked each persona and when (never the questions or the "
+                 "postings you paste)",
+         "where": YOURS, "kept_for": "until you delete it",
+         "who_can_read": "only you"},
         {"what": "The date you agreed to these terms",
          "where": YOURS, "kept_for": "until you delete it",
          "who_can_read": "only you"},

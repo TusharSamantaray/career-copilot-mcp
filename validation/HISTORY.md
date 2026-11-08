@@ -10,3 +10,4 @@ commit behind each row.
 | 2026-11-08 | 0.3.0 | resume_rebuild | B-051 | 10/10 |
 | 2026-11-08 | 0.3.0 | trust_pack | B-043 | 7/7 |
 | 2026-11-08 | 0.3.0 | persona_privacy | B-052 | 8/8 |
+| 2026-11-08 | 0.3.0 | recruiter_search | B-053 | 9/9 |

@@ -35,6 +35,24 @@ Score: 8/8
 | searchable after the yes | yes | yes | pass |
 | gone from search after unpublish | no | no | pass |
 
+## Job posting to top 5 personas, ranked by verified evidence (B-053)
+
+Before: No way for someone hiring to find a person's verified work without a resume carrying their name, contacts and employers.
+
+Score: 9/9
+
+| Measure | Expected | Measured | |
+|---|---|---|---|
+| ranked by verified evidence: owner and lead first | yes | yes | pass |
+| must-have 'spark' filters out personas that don't prove it | ana, dev | ana, dev | pass |
+| never more than 5 matches | yes | yes | pass |
+| unpublished persona never found | no | no | pass |
+| employer names in results | none | none | pass |
+| salary in results | no | no | pass |
+| identity question refused | identity | identity | pass |
+| salary question refused | salary | salary | pass |
+| skill question answered from verified evidence only | owned | owned | pass |
+
 ## Resume timeline proves a rebuild from saved text (B-051)
 
 Before: No history: proving an improvement meant diffing files by hand, and a version that brought old problems back went unnoticed.
@@ -63,9 +81,9 @@ Score: 7/7
 | Measure | Expected | Measured | |
 |---|---|---|---|
 | agreement asked for before anything is saved | no | no | pass |
-| data rows that say what, where, how long and who can read | 8 | 8 | pass |
+| data rows that say what, where, how long and who can read | 9 | 9 | pass |
 | things never stored are listed | yes | yes | pass |
 | orders to the assistant in the disclosure | 0 | 0 | pass |
 | fields that steer the assistant (show_user, reply_style) | 0 | 0 | pass |
 | summary is three lines | 3 | 3 | pass |
-| agreement recorded for this version | yes -> 2026-11-08.13 | yes -> 2026-11-08.13 | pass |
+| agreement recorded for this version | yes -> 2026-11-08.14 | yes -> 2026-11-08.14 | pass |

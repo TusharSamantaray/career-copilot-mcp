@@ -48,4 +48,5 @@ Rules:
 | `resume_rebuild` | A four-version rebuild: invented bullets, level tags and internal names gone, summary led by numbers, same roles, tighter, and a branch that brought problems back is flagged | B-051 |
 | `trust_pack` | Ground rules give no orders to the assistant, and every stored kind of data says where, how long and who can read it | B-043 |
 | `persona_privacy` | A planted name, contact, link and faith never reach the persona; unverified skills stay out; nothing is searchable before the yes or after unpublish | B-052 |
+| `recruiter_search` | Six made-up candidates, one posting: owners and leads rank first, must-haves filter, never more than 5, no employer or salary in results, identity and salary questions refused | B-053 |
 | `outreach_gate` | Nothing is approved to send without a yes to the exact text, edits and expired approvals are refused, and nothing is stored | B-056 |

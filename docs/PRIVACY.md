@@ -1,6 +1,6 @@
 # Privacy notice
 
-Version 2026-11-08.13. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-08.14. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 Career Copilot is run by Tushar Samantaray ("we"). It's a connector that
@@ -18,6 +18,7 @@ Only what you or your assistant give it:
 | Money | Account names, types and balances you enter or import |
 | Coaching | Daily check-ins, energy level, steps done |
 | Persona | Only if you publish it: the anonymous view described below |
+| Hiring searches | If you search for candidates: how many questions you asked each persona and when (never the questions or the postings you paste) |
 | Agreement | The date you agreed to these terms |
 
 Each person's data is in **its own private file**, linked to their
@@ -51,6 +52,10 @@ published only after you say yes to that view.
 - **Take it down:** `persona_unpublish` removes it from search at once;
   deleting your data deletes it too. It is a snapshot: it changes only
   when you publish again.
+- **Searches:** a person searching sees the persona's role, level,
+  experience range, locations, skills and proof lines, and can ask it
+  questions answered only from those lines. Questions about who you are,
+  where you work, how to reach you or salary are refused.
 - **Be aware:** someone who already knows your work well might
   recognise it from the facts themselves. Leave out any line that feels
   too specific.

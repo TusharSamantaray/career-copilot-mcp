@@ -63,6 +63,7 @@ from copilot import outreach
 from copilot import persona
 from copilot import places
 from copilot import prep
+from copilot import recruiter
 from copilot import sponsorship as visa_sponsor
 from copilot import store
 from copilot import tailor
@@ -116,6 +117,8 @@ SENSITIVE_ARGS = {"api_key", "token", "password", "authorization",
                   "emails", "events", "mood", "note", "text", "statement",
                   # people's own words: lessons, resume lines, answers
                   "add", "bullet", "answer", "posting_text", "resume_text",
+                  # a recruiter's questions to a persona
+                  "question",
                   # pasted error text and app names in report_issue
                   "error_code", "client_hint",
                   # file paths can carry a person's name
@@ -361,6 +364,8 @@ mcp = FastMCP("career-copilot", version=VERSION, auth=make_auth(),
     "days are fine; the rule is never skip twice. Name the hard thing, then "
     "shrink it. If a different role (career_move) or city (where_to_move) "
     "would help them grow, say so in one line and let them decide. "
+    "Someone hiring (not job seeking) uses persona_search and "
+    "persona_chat: anonymous verified work only, never identity or pay. "
     "How you talk (always): stay on career, work, money "
     "and life planning, and steer back politely when asked about other "
     "things; be respectful and neutral, never insult, mock or stereotype "
@@ -1236,6 +1241,30 @@ def persona_unpublish(delete: bool = False) -> dict:
     return persona.unpublish(current_user(), delete)
 
 
+@mcp.tool
+def persona_search(posting_text: str, title: str = "",
+                   must_have: list[str] | None = None,
+                   nice_to_have: list[str] | None = None,
+                   location: str = "") -> dict:
+    """For someone hiring: the top 5 published anonymous personas for a
+    job. posting_text: the posting the recruiter pasted (from a job link
+    they opened). must_have filters out personas that don't prove it;
+    nice_to_have and the posting's skills rank them; location keeps
+    personas there or remote. Ranked by verified evidence. Results carry
+    skills and proof lines only: no names, contacts or salary. Never
+    contacts anyone."""
+    return recruiter.search(current_user(), posting_text, title, must_have,
+                            nice_to_have, location)
+
+
+@mcp.tool
+def persona_chat(persona_id: str, question: str) -> dict:
+    """Ask a published persona about its work, like a short screen.
+    Answers come only from the persona's verified evidence; identity and
+    salary questions are refused. Answer from answer_from only."""
+    return recruiter.chat(current_user(), persona_id, question)
+
+
 # ------------------------------------------------------------- guidance
 
 @mcp.tool
@@ -1921,6 +1950,15 @@ def i_know_my_target() -> str:
     return ("I know the role I want. Ask for the role, where I want to work, "
             "my pay floor and any hard no's, one at a time. Save them with "
             "profile_save, then give me one step toward applying.")
+
+
+@mcp.prompt
+def find_candidates() -> str:
+    """Starter chip, for someone hiring: find candidates for a job."""
+    return ("I'm hiring. I'll paste a job posting and say what the role must "
+            "have. Use persona_search to find the top 5 anonymous personas, "
+            "one line each with its proof, then let me ask one of them a "
+            "question with persona_chat.")
 
 
 @mcp.prompt

@@ -34,6 +34,11 @@ The values are in Render → career-copilot → Environment.
 - **Invite a friend:** add their GitHub username to
   `CAREER_COPILOT_ALLOWED_GITHUB_USERS`, save, and send them the
   connector address and [CONNECT.md](CONNECT.md).
+- **Let a recruiter in:** exactly the same as inviting a friend: no
+  separate site or account type. They connect the same address in their
+  own AI assistant and say "I'm hiring" (the `find_candidates` starter).
+  They see published anonymous personas only, never anyone's name,
+  contacts or salary. Send them the recruiter message below.
 - **Remove someone:** take their username out and save.
 - **Connect a new app:** add a custom connector with the plain address
   and sign in with GitHub. Leave the OAuth fields empty in claude.ai.
@@ -79,6 +84,25 @@ connecting.
 > sleeps when idle, so the first connect can take up to a minute.
 >
 > If something breaks, tell me what you said and what you saw.
+
+## Message to send a recruiter
+
+Add their GitHub username to the invite list first.
+
+> Hi! Career Copilot lets you find candidates by their verified work,
+> not their resume. People choose to publish an anonymous persona:
+> skills, and the work that proves them. No names, contacts or salary.
+>
+> 1. In your AI assistant, add a custom connector with this address:
+>    `https://career-copilot-cg2k.onrender.com/mcp`, and sign in with
+>    GitHub (public profile only; it's invite-only and you're on it).
+> 2. Say "I'm hiring", paste a job posting, and say what the role must
+>    have. You'll get up to 5 anonymous personas, each with proof lines.
+> 3. Ask one a question, like "What have they built with Kafka?".
+>    Answers come only from their verified work.
+>
+> Nobody is contacted automatically, and a persona can't tell you who
+> they are.
 
 If you make the repository public (B-043), swap the source line for its
 link.

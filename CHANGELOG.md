@@ -6,6 +6,18 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Find candidates by their verified work, with no new website (B-053,
+  GitHub #13). Someone hiring connects the same Career Copilot in their
+  own AI assistant (invite-only, like everyone), pastes a job posting
+  and says what the role must have. They get up to 5 published
+  anonymous personas, ranked by work that proves each skill (owned or
+  led counts most), each with proof lines. They can ask a persona about
+  its work; questions about who someone is, where they work, how to
+  reach them or salary are refused. Nobody is contacted automatically.
+  **Try it:** from a second GitHub account on the invite list, say "I'm
+  hiring", paste a job posting, and add "it must have Python". You
+  should get anonymous matches with proof lines and no names. Then ask
+  "What's their email?"; it should refuse.
 - An anonymous persona you can publish so people hiring find your work,
   not your name (B-052, GitHub #12). It shows your target role, level,
   an experience range and your confirmed work facts with the skills they

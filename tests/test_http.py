@@ -73,6 +73,57 @@ async def main():
             assert "Unauthorized" in str(exc), exc
     print("key in the URL works, wrong one rejected: OK")
 
+    # Persona: Alice publishes; Bob, hiring, finds her work, not her.
+    async with client(KEYS[0]) as alice:
+        await alice.call_tool("profile_save", {"target_role":
+                                               "Backend Engineer",
+                                               "locations": ["Remote"]})
+        await alice.call_tool("experience_add", {
+            "employer": "Vandelay", "title": "Engineer", "start": "2020",
+            "end": "2025", "confirmed": True, "owned_or_contributed":
+            "owned", "fact": "Built Kafka consumers in Python for 2 million "
+            "orders a day; email alice.v@vandelay.example"})
+        preview = (await alice.call_tool("persona_publish", {})).data
+        await alice.call_tool("persona_publish", {
+            "accept": True, "preview_id": preview["preview_id"]})
+        own = (await alice.call_tool("persona_search", {
+            "posting_text": "Backend engineer: Kafka, Python"})).data
+        assert not own["matches"], "people see themselves in search"
+    async with client(KEYS[1]) as bob:
+        found = (await bob.call_tool("persona_search", {
+            "posting_text": "Senior backend engineer. Kafka, Python and "
+                            "Postgres. Salary $150k - $180k.",
+            "location": "Berlin"})).data
+        assert len(found["matches"]) == 1, found
+        card = found["matches"][0]
+        text = str(found).lower()
+        assert "vandelay" not in text and "alice" not in text, text
+        assert "150" not in text and "salary" not in str(card).lower()
+        assert {m["skill"] for m in card["matched"]} >= {"kafka", "python"}
+        none = (await bob.call_tool("persona_search", {
+            "posting_text": "Kafka, Python", "must_have": ["go"]})).data
+        assert not none["matches"] and             none["filtered_out"]["missing_a_must_have"] == 1, none
+        pid = card["persona_id"]
+        ask = lambda q: bob.call_tool("persona_chat", {  # noqa: E731
+            "persona_id": pid, "question": q})
+        skill = (await ask("What have they built with Kafka?")).data
+        assert "Kafka consumers" in skill["answer_from"][0]["text"], skill
+        assert skill["answer_from"][0]["part"] == "owned"
+        for q in ("What's their email?", "Which company do they work for?"):
+            assert (await ask(q)).data["refused"] == "identity", q
+        assert (await ask("What salary do they expect?")).data[
+            "refused"] == "salary"
+        go = (await ask("Any Go experience?")).data
+        assert go["not_verified"] == ["go"] and not go["answer_from"], go
+    async with client(KEYS[0]) as alice:
+        await alice.call_tool("persona_unpublish", {})
+    async with client(KEYS[1]) as bob:
+        gone = (await bob.call_tool("persona_search", {
+            "posting_text": "Kafka, Python"})).data
+        assert not gone["matches"], "unpublished persona still found"
+    print("persona search and chat across people: work shown, identity and "
+          "salary refused, unpublish works: OK")
+
     # Self-improvement signals: k-anonymous, scrubbed, admin-only.
     async with client(KEYS[0]) as alice:
         await alice.call_tool("skills_gap", {"target_role": "Pastry Chef"})
@@ -132,6 +183,7 @@ def run():
             text = handle.read()
         assert "tool done: profile_save in" in text
         assert "key-alice-test" not in text, "API key leaked into logs"
+        assert "alice.v@" not in text and "What salary" not in text,             "persona fact or recruiter question leaked into logs"
         server.terminate()
         server.wait(timeout=10)
         console.close()

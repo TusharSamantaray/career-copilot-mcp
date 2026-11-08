@@ -9,16 +9,18 @@
   Render so anonymous counts survive restarts? If yes, the privacy notice
   gets a line saying Neon also holds them (new TERMS_VERSION). From:
   B-049.
-- B-053 [P1, owner] Recruiter view (GitHub #13, with #14 folded in by
-  the owner on 2026-11-08): job link to top 5 personas, persona chat,
-  recruiter survey, demand digest and pathways. Needs a way for
-  recruiters in without a website. Depends on B-052. From: GitHub
-  issues.
+- B-061 [P1] Recruiter survey, demand digest and pathways (from GitHub
+  #14, folded into #13 by the owner on 2026-11-08). From: GitHub issue.
 - B-055 [P2, owner] Identity reveal after both sides agree (GitHub #16);
   agency lane still to confirm. Depends on B-052 and B-053. From: GitHub
   issue.
 
 ## Done
+- B-053 Recruiter view (GitHub #13): persona_search (top 5 by verified
+  evidence, must-haves filter) and persona_chat (verified answers only;
+  identity and salary refused). Recruiters use the same connector, on
+  the invite list: no website. Terms 2026-11-08.14. Survey, digest and
+  pathways moved to B-061. From: GitHub issues.
 - B-052 Persona v1 (GitHub #12): persona_publish (exact preview, hide
   lines, publish only that view on a yes) and persona_unpublish; verified
   skills only; employer names, contacts, links and traits removed;
