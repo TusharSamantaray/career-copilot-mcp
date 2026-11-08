@@ -388,7 +388,9 @@ async def health(request: Request) -> JSONResponse:
     auth_mode tells a new client what the server expects before it
     ever calls a tool: "github-oauth", "api-key", "open", or
     "off (stdio)". invite_only says whether sign-in is limited to the
-    owner's list (never who is on it)."""
+    owner's list (never who is on it). insights says where anonymous
+    usage counts live: file (wiped on a free host's restart) or
+    database."""
     if STDIO:
         auth_mode = "off (stdio)"
     elif OAUTH:
@@ -402,6 +404,7 @@ async def health(request: Request) -> JSONResponse:
                          "storage": store.BACKEND.name,
                          "auth_mode": auth_mode,
                          "invite_only": bool(OAUTH and ALLOWED_GITHUB),
+                         "insights": insights.location(),
                          "tool_count": len(tools)})
 
 

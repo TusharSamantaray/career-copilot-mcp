@@ -9,6 +9,11 @@ Privacy rules, enforced here:
   number is dropped.
 - A label is reported only once K_ANON distinct users have sent it.
 Disable entirely with CAREER_COPILOT_INSIGHTS=0.
+
+Where they live: a local file by default. On a free host that file is
+wiped on every restart, so the owner can keep the counts in the hosted
+database instead (CAREER_COPILOT_INSIGHTS_STORE=database, with
+DATABASE_URL set). There, counts older than RETENTION_DAYS are dropped.
 """
 import hashlib
 import hmac
@@ -26,6 +31,40 @@ K_ANON = int(os.environ.get("CAREER_COPILOT_K_ANON", "5"))
 FEEDBACK_REASONS = ("helpful", "wrong", "missing_info", "confusing",
                     "too_generic", "not_my_country", "missing_role")
 MAX_LABEL = 40
+STORE = os.environ.get("CAREER_COPILOT_INSIGHTS_STORE", "file")
+RETENTION_DAYS = 400
+_pg_ready = False
+
+
+def _database():
+    """The hosted database backend when the owner chose it, else None."""
+    if STORE != "database":
+        return None
+    from copilot import store
+    return store.BACKEND if store.BACKEND.name == "postgres" else None
+
+
+def _run(sql, params=(), fetch=False):
+    """One statement against wherever the counts live."""
+    global _pg_ready
+    db = _database()
+    if db is None:
+        with _connect() as conn:
+            rows = conn.execute(sql.replace("{T}", "signals"), params)
+            return rows.fetchall() if fetch else None
+    with db._conn() as conn:
+        if not _pg_ready:
+            conn.execute("CREATE TABLE IF NOT EXISTS cc_signals (kind TEXT, "
+                         "label TEXT, who TEXT, day TEXT, ok INTEGER, "
+                         "ms REAL)")
+            _pg_ready = True
+        rows = conn.execute(sql.replace("{T}", "cc_signals")
+                            .replace("?", "%s"), params)
+        return rows.fetchall() if fetch else None
+
+
+def location():
+    return "database" if _database() is not None else "file"
 
 
 @contextmanager
@@ -64,41 +103,44 @@ def record(kind, label, user_id, ok=True, ms=0.0):
     label = scrub(label) if kind != "tool" else label
     if not label:
         return
-    with _connect() as conn:
-        conn.execute("INSERT INTO signals VALUES (?,?,?,?,?,?)",
-                     (kind, label, _who(user_id), str(date.today()),
-                      int(ok), round(ms, 1)))
+    _run("INSERT INTO {T} VALUES (?,?,?,?,?,?)",
+         (kind, label, _who(user_id), str(date.today()), int(ok),
+          round(ms, 1)))
 
 
 def forget(user_id):
     """Remove one user's signals (called by data_delete)."""
-    if not ENABLED or not os.path.exists(DB_PATH):
+    if not ENABLED or (_database() is None and not os.path.exists(DB_PATH)):
         return
-    with _connect() as conn:
-        conn.execute("DELETE FROM signals WHERE who=?", (_who(user_id),))
+    _run("DELETE FROM {T} WHERE who=?", (_who(user_id),))
 
 
 def summary(since_days=30):
     """Aggregates only, with every label behind the K_ANON threshold."""
-    if not os.path.exists(DB_PATH):
+    if _database() is None and not os.path.exists(DB_PATH):
         return {"k_anon": K_ANON, "tools": [], "labels": {}}
-    cutoff = str(date.fromordinal(date.today().toordinal() - since_days))
-    with _connect() as conn:
-        tools = conn.execute(
-            "SELECT label, COUNT(*), COUNT(DISTINCT who), "
-            "AVG(ok), AVG(ms) FROM signals WHERE kind='tool' AND day>=? "
-            "GROUP BY label ORDER BY COUNT(*) DESC", (cutoff,)).fetchall()
-        labels = conn.execute(
-            "SELECT kind, label, COUNT(DISTINCT who) AS users, "
-            "AVG(ok) FROM signals WHERE kind!='tool' AND day>=? "
-            "GROUP BY kind, label HAVING users>=? ORDER BY users DESC",
-            (cutoff, K_ANON)).fetchall()
+    today = date.today().toordinal()
+    cutoff = str(date.fromordinal(today - since_days))
+    if _database() is not None:
+        _run("DELETE FROM {T} WHERE day<?",
+             (str(date.fromordinal(today - RETENTION_DAYS)),))
+    tools = _run(
+        "SELECT label, COUNT(*), COUNT(DISTINCT who), "
+        "AVG(ok), AVG(ms) FROM {T} WHERE kind='tool' AND day>=? "
+        "GROUP BY label ORDER BY COUNT(*) DESC", (cutoff,), fetch=True)
+    labels = _run(
+        "SELECT kind, label, COUNT(DISTINCT who) AS users, "
+        "AVG(ok) FROM {T} WHERE kind!='tool' AND day>=? "
+        "GROUP BY kind, label HAVING COUNT(DISTINCT who)>=? "
+        "ORDER BY users DESC", (cutoff, K_ANON), fetch=True)
     out = {"since_days": since_days, "k_anon": K_ANON,
            "tools": [{"tool": t, "calls": n, "users": u,
-                      "success_rate": round(ok, 3), "avg_ms": round(ms, 1)}
+                      "success_rate": round(float(ok), 3),
+                      "avg_ms": round(float(ms), 1)}
                      for t, n, u, ok, ms in tools if u >= K_ANON],
            "labels": {}}
     for kind, label, users, ok in labels:
         out["labels"].setdefault(kind, []).append(
-            {"label": label, "users": users, "positive_rate": round(ok, 3)})
+            {"label": label, "users": users,
+             "positive_rate": round(float(ok), 3)})
     return out

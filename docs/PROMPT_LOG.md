@@ -4,6 +4,22 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-07 | v0.3.0-dev
+**Asked:** Keep resolving open issues (B-046 investigation).
+**Did:** Found that anonymous counts (insights) lived in a local SQLite
+file, wiped on every free-host restart, so the weekly improver and
+report_issue counts saw almost nothing. Added an opt-in Postgres store
+(cc_signals table, same hashing and k-anonymity, 400-day pruning there,
+floats for JSON), /health `insights`, Postgres CI checks. Off by default:
+keeping counts longer is a privacy-behaviour change, so the owner decides
+(B-050).
+**Files:** `copilot/insights.py`, `app.py`, `tests/test_postgres.py`,
+`tests/pg_reset.py`, `tests/test_oauth.py`, `docs/SETUP.md`,
+`docs/OWNER.md`.
+**Tests:** see commit; Postgres checks run in CI.
+**Try it:** open /health and look for "insights".
+**Open:** B-050 owner decision; then B-046 triage.
+
+### 2026-11-07 | v0.3.0-dev
 **Asked:** Keep resolving open issues (B-034 next).
 **Did:** Dashboard action strip: `action_strip` in copilot/dashboard.py
 ranks live applications (overdue, due in two days, no next step,

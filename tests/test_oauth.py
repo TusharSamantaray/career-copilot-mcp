@@ -154,6 +154,7 @@ def first_run():
     health = httpx.get(f"{BASE}/health").json()
     assert health["status"] == "ok" and health["auth_mode"] == "github-oauth"
     assert health["invite_only"] is True and health["tool_count"] > 0
+    assert health["insights"] == "file", health
     assert "octo" not in json.dumps(health).lower(), "invitees leaked"
     print("/health says GitHub sign-in, invite-only, no names: OK")
     anon = httpx.post(f"{BASE}/mcp", json=INIT, headers=MCP_HEADERS)

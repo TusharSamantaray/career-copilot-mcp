@@ -12,3 +12,4 @@ def fresh_database():
     with psycopg.connect(url, autocommit=True) as conn:
         conn.execute("DROP TABLE IF EXISTS cc_records")
         conn.execute("DROP TABLE IF EXISTS cc_keys")
+        conn.execute("DROP TABLE IF EXISTS cc_signals")

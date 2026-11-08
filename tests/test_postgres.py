@@ -19,6 +19,7 @@ def reset():
     with psycopg.connect(URL, autocommit=True) as conn:
         conn.execute("DROP TABLE IF EXISTS cc_records")
         conn.execute("DROP TABLE IF EXISTS cc_keys")
+        conn.execute("DROP TABLE IF EXISTS cc_signals")
 
 
 def store_checks():
@@ -47,6 +48,31 @@ def store_checks():
     assert store.delete_all("u_ana") and not store.list_kind("u_ana", "goal")
     assert store.list_kind("u_ben", "fact"), "deleting ana hurt ben"
     print("postgres store: per person, encrypted, update, delete: OK")
+
+
+def insights_checks():
+    """Anonymous counts kept in the database when the owner opts in, so
+    the weekly improver doesn't see an empty week after every restart."""
+    os.environ["CAREER_COPILOT_INSIGHTS_STORE"] = "database"
+    from copilot import insights
+    assert insights.location() == "database"
+    for n in range(5):
+        insights.record("tool", "job_search", f"u_{n}", ok=n != 0, ms=12)
+        insights.record("issue:INTERNAL_ERROR", "job_search", f"u_{n}",
+                        ok=False)
+    summary = insights.summary(7)
+    json.dumps(summary)                       # must be JSON-safe
+    assert summary["tools"][0]["tool"] == "job_search", summary
+    assert summary["tools"][0]["success_rate"] == 0.8
+    assert summary["labels"]["issue:INTERNAL_ERROR"][0]["users"] == 5
+    insights.forget("u_0")
+    assert "issue:INTERNAL_ERROR" not in insights.summary(7)["labels"],         "forget left a person's counts behind"
+    import psycopg
+    with psycopg.connect(URL) as conn:
+        whos = [r[0] for r in conn.execute("SELECT who FROM cc_signals")]
+    assert whos and not any(w.startswith("u_") for w in whos),         "raw ids stored"
+    print("anonymous counts in the database: k-anonymous, hashed, "
+          "forgettable: OK")
 
 
 async def tool_call(env, name, args):
@@ -98,6 +124,7 @@ if __name__ == "__main__":
         sys.exit(0)
     reset()
     store_checks()
+    insights_checks()
     reset()
     survives_restart()
     logs_hide_the_url()

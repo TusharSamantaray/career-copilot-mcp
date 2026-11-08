@@ -27,6 +27,7 @@ The values are in Render → career-copilot → Environment.
 | `CAREER_COPILOT_MASTER_KEY` | Encrypts everyone's data, each with their own key. Add a long random value once. **Never change it**: stored data would become unreadable |
 | `CAREER_COPILOT_API_KEY` | Old fallback, unused while sign-in is on. Safe to delete |
 | `CAREER_COPILOT_INSIGHTS_SALT`, `CAREER_COPILOT_ADMIN_KEY` | Anonymous usage counts and the `/insights` page |
+| `CAREER_COPILOT_INSIGHTS_STORE` | Not set (or `file`): anonymous counts are wiped on every restart, so the weekly improver sees little. `database`: kept in Neon for 400 days. Your call (B-050); `/health` shows which |
 
 ## Everyday tasks
 

@@ -132,6 +132,7 @@ To try it, ask the assistant *"I just got laid off"* or
 | `CAREER_COPILOT_ADMIN_KEY` | For self-improvement | none | Unlocks `GET /insights` for the weekly improver |
 | `CAREER_COPILOT_K_ANON` | No | `5` | Distinct users needed before a label is reported |
 | `CAREER_COPILOT_INSIGHTS` | No | `1` | `0` turns anonymous signals off |
+| `CAREER_COPILOT_INSIGHTS_STORE` | No | `file` | `database` keeps anonymous counts in Postgres (needs `DATABASE_URL`), so a restart doesn't wipe them; kept 400 days there |
 
 ## 5a. Turn on self-improvement (one-time, then hands-off)
 
