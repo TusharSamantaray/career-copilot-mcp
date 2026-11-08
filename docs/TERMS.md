@@ -1,6 +1,6 @@
 # Terms of use
 
-Version 2026-11-08.12. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-08.13. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 By using Career Copilot, you agree to these terms. Career Copilot asks you
@@ -35,6 +35,8 @@ reference content.
 - Keep your sign-in, key or connector URL private. Anyone who has them
   can use your copy.
 - Keep your own copy of anything important (`data_export`).
+- If you publish an anonymous persona, it must describe your own real
+  work. You can take it down at any time.
 
 ## How Career Copilot talks
 

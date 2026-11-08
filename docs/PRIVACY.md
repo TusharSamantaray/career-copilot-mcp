@@ -1,6 +1,6 @@
 # Privacy notice
 
-Version 2026-11-08.12. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-08.13. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 Career Copilot is run by Tushar Samantaray ("we"). It's a connector that
@@ -17,6 +17,7 @@ Only what you or your assistant give it:
 | Job search | Applications, statuses, reminders, interview dates, deadlines you set, roles already shown to you (so you only see new ones), and for postings you analyze: title, company and the skills asked (never the full text), watches you set with what they found, and lessons you note |
 | Money | Account names, types and balances you enter or import |
 | Coaching | Daily check-ins, energy level, steps done |
+| Persona | Only if you publish it: the anonymous view described below |
 | Agreement | The date you agreed to these terms |
 
 Each person's data is in **its own private file**, linked to their
@@ -29,6 +30,30 @@ The same list, as data a program can check (what, where, how long, who
 can read it), is at `/data-handling` on the hosted server and in the
 `copilot://data-handling` resource. Career Copilot shows it with the
 ground rules before saving anything.
+
+## Your anonymous persona (only if you publish it)
+
+Off by default. If you choose to, Career Copilot builds an anonymous
+view of your work so people hiring can find you without seeing who you
+are. You see the exact view first, can leave out any line, and it is
+published only after you say yes to that view.
+
+- **In it:** your target role, level, an experience range (like "6-9
+  years"), the locations you chose, and your confirmed work facts with
+  the skills they prove. A skill appears only when a confirmed fact
+  proves it.
+- **Never in it:** your name, contact details, photo, age, gender,
+  salary, work authorization, or the employer names you gave. Emails,
+  links and phone numbers are removed from facts, and a line that
+  mentions a personal trait (like religion) is left out.
+- **Who sees it:** other signed-in people on this invite-only server
+  who search for candidates. Nobody sees it before you publish.
+- **Take it down:** `persona_unpublish` removes it from search at once;
+  deleting your data deletes it too. It is a snapshot: it changes only
+  when you publish again.
+- **Be aware:** someone who already knows your work well might
+  recognise it from the facts themselves. Leave out any line that feels
+  too specific.
 
 ## Signing in with GitHub
 

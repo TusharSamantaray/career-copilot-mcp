@@ -9,10 +9,6 @@
   Render so anonymous counts survive restarts? If yes, the privacy notice
   gets a line saying Neon also holds them (new TERMS_VERSION). From:
   B-049.
-- B-052 [P1] Persona v1 (GitHub #12). First step agreed: a private
-  persona preview, nothing published or searchable. How recruiters reach
-  a persona must not need a new website (owner, 2026-11-08). From:
-  GitHub issue.
 - B-053 [P1, owner] Recruiter view (GitHub #13, with #14 folded in by
   the owner on 2026-11-08): job link to top 5 personas, persona chat,
   recruiter survey, demand digest and pathways. Needs a way for
@@ -23,6 +19,11 @@
   issue.
 
 ## Done
+- B-052 Persona v1 (GitHub #12): persona_publish (exact preview, hide
+  lines, publish only that view on a yes) and persona_unpublish; verified
+  skills only; employer names, contacts, links and traits removed;
+  stored in the person's own file. Terms 2026-11-08.13. From: GitHub
+  issue.
 - B-043 Trust pack (GitHub #4): machine-readable data-handling statement
   (ground_rules, copilot://data-handling, GET /data-handling) and
   ground_rules as a disclosure with no directions to the assistant.

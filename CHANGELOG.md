@@ -6,6 +6,18 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- An anonymous persona you can publish so people hiring find your work,
+  not your name (B-052, GitHub #12). It shows your target role, level,
+  an experience range and your confirmed work facts with the skills they
+  prove. Employer names, emails, links and phone numbers are removed,
+  and a line mentioning a personal trait is left out. You see the exact
+  view first, can hide any line, and it's published only after your yes.
+  Take it down any time. The privacy and terms version changed, so
+  you'll be asked to agree once more.
+  **Try it:** say "Show me what my anonymous persona would look like".
+  You should see every line, with no name, employer or contact details,
+  and "Publish this?". Say "hide the second line", then "yes, publish
+  it", then "take my persona down".
 - A data-handling statement any program can check before you connect
   (B-043, GitHub #4). It lists what is stored, where, for how long and
   who can read it, plus what is never stored. It is shown with the
@@ -16,16 +28,6 @@ Every Added or Changed line has a **Try it:** line.
   "What data do you keep about me, and where?". You should see each kind
   of data with where it lives, how long it's kept and who can read it.
 
-### Changed
-- The ground rules now read as a disclosure: plain statements of what
-  Career Copilot does, with a three-line summary, instead of
-  instructions to your assistant (B-043, GitHub #4). Cautious assistants
-  treat server instructions as a risk, so the rules no longer give any.
-  **Try it:** start a new chat and say "What are your ground rules?".
-  You should get three short lines (your data, not advice, nothing sent
-  without your yes) and a question whether that's OK.
-
-### Added
 - A `validation/` folder that proves each improvement with numbers
   (B-060). Each case replays one improvement with made-up people and
   measures it, like the before and after table in a resume proof.
@@ -270,6 +272,19 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- Resumes, messages and personas now also flag Catholic, Protestant,
+  Mormon, Evangelical and church as personal traits, like other faiths
+  (B-052).
+  **Try it:** say "Check this line: Led the church fundraising
+  committee". It should suggest leaving the faith detail out unless you
+  chose to include it.
+- The ground rules now read as a disclosure: plain statements of what
+  Career Copilot does, with a three-line summary, instead of
+  instructions to your assistant (B-043, GitHub #4). Cautious assistants
+  treat server instructions as a risk, so the rules no longer give any.
+  **Try it:** start a new chat and say "What are your ground rules?".
+  You should get three short lines (your data, not advice, nothing sent
+  without your yes) and a question whether that's OK.
 - The resume timeline now checks what a real rebuild proof checks
   (B-059): a summary is flagged when it doesn't lead with a number, not
   for using "I"; education lines no longer count as roles; and you can

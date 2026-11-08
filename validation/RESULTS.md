@@ -18,6 +18,23 @@ Score: 7/7
 | approved after it expired | no | no | pass |
 | records stored by the send flow | 0 | 0 | pass |
 
+## Anonymous persona: verified skills only, published on a yes (B-052)
+
+Before: No persona: showing your work to recruiters meant sending a resume with your name, contacts and employers on it.
+
+Score: 8/8
+
+| Measure | Expected | Measured | |
+|---|---|---|---|
+| planted name, contact, link or trait in the preview | none | none | pass |
+| skill with no confirmed fact behind it shown | no | no | pass |
+| verified skills shown | yes | yes | pass |
+| experience shown as a range, not exact years | 6-9 years | 6-9 years | pass |
+| published without a yes | no | no | pass |
+| published with a stale preview | no | no | pass |
+| searchable after the yes | yes | yes | pass |
+| gone from search after unpublish | no | no | pass |
+
 ## Resume timeline proves a rebuild from saved text (B-051)
 
 Before: No history: proving an improvement meant diffing files by hand, and a version that brought old problems back went unnoticed.
@@ -46,9 +63,9 @@ Score: 7/7
 | Measure | Expected | Measured | |
 |---|---|---|---|
 | agreement asked for before anything is saved | no | no | pass |
-| data rows that say what, where, how long and who can read | 7 | 7 | pass |
+| data rows that say what, where, how long and who can read | 8 | 8 | pass |
 | things never stored are listed | yes | yes | pass |
 | orders to the assistant in the disclosure | 0 | 0 | pass |
 | fields that steer the assistant (show_user, reply_style) | 0 | 0 | pass |
 | summary is three lines | 3 | 3 | pass |
-| agreement recorded for this version | yes -> 2026-11-08.12 | yes -> 2026-11-08.12 | pass |
+| agreement recorded for this version | yes -> 2026-11-08.13 | yes -> 2026-11-08.13 | pass |

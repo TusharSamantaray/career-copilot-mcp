@@ -60,6 +60,7 @@ from copilot import journey
 from copilot import loops
 from copilot import nudges
 from copilot import outreach
+from copilot import persona
 from copilot import places
 from copilot import prep
 from copilot import sponsorship as visa_sponsor
@@ -1210,6 +1211,29 @@ def outreach_approve(approval_id: str, channel: str, consent: bool,
     return outreach.approve(current_user(), approval_id, channel, to,
                             subject, body, thread_id, when, event_id,
                             consent)
+
+
+# -------------------------------------------------------------- persona
+
+@mcp.tool
+def persona_publish(accept: bool = False, preview_id: str = "",
+                    hide: list[str] | None = None) -> dict:
+    """The person's anonymous persona: verified skills and confirmed work
+    facts only (employer names, emails, links and phone numbers removed;
+    never a name, photo, age, gender, salary or work authorization).
+    accept=false (default) returns the exact preview and a preview_id;
+    hide: ids of evidence lines to leave out. Show the preview word for
+    word. Only after their yes, call with accept=true and that preview_id
+    to publish it, so signed-in people searching for candidates can find
+    it (write action). Private until then."""
+    return persona.publish(current_user(), accept, preview_id, hide)
+
+
+@mcp.tool
+def persona_unpublish(delete: bool = False) -> dict:
+    """Take the person's persona out of search at once (write action).
+    delete=true removes it completely."""
+    return persona.unpublish(current_user(), delete)
 
 
 # ------------------------------------------------------------- guidance

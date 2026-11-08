@@ -4,6 +4,26 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-08 | v0.3.0-dev
+**Asked:** Wrap up the remaining issues; persona v1 (#12).
+**Did:** copilot/persona.py: a view over confirmed facts and confirmed
+profile fields; employer names (from facts, experience, company lists
+and snapshot avoid_terms), emails, links, handles and phone numbers
+scrubbed; personal-trait lines left out; experience as a range; skills
+only when a confirmed fact proves them. persona_publish previews with a
+preview_id and publishes only that exact view on accept;
+persona_unpublish hides or deletes. Stored in the person's own file.
+The new validation case caught "Catholic" missing from the trait words;
+added it and four others. Privacy notice section and terms line;
+TERMS_VERSION 2026-11-08.13.
+**Files:** `copilot/persona.py`, `copilot/conduct.py`, `app.py`,
+`copilot/store.py`, `docs/PRIVACY.md`, `docs/TERMS.md`,
+`tests/test_soul.py`, `validation/cases/persona_privacy.py`.
+**Tests:** see commit.
+**Try it:** "Show me what my anonymous persona would look like".
+**Open:** names inside fact text (a manager's first name) can't be
+detected; the preview and hide are the safeguard.
+
+### 2026-11-08 | v0.3.0-dev
 **Asked:** Wrap up the remaining issues; first, the trust pack (#4).
 **Did:** Machine-readable DATA_HANDLING in conduct.py (what, where,
 kept_for, who_can_read; never_stored; logs; usage counts; controls),

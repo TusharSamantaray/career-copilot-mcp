@@ -822,6 +822,41 @@ async def tailor_checks(s):
           "reason, accepted lines saved as a version: OK")
 
 
+async def persona_checks(s):
+    job = {"employer": "Initrode", "title": "Engineer", "start": "2021",
+           "end": "2024"}
+    await call(s, "experience_add", {**job, "confirmed": True,
+               "fact": "Built Kafka pipelines at Initrode in Python; reach "
+                       "me at sam.r@initrode.example or +1 415 555 0134"})
+    await call(s, "experience_add", {**job, "confirmed": True,
+               "fact": "Ran meditation sessions as a Buddhist volunteer"})
+    await call(s, "experience_add", {**job, "confirmed": False,
+               "fact": "Did some fuzzing research"})
+    first = await call(s, "persona_publish")
+    assert first["published"] is False and first["preview_id"], first
+    shown = json.dumps(first["preview"]).lower()
+    for leak in ("initrode", "sam.r", "555", "buddhist"):
+        assert leak not in shown, f"{leak} leaked into the persona"
+    skills = {row["skill"] for row in first["preview"]["skills"]}
+    assert "kafka" in skills and "fuzzing" not in skills, skills
+    print("persona preview: no employer, contact or trait; only verified "
+          "skills: OK")
+    wrong = await call(s, "persona_publish", {"accept": True,
+                                              "preview_id": "made-up"})
+    assert wrong["published"] is False, wrong
+    kafka = next(e["id"] for e in first["preview"]["evidence"]
+                 if "kafka" in e["skills"])
+    hidden = await call(s, "persona_publish", {"hide": [kafka]})
+    assert kafka not in {e["id"] for e in hidden["preview"]["evidence"]}
+    done = await call(s, "persona_publish", {
+        "accept": True, "preview_id": hidden["preview_id"], "hide": [kafka]})
+    assert done["published"] and done["persona_id"].startswith("p_"), done
+    down = await call(s, "persona_unpublish")
+    assert down["published"] is False
+    print("persona: publish only the previewed view, hide lines, "
+          "unpublish: OK")
+
+
 async def outreach_checks(s):
     mail = {"channel": "email", "to": "Jordan@Acme.example",
             "subject": "Following up on the analyst role",
@@ -1058,6 +1093,7 @@ async def main():
             await tailor_checks(s)
             await timeline_checks(s)
             await outreach_checks(s)
+            await persona_checks(s)
             await sponsorship_checks(s)
             await error_checks(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
@@ -1074,6 +1110,7 @@ async def main():
     assert "Zanzibar" not in log, "a bad argument's value leaked into logs"
     assert "Jordan's laptop" not in log, "client hint leaked into logs"
     assert "Wombat" not in log, "a file path leaked into logs"
+    assert "sam.r@initrode" not in log, "a persona fact leaked into logs"
     assert "Jordan@Acme" not in log and "keen to keep" not in log,         "outreach recipient or draft leaked into logs"
     assert "bad arguments: finance_dashboard: monthly_burn" in log, \
         "field name not logged"

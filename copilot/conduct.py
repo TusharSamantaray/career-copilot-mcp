@@ -10,7 +10,7 @@ from datetime import date
 from copilot import facts as fact_record
 from copilot import store
 
-TERMS_VERSION = "2026-11-08.12"
+TERMS_VERSION = "2026-11-08.13"
 DOCS = "https://github.com/TusharSamantaray/career-copilot-mcp/blob/main/docs"
 
 # How every reply sounds. People act on short, clear direction; long
@@ -31,7 +31,9 @@ MAX_CHAT_WORDS = 90
 PRIVACY = [
     "Career Copilot keeps only what you tell it: your goals, work history, "
     "applications, reminders, check-ins and any money figures you enter.",
-    "Each person's data is in its own private file. Nobody else can see it.",
+    "Each person's data is in its own private file. Nobody else can see "
+    "it, unless you publish your anonymous persona: then signed-in people "
+    "searching for candidates see that one view, and nothing else.",
     "Signing in with GitHub shares only your public profile. Career "
     "Copilot never sees your password and stores your GitHub id only as a "
     "scrambled code.",
@@ -117,6 +119,13 @@ DATA_HANDLING = {
         {"what": "Check-ins, energy level and steps done",
          "where": YOURS, "kept_for": "until you delete it",
          "who_can_read": "only you"},
+        {"what": "Your anonymous persona, only if you publish it: target "
+                 "role, level, experience range, locations, and confirmed "
+                 "work facts with the skills they prove (employer names, "
+                 "emails, links and phone numbers removed)",
+         "where": YOURS, "kept_for": "until you unpublish or delete it",
+         "who_can_read": "only you until you publish; then signed-in "
+                         "people searching for candidates"},
         {"what": "The date you agreed to these terms",
          "where": YOURS, "kept_for": "until you delete it",
          "who_can_read": "only you"},
@@ -128,6 +137,8 @@ DATA_HANDLING = {
         "account numbers and bank ids",
         "your GitHub username or name (only a salted hash of your GitHub "
         "user number)",
+        "in a persona: your name, contact details, photo, age, gender, "
+        "salary, work authorization or employer names",
     ],
     "logs": {"what": "which tool ran, when, how long, and error codes",
              "hidden": "your words, emails, money figures, notes and keys",
@@ -205,6 +216,7 @@ RULES = [
           # "diagnosed an outage", "conservative estimate") are left out.
           ["religion", "religious", "mosque", "synagogue", "christian",
            "muslim", "hindu", "jewish", "buddhist", "sikh", "atheist",
+           "catholic", "protestant", "mormon", "evangelical", "church",
            "democrats?", "republicans?", "pregnan\\w*", "married",
            "divorced", "maternity", "my kids", "my children",
            "\\d+ years old", "date of birth", "born in \\d{4}",

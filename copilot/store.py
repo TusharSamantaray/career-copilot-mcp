@@ -31,7 +31,8 @@ _keys = {}
 KINDS = {"profile", "experience", "story", "application", "resume",
          "account", "holding", "budget", "nudge", "goal", "checkin",
          "consent", "compass", "fact", "seen", "round", "posting",
-         "watch", "outbox", "lesson", "deadline", "snapshot"}
+         "watch", "outbox", "lesson", "deadline", "snapshot",
+         "persona"}
 
 
 def _now():
