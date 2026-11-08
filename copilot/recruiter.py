@@ -107,7 +107,8 @@ def search(user, posting_text, title="", must_have=None, nice_to_have=None,
             "say": "List each match in one line: its why and one proof "
                    "line. These are anonymous personas: verified work only, "
                    "no names, contacts or salary. To learn more, use "
-                   "persona_chat." if top else
+                   "persona_chat; to ask to meet one, persona_intro." if top
+                   else
                    "No published persona matches yet. Say so plainly; "
                    "loosening a must-have may help."}
 
@@ -132,7 +133,7 @@ def chat(user, persona_id, question):
         return {"refused": "identity",
                 "say": "Say the persona can't share who they are, where they "
                        "work or how to reach them. Identity is shared only "
-                       "when both sides agree to talk."}
+                       "when both sides agree to talk: use persona_intro."}
     if PAY.search(question or ""):
         return {"refused": "salary",
                 "say": "Say Career Copilot doesn't show, store or negotiate "

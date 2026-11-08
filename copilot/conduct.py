@@ -10,7 +10,7 @@ from datetime import date
 from copilot import facts as fact_record
 from copilot import store
 
-TERMS_VERSION = "2026-11-08.15"
+TERMS_VERSION = "2026-11-08.16"
 DOCS = "https://github.com/TusharSamantaray/career-copilot-mcp/blob/main/docs"
 
 # How every reply sounds. People act on short, clear direction; long
@@ -142,6 +142,12 @@ DATA_HANDLING = {
          "who_can_read": "you; the roles and skills in them, with your "
                          "company name if given, appear in the demand "
                          "digest that signed-in people can read"},
+        {"what": "Introductions: requests to your persona (company, role, "
+                 "message), requests you sent, who confirmed, and the "
+                 "contact you chose to share",
+         "where": YOURS, "kept_for": "until you delete it",
+         "who_can_read": "you; the other side sees the contact you "
+                         "share only after you both confirm"},
         {"what": "Your pathway: the direction you picked and its steps",
          "where": YOURS, "kept_for": "until you delete it",
          "who_can_read": "only you"},

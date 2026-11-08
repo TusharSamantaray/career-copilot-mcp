@@ -1,6 +1,6 @@
 # Terms of use
 
-Version 2026-11-08.15. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-08.16. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 By using Career Copilot, you agree to these terms. Career Copilot asks you
@@ -40,6 +40,8 @@ reference content.
 - If you search for candidates, use what a persona shows only to judge
   their work. Don't try to work out who someone is, or contact them
   outside an introduction they agree to.
+- An introduction shares contacts only after both sides confirm. What
+  happens after that, including any offer, is between the two of you.
 
 ## How Career Copilot talks
 

@@ -1,6 +1,6 @@
 # Privacy notice
 
-Version 2026-11-08.15. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-08.16. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 Career Copilot is run by Tushar Samantaray ("we"). It's a connector that
@@ -21,6 +21,7 @@ Only what you or your assistant give it:
 | Hiring searches | If you search for candidates: how many questions you asked each persona and when, and the role and skills each search asked for (never the questions or the postings you paste) |
 | Hiring survey | If you answer it: your answers and the company name you chose to give |
 | Pathway | The direction you picked and its steps |
+| Introductions | Requests to your persona (company, role, message), requests you sent, who confirmed, and the contact you chose to share |
 | Agreement | The date you agreed to these terms |
 
 Each person's data is in **its own private file**, linked to their
@@ -58,6 +59,12 @@ published only after you say yes to that view.
   experience range, locations, skills and proof lines, and can ask it
   questions answered only from those lines. Questions about who you are,
   where you work, how to reach you or salary are refused.
+- **Introductions:** someone hiring can ask to meet your persona, with
+  their company, role and a message (kept in your file). Nobody learns
+  who you are unless you say yes and choose what to share (for example
+  a name and an email), and they confirm too. Each side's shared contact
+  stays in its own file; you see theirs at the same moment they see
+  yours. Declining shares nothing.
 - **Be aware:** someone who already knows your work well might
   recognise it from the facts themselves. Leave out any line that feels
   too specific.

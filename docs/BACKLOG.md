@@ -9,11 +9,15 @@
   Render so anonymous counts survive restarts? If yes, the privacy notice
   gets a line saying Neon also holds them (new TERMS_VERSION). From:
   B-049.
-- B-055 [P2, owner] Identity reveal after both sides agree (GitHub #16);
-  agency lane still to confirm. Depends on B-052 and B-053. From: GitHub
-  issue.
+- B-062 [P2, owner] Agency lane for introductions: an agency holds the
+  candidate's identity until the offer, and the company sees only the
+  persona. Confirm it stays in scope. From: GitHub #16 open question.
 
 ## Done
+- B-055 Identity reveal (GitHub #16), direct lane: persona_intro,
+  persona_intros, identity_reveal; nothing shared until both confirm;
+  declines stay closed; persona notes reveals after the screen. Terms
+  2026-11-08.16. Agency lane moved to B-062. From: GitHub issue.
 - B-061 Recruiter survey (versioned, company optional), demand digest
   (who and how many, per source, 90 days, no candidate data), pathways
   (guided and immediate; every step cites its reason). From GitHub #14.

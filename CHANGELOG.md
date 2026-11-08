@@ -6,6 +6,17 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Meet a persona only when both sides agree (B-055, GitHub #16). Someone
+  hiring asks to meet a persona with their company, role and a short
+  message, which is checked first. The persona's owner sees the request
+  and how many screening questions came first, then says yes (choosing
+  what contact to share) or no. Nobody learns who the other is until
+  both have confirmed; then each sees what the other shared. The persona
+  notes each reveal and that it came after the screen.
+  **Try it:** from a hiring account, find a persona and say "Ask to meet
+  this one for our backend role at Globex". As the job seeker, say "Any
+  introduction requests?", then "Yes, share my name and email". Neither
+  side should see the other's contact until both said yes.
 - Pathways built on what people hiring actually ask for (B-061, from
   GitHub #14). People hiring can answer a short survey (three questions,
   versioned so questions can change later), and their searches count

@@ -32,7 +32,8 @@ KINDS = {"profile", "experience", "story", "application", "resume",
          "account", "holding", "budget", "nudge", "goal", "checkin",
          "consent", "compass", "fact", "seen", "round", "posting",
          "watch", "outbox", "lesson", "deadline", "snapshot",
-         "persona", "screen", "survey", "search", "pathway"}
+         "persona", "screen", "survey", "search", "pathway",
+         "intro", "intro_sent"}
 
 
 def _now():

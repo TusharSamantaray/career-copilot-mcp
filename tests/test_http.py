@@ -160,6 +160,57 @@ async def main():
     print("survey, demand digest and pathways: counted, attributed, every "
           "step cites its reason: OK")
 
+    # Introductions: identity only after both sides confirm.
+    async with client(KEYS[0]) as alice:
+        preview = (await alice.call_tool("persona_publish", {})).data
+        pid = (await alice.call_tool("persona_publish", {
+            "accept": True, "preview_id": preview["preview_id"]})).data[
+            "persona_id"]
+    async with client(KEYS[1]) as bob:
+        await bob.call_tool("persona_chat", {"persona_id": pid,
+                                             "question": "Kafka scale?"})
+        rude = (await bob.call_tool("persona_intro", {
+            "persona_id": pid, "company": "Globex", "role": "Backend",
+            "message": "You'd be an idiot to say no."})).data
+        assert rude["sent"] is False, rude
+        sent = (await bob.call_tool("persona_intro", {
+            "persona_id": pid, "company": "Globex",
+            "role": "Senior Backend Engineer",
+            "message": "Your Kafka work fits our order pipeline. Open to a "
+                       "chat?"})).data
+        first = (await bob.call_tool("identity_reveal", {
+            "intro_id": sent["intro_id"], "confirm": True,
+            "share": "Bob B, bob.b@globex.example"})).data
+        assert first["revealed"] is False and "they_shared" not in first
+        decline = (await bob.call_tool("persona_intro", {
+            "persona_id": pid, "company": "Globex", "role": "Data Engineer",
+            "message": "Also hiring for data. Interested?"})).data
+    async with client(KEYS[0]) as alice:
+        box = (await alice.call_tool("persona_intros", {})).data
+        got = {r["intro_id"]: r for r in box["received"]}
+        assert got[sent["intro_id"]]["company"] == "Globex"
+        assert got[sent["intro_id"]]["screened_questions"] >= 1
+        assert "bob.b@" not in str(box), "contact shown before both agree"
+        no = (await alice.call_tool("identity_reveal", {
+            "intro_id": decline["intro_id"], "confirm": False})).data
+        assert no["status"] == "declined"
+        yes = (await alice.call_tool("identity_reveal", {
+            "intro_id": sent["intro_id"], "confirm": True,
+            "share": "Alice V, alice.v@vandelay.example"})).data
+        assert yes["revealed"] and yes["they_shared"].startswith("Bob B")
+        assert yes["merit_screen"]["questions_before_intro"] >= 1
+    async with client(KEYS[1]) as bob:
+        seen = (await bob.call_tool("identity_reveal", {
+            "intro_id": sent["intro_id"], "confirm": True,
+            "share": "Bob B"})).data
+        assert seen["they_shared"].startswith("Alice V"), seen
+        late = (await bob.call_tool("identity_reveal", {
+            "intro_id": decline["intro_id"], "confirm": True,
+            "share": "Bob B"})).data
+        assert late["revealed"] is False and "they_shared" not in late
+    print("introductions: nothing shared until both confirm, declines "
+          "stay closed, reveal noted after the screen: OK")
+
     # Self-improvement signals: k-anonymous, scrubbed, admin-only.
     async with client(KEYS[0]) as alice:
         await alice.call_tool("skills_gap", {"target_role": "Pastry Chef"})
@@ -219,7 +270,9 @@ def run():
             text = handle.read()
         assert "tool done: profile_save in" in text
         assert "key-alice-test" not in text, "API key leaked into logs"
-        assert "alice.v@" not in text and "What salary" not in text,             "persona fact or recruiter question leaked into logs"
+        assert "alice.v@" not in text and "What salary" not in text \
+            and "bob.b@" not in text and "order pipeline" not in text, \
+            "persona fact or recruiter question leaked into logs"
         server.terminate()
         server.wait(timeout=10)
         console.close()

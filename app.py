@@ -56,6 +56,7 @@ from copilot import facts as fact_record
 from copilot import finance
 from copilot import guide
 from copilot import insights
+from copilot import intro
 from copilot import jobs
 from copilot import journey
 from copilot import loops
@@ -118,8 +119,9 @@ SENSITIVE_ARGS = {"api_key", "token", "password", "authorization",
                   "emails", "events", "mood", "note", "text", "statement",
                   # people's own words: lessons, resume lines, answers
                   "add", "bullet", "answer", "posting_text", "resume_text",
-                  # a recruiter's questions to a persona
-                  "question",
+                  # a recruiter's questions and intro messages, and the
+                  # contact either side shares at a reveal
+                  "question", "message", "share",
                   # pasted error text and app names in report_issue
                   "error_code", "client_hint",
                   # file paths can carry a person's name
@@ -365,8 +367,9 @@ mcp = FastMCP("career-copilot", version=VERSION, auth=make_auth(),
     "days are fine; the rule is never skip twice. Name the hard thing, then "
     "shrink it. If a different role (career_move) or city (where_to_move) "
     "would help them grow, say so in one line and let them decide. "
-    "Someone hiring (not job seeking) uses persona_search and "
-    "persona_chat: anonymous verified work only, never identity or pay. "
+    "Someone hiring (not job seeking) uses persona_search, persona_chat "
+    "and persona_intro: anonymous verified work only, never identity or "
+    "pay; identity_reveal shares contacts only after both sides confirm. "
     "How you talk (always): stay on career, work, money "
     "and life planning, and steer back politely when asked about other "
     "things; be respectful and neutral, never insult, mock or stereotype "
@@ -1264,6 +1267,34 @@ def persona_chat(persona_id: str, question: str) -> dict:
     Answers come only from the persona's verified evidence; identity and
     salary questions are refused. Answer from answer_from only."""
     return recruiter.chat(current_user(), persona_id, question)
+
+
+@mcp.tool
+def persona_intro(persona_id: str, company: str, role: str,
+                  message: str) -> dict:
+    """For someone hiring: ask to meet a persona (write action). company
+    and role say what it's for; message is checked first. Neither side's
+    identity is shared; that happens only if both confirm with
+    identity_reveal. Never contacts the person any other way."""
+    return intro.request(current_user(), persona_id, company, role, message)
+
+
+@mcp.tool
+def persona_intros() -> dict:
+    """Introduction requests the person's persona received (company,
+    role, message, how many screening questions came first) and ones
+    they sent, with who has confirmed."""
+    return intro.inbox(current_user())
+
+
+@mcp.tool
+def identity_reveal(intro_id: str, confirm: bool, share: str = "") -> dict:
+    """Either side of an introduction confirms (write action). confirm=true
+    with share: the contact they choose to give (e.g. a name and email),
+    only after they said yes. confirm=false declines. Nothing is shared
+    until both sides confirm; then each sees what the other shared, and
+    the persona notes that the reveal came after the merit screen."""
+    return intro.reveal(current_user(), intro_id, confirm, share)
 
 
 @mcp.tool

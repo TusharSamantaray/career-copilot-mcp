@@ -50,4 +50,5 @@ Rules:
 | `persona_privacy` | A planted name, contact, link and faith never reach the persona; unverified skills stay out; nothing is searchable before the yes or after unpublish | B-052 |
 | `recruiter_search` | Six made-up candidates, one posting: owners and leads rank first, must-haves filter, never more than 5, no employer or salary in results, identity and salary questions refused | B-053 |
 | `demand_pathway` | Three made-up recruiters and a candidate: each skill counted once per person with who said it, no candidate data in the digest, every pathway step cites its reason, immediate mode needs no new learning | B-061 |
+| `identity_reveal` | Nothing shared after one side confirms, a third person can't confirm, a decline stays closed, each side gets only what the other chose, the persona notes the screen came first | B-055 |
 | `outreach_gate` | Nothing is approved to send without a yes to the exact text, edits and expired approvals are refused, and nothing is stored | B-056 |

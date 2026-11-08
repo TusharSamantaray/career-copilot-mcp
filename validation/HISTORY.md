@@ -12,3 +12,4 @@ commit behind each row.
 | 2026-11-08 | 0.3.0 | persona_privacy | B-052 | 8/8 |
 | 2026-11-08 | 0.3.0 | recruiter_search | B-053 | 9/9 |
 | 2026-11-08 | 0.3.0 | demand_pathway | B-061 | 10/10 |
+| 2026-11-08 | 0.3.0 | identity_reveal | B-055 | 8/8 |

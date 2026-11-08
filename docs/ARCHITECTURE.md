@@ -54,7 +54,7 @@ flowchart LR
 
   subgraph server["Career Copilot server · FastMCP on Render"]
     auth["Sign-in check<br/>stateless GitHub tokens"]:::guard
-    tools["102 tools<br/>journey · facts · search · prep · deadlines · money"]:::copilot
+    tools["105 tools<br/>journey · facts · search · prep · deadlines · money"]:::copilot
     checks["Truth and conduct checks<br/>response_check · ownership_check"]:::guard
   end
 

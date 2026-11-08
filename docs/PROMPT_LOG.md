@@ -4,6 +4,24 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-08 | v0.3.0-dev
+**Asked:** Wrap up the remaining issues; identity reveal (#16).
+**Did:** copilot/intro.py: persona_intro (company, role, checked
+message; a request in the owner's file and a sent note in the
+recruiter's), persona_intros (received and sent, who confirmed, screen
+count), identity_reveal (either side confirms with what to share, or
+declines; nothing shared until both confirm; each side's contact stays
+in its own file; reveal noted on the persona with after_screen).
+Direct lane only. TERMS_VERSION 2026-11-08.16.
+**Files:** `copilot/intro.py`, `app.py`, `copilot/conduct.py`,
+`docs/PRIVACY.md`, `docs/TERMS.md`, `tests/test_http.py`,
+`validation/cases/identity_reveal.py`.
+**Tests:** see commit.
+**Try it:** "Any introduction requests?", then "Yes, share my name and
+email".
+**Open:** the agency lane (an agency holds identity until the offer) is
+the owner's call (B-062).
+
+### 2026-11-08 | v0.3.0-dev
 **Asked:** Wrap up the remaining issues; the survey, demand digest and
 pathways from #14 (folded into #13).
 **Did:** copilot/demand.py: versioned SURVEYS (v1, three questions);

@@ -21,6 +21,23 @@ Score: 10/10
 | immediate mode needs no new learning | yes | yes | pass |
 | one step at a time | yes | yes | pass |
 
+## Identity revealed only when both sides confirm (B-055)
+
+Before: No introduction step: the only way to meet a persona would be to learn who they are first.
+
+Score: 8/8
+
+| Measure | Expected | Measured | |
+|---|---|---|---|
+| revealed after only the recruiter confirmed | no | no | pass |
+| recruiter's contact visible before both confirm | no | no | pass |
+| candidate confirming without saying what to share | no | no | pass |
+| a third person can confirm someone else's intro | no | no | pass |
+| revealed once both confirm | yes | yes | pass |
+| each side gets only what the other chose to share | Riley, riley@fabrikam.example -> Sam, sam@example.org | Riley, riley@fabrikam.example -> Sam, sam@example.org | pass |
+| persona notes the reveal came after the merit screen | yes | yes | pass |
+| declined intro can still be revealed | no | no | pass |
+
 ## Send only after a yes to the exact text (B-056)
 
 Before: Drafts only: every outreach dead-ended at a draft the person copied by hand, and nothing checked the exact text sent.
@@ -100,9 +117,9 @@ Score: 7/7
 | Measure | Expected | Measured | |
 |---|---|---|---|
 | agreement asked for before anything is saved | no | no | pass |
-| data rows that say what, where, how long and who can read | 11 | 11 | pass |
+| data rows that say what, where, how long and who can read | 12 | 12 | pass |
 | things never stored are listed | yes | yes | pass |
 | orders to the assistant in the disclosure | 0 | 0 | pass |
 | fields that steer the assistant (show_user, reply_style) | 0 | 0 | pass |
 | summary is three lines | 3 | 3 | pass |
-| agreement recorded for this version | yes -> 2026-11-08.15 | yes -> 2026-11-08.15 | pass |
+| agreement recorded for this version | yes -> 2026-11-08.16 | yes -> 2026-11-08.16 | pass |
