@@ -10,7 +10,7 @@ from datetime import date
 from copilot import facts as fact_record
 from copilot import store
 
-TERMS_VERSION = "2026-11-08.11"
+TERMS_VERSION = "2026-11-08.12"
 DOCS = "https://github.com/TusharSamantaray/career-copilot-mcp/blob/main/docs"
 
 # How every reply sounds. People act on short, clear direction; long
@@ -66,29 +66,91 @@ TERMS = [
     "It is for people aged 16 and over.",
 ]
 
+# How Career Copilot is built to talk, stated as facts about the product
+# (a disclosure), not as orders to the assistant reading it.
 CONDUCT = [
-    "Keep replies short and simple: one small step and one question at a "
-    "time.",
-    "Stay on the person's career, work, money and life-planning goals. If "
-    "asked about something else, say briefly that it's outside what Career "
-    "Copilot does, and offer the next useful step.",
-    "Be respectful and neutral. Never insult, mock or judge anyone: not "
-    "the person, not employers, not other groups.",
-    "Never comment on or rank anyone's religion, beliefs, politics, race, "
-    "ethnicity, nationality, gender, sexuality, age, disability, health "
-    "or family. Mention them only when the person raises them for a "
-    "practical reason (for example visa or accommodations), and stay "
+    "Career Copilot keeps replies short: one small step and one question "
+    "at a time.",
+    "It stays on career, work, money and life-planning goals, and says so "
+    "when something is outside what it does.",
+    "It is respectful and neutral, and never insults, mocks or judges "
+    "anyone: not the person, not employers, not other groups.",
+    "It does not comment on or rank anyone's religion, beliefs, politics, "
+    "race, ethnicity, nationality, gender, sexuality, age, disability, "
+    "health or family, unless the person raises one for a practical "
+    "reason (for example visa or accommodations), and then it stays "
     "factual.",
-    "No stereotypes. Don't assume what someone can do from who they are.",
-    "Say what you know and where it comes from: the person said it, the "
-    "Career Copilot knowledge base, or live data. If you don't know, say "
-    "so. Never guess and present it as fact.",
-    "Label estimates as estimates, with the range and what they depend on.",
-    "Use plain, kind and direct words. No profanity, no sarcasm, no jokes "
-    "at anyone's expense.",
-    "Before showing or drafting a resume line, message or plan the person "
-    "may send or rely on, run response_check and fix what it flags.",
+    "It does not assume what someone can do from who they are.",
+    "It says where a fact comes from (the person, its knowledge base or "
+    "live data), says 'I don't know' instead of guessing, and labels "
+    "estimates with their range.",
+    "It uses plain, kind, direct words: no profanity, sarcasm or jokes at "
+    "anyone's expense.",
+    "Resume lines, messages and plans the person may send or rely on are "
+    "checked by response_check first.",
 ]
+
+# Machine-readable data handling: what is stored, where, for how long and
+# who can read it. Shown by ground_rules before anything is saved, served
+# as the copilot://data-handling resource and at GET /data-handling.
+YOURS = "your data file: one per person, on this server (hosted) or your "         "own computer (local)"
+DATA_HANDLING = {
+    "version": TERMS_VERSION,
+    "stored": [
+        {"what": "Profile answers, wants, dealbreakers and honest gaps",
+         "where": YOURS, "kept_for": "until you delete it",
+         "who_can_read": "only you"},
+        {"what": "Work facts, stories, resume text and resume versions",
+         "where": YOURS, "kept_for": "until you delete it",
+         "who_can_read": "only you"},
+        {"what": "Applications, interview rounds, reminders, deadlines, "
+                 "watches and roles already shown to you",
+         "where": YOURS, "kept_for": "until you delete it",
+         "who_can_read": "only you"},
+        {"what": "Postings you analyze: title, company and skills asked, "
+                 "never the full text",
+         "where": YOURS, "kept_for": "until you delete it",
+         "who_can_read": "only you"},
+        {"what": "Money figures you enter or import (no account numbers)",
+         "where": YOURS, "kept_for": "until you delete it",
+         "who_can_read": "only you"},
+        {"what": "Check-ins, energy level and steps done",
+         "where": YOURS, "kept_for": "until you delete it",
+         "who_can_read": "only you"},
+        {"what": "The date you agreed to these terms",
+         "where": YOURS, "kept_for": "until you delete it",
+         "who_can_read": "only you"},
+    ],
+    "never_stored": [
+        "passwords, one-time codes and bank logins",
+        "email text shared for sorting (only the update it leads to)",
+        "messages you approve to send",
+        "account numbers and bank ids",
+        "your GitHub username or name (only a salted hash of your GitHub "
+        "user number)",
+    ],
+    "logs": {"what": "which tool ran, when, how long, and error codes",
+             "hidden": "your words, emails, money figures, notes and keys",
+             "kept_for": "rolling files, deleted over time"},
+    "usage_counts": {"what": "anonymous counts such as 'this tool failed'",
+                     "identity": "salted hashes, text cleaned of names, "
+                                 "emails and numbers",
+                     "reported_after": "at least 5 different people"},
+    "encryption": "hosted records can be encrypted with a key per person; "
+                  "deleting your data destroys the key",
+    "your_controls": {"see_everything": "data_export or data_mirror",
+                      "delete_everything": "data_delete",
+                      "say_no": "decline the terms and nothing about you "
+                                "is saved"},
+    "others_involved": [
+        {"who": "your AI assistant", "sees": "the conversation, under its "
+                                            "own privacy policy"},
+        {"who": "GitHub", "sees": "that you signed in"},
+        {"who": "the host and database host", "sees": "the hosted "
+                                                     "records and logs"},
+    ],
+    "full_text": f"{DOCS}/PRIVACY.md",
+}
 
 # ------------------------------------------------------------------ checks
 # Each rule: (type, severity, pattern, why, suggestion). "fix" must be
@@ -261,9 +323,21 @@ def check(user, text, kind="chat"):
                     "Rewrite the flagged parts, then check again."}
 
 
+SUMMARY = [
+    "Your data stays in your own file; see it with data_export and delete "
+    "it any time with data_delete.",
+    "This is education and drafts, not professional advice, and no "
+    "outcome is promised.",
+    "Nothing is sent, posted or scheduled without your yes to the exact "
+    "text.",
+]
+
+
 def ground_rules(user, accept=False):
-    """The rules, plus whether this person has agreed to the current
-    version. accept=True records today's agreement."""
+    """A disclosure: privacy, terms, data handling and how Career Copilot
+    talks, plus whether this person agreed to the current version.
+    accept=True records today's agreement. Nothing here directs the
+    assistant; it states what the product does."""
     agreed = [c for c in store.list_kind(user, "consent")
               if c.get("version") == TERMS_VERSION]
     if accept and not agreed:
@@ -272,12 +346,8 @@ def ground_rules(user, accept=False):
         agreed = [body]
     return {"version": TERMS_VERSION, "accepted": bool(agreed),
             "accepted_on": agreed[-1]["accepted_on"] if agreed else None,
-            "privacy": PRIVACY, "terms": TERMS, "how_we_talk": CONDUCT,
-            "reply_style": REPLY_STYLE,
+            "summary": SUMMARY, "privacy": PRIVACY, "terms": TERMS,
+            "data_handling": DATA_HANDLING, "how_career_copilot_talks":
+            CONDUCT,
             "full_text": {"privacy": f"{DOCS}/PRIVACY.md",
-                          "terms": f"{DOCS}/TERMS.md"},
-            "show_user": "In three short lines: your data stays yours and "
-                         "you can delete it any time; this is education, "
-                         "not advice, and no outcome is promised; nothing "
-                         "is sent without your yes. Then ask if that's "
-                         "OK. Never block someone in crisis."}
+                          "terms": f"{DOCS}/TERMS.md"}}

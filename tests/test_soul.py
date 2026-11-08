@@ -3,6 +3,7 @@ stdio with synthetic data only."""
 import asyncio
 import json
 import os
+import re
 import shutil
 import sys
 
@@ -291,7 +292,14 @@ async def conduct_checks(s):
     plan = await call(s, "response_check", {"text": lecture.replace(
         "Or this?", ""), "kind": "plan"})
     assert not any(i["type"] == "too_long" for i in plan["issues"])
-    assert (await call(s, "ground_rules"))["reply_style"]
+    rules = await call(s, "ground_rules")
+    assert len(rules["summary"]) == 3 and rules["data_handling"]["stored"]
+    assert "reply_style" not in rules and "show_user" not in rules
+    # A disclosure states what the product does; it gives the assistant no
+    # orders ("call", "ask", "never block", "you must").
+    told = " ".join(rules["summary"] + rules["how_career_copilot_talks"])
+    assert not re.search(r"(call|ask (?:if|them)|you must|then ask)",
+                         told, re.I), told
     print("short chat replies enforced, plans may be longer: OK")
 
 

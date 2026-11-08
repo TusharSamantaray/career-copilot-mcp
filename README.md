@@ -240,7 +240,7 @@ flowchart LR
 | Language | Python 3.11+ |
 | Framework | [FastMCP](https://gofastmcp.com) 2.x |
 | Protocol | Model Context Protocol: stdio (local) or streamable HTTP at `/mcp` |
-| Surface | 94 tools, 8 resources, 16 starter prompts |
+| Surface | 94 tools, 9 resources, 16 starter prompts |
 | Storage | SQLite files locally; Postgres when `DATABASE_URL` is set (the hosted demo uses Neon's free plan). Optionally encrypted per person (AES-GCM) |
 | Auth (hosted) | Sign in with GitHub (OAuth, `read:user` only, optional invite list), or API keys as a fallback. Local mode needs none |
 | Network calls out | GitHub (sign-in), public job boards (Greenhouse, Lever, Ashby; read-only, cached), World Bank API |

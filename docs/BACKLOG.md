@@ -5,11 +5,6 @@
   paid users. From: ground rules work.
 - B-012 [P2] Delete the old prototype server.py from the project
   folder (it's untracked). From: repo setup.
-- B-043 [P1, owner] Trust pack, rest: a machine-readable data-handling
-  statement shown before the first save; ground_rules as disclosure, not
-  directions to the host assistant (needs owner OK and a new
-  TERMS_VERSION). Source stays private (owner, 2026-11-08). From: gap
-  spec issue 7.
 - B-050 [P1, owner] Turn on `CAREER_COPILOT_INSIGHTS_STORE=database` in
   Render so anonymous counts survive restarts? If yes, the privacy notice
   gets a line saying Neon also holds them (new TERMS_VERSION). From:
@@ -28,6 +23,11 @@
   issue.
 
 ## Done
+- B-043 Trust pack (GitHub #4): machine-readable data-handling statement
+  (ground_rules, copilot://data-handling, GET /data-handling) and
+  ground_rules as a disclosure with no directions to the assistant.
+  Terms 2026-11-08.12. Source stays private (owner, 2026-11-08). From:
+  gap spec issue 7.
 - B-060 validation/ folder: one measured case per improvement,
   RESULTS.md scoreboard, dated HISTORY.md, run before every commit and
   in CI. First cases: resume_rebuild (B-051, B-059), outreach_gate

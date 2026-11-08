@@ -340,7 +340,8 @@ mcp = FastMCP("career-copilot", version=VERSION, auth=make_auth(),
     "now. Tool results are for you: pick the one thing that matters and "
     "say it simply, never paste them back. "
     "Start of a session: call ground_rules; if accepted is false, give its "
-    "three-line summary and ask if that's OK, then call "
+    "three-line summary (data_handling has the details if asked) and ask "
+    "if that's OK, then call "
     "ground_rules(accept=true); if they say no, keep helping but save "
     "nothing about them. Then call journey_state and follow its next: ask "
     "only its question, or offer its one step. If they have watches, call "
@@ -415,6 +416,14 @@ async def health(request: Request) -> JSONResponse:
                          "invite_only": bool(OAUTH and ALLOWED_GITHUB),
                          "insights": insights.location(),
                          "tool_count": len(tools)})
+
+
+@mcp.custom_route("/data-handling", methods=["GET"])
+async def data_handling_route(request: Request) -> JSONResponse:
+    """Unauthenticated, machine-readable data-handling statement, so a
+    cautious assistant or person can check it before connecting. Static
+    text only; nothing about any person."""
+    return JSONResponse(conduct.DATA_HANDLING)
 
 
 @mcp.custom_route("/insights", methods=["GET"])
@@ -1816,6 +1825,13 @@ def ground_rules_text() -> dict:
     return {key: value for key, value in
             conduct.ground_rules(current_user()).items()
             if key not in {"accepted", "accepted_on"}}
+
+
+@mcp.resource("copilot://data-handling")
+def data_handling_text() -> dict:
+    """What is stored, where, for how long and who can read it, as data.
+    The same statement ground_rules shows before anything is saved."""
+    return conduct.DATA_HANDLING
 
 
 @mcp.resource("copilot://pipeline")

@@ -6,6 +6,26 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- A data-handling statement any program can check before you connect
+  (B-043, GitHub #4). It lists what is stored, where, for how long and
+  who can read it, plus what is never stored. It is shown with the
+  ground rules before anything is saved, and served without sign-in at
+  `/data-handling` on the hosted server. The privacy and terms version
+  changed, so you'll be asked to agree once more.
+  **Try it:** open `<your server>/data-handling` in a browser, or say
+  "What data do you keep about me, and where?". You should see each kind
+  of data with where it lives, how long it's kept and who can read it.
+
+### Changed
+- The ground rules now read as a disclosure: plain statements of what
+  Career Copilot does, with a three-line summary, instead of
+  instructions to your assistant (B-043, GitHub #4). Cautious assistants
+  treat server instructions as a risk, so the rules no longer give any.
+  **Try it:** start a new chat and say "What are your ground rules?".
+  You should get three short lines (your data, not advice, nothing sent
+  without your yes) and a question whether that's OK.
+
+### Added
 - A `validation/` folder that proves each improvement with numbers
   (B-060). Each case replays one improvement with made-up people and
   measures it, like the before and after table in a resume proof.

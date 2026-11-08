@@ -4,6 +4,24 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-08 | v0.3.0-dev
+**Asked:** Wrap up the remaining issues; first, the trust pack (#4).
+**Did:** Machine-readable DATA_HANDLING in conduct.py (what, where,
+kept_for, who_can_read; never_stored; logs; usage counts; controls),
+returned by ground_rules, the copilot://data-handling resource and an
+unauthenticated GET /data-handling. ground_rules rewritten as a
+disclosure: a three-line summary and statements, no show_user or
+reply_style directives. TERMS_VERSION 2026-11-08.12 (owner asked for
+issue #4, which calls for this change).
+**Files:** `copilot/conduct.py`, `app.py`, `docs/PRIVACY.md`,
+`docs/TERMS.md`, `tests/test_soul.py`, `tests/test_http.py`,
+`validation/cases/trust_pack.py`.
+**Tests:** see commit.
+**Try it:** open /data-handling, or ask "What data do you keep about
+me, and where?".
+**Open:** nothing enforces "shown before the first save" in code; the
+server instructions call ground_rules first.
+
+### 2026-11-08 | v0.3.0-dev
 **Asked:** A place in the repo to track improvements: validation or
 benchmarking.
 **Did:** validation/ with run.py, cases/ (resume_rebuild modelled on

@@ -121,6 +121,11 @@ def run():
         health = httpx.get(f"{BASE}/health").json()
         assert health["storage"] in ("sqlite", "postgres"), health
         print("health: OK")
+        handling = httpx.get(f"{BASE}/data-handling").json()
+        assert handling["stored"] and handling["never_stored"], handling
+        assert all({"what", "where", "kept_for", "who_can_read"}
+                   <= set(row) for row in handling["stored"])
+        print("data-handling statement readable before sign-in: OK")
         asyncio.run(main())
         log = os.path.join(TEST_DIR, "logs", "mcp_server.log")
         with open(log, encoding="utf-8") as handle:

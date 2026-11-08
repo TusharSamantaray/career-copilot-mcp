@@ -36,3 +36,19 @@ Score: 10/10
 | branch that brought problems back is flagged | level_tags, unsupported_numbers | level_tags, unsupported_numbers | pass |
 | nothing overwritten (4 versions kept) | 4 | 4 | pass |
 | proof ends with the final resume | yes | yes | pass |
+
+## Ground rules as disclosure, with a machine-readable data statement (B-043)
+
+Before: Ground rules mixed terms with orders to the assistant ('ask if that's OK', 'never block'), and data handling was only prose.
+
+Score: 7/7
+
+| Measure | Expected | Measured | |
+|---|---|---|---|
+| agreement asked for before anything is saved | no | no | pass |
+| data rows that say what, where, how long and who can read | 7 | 7 | pass |
+| things never stored are listed | yes | yes | pass |
+| orders to the assistant in the disclosure | 0 | 0 | pass |
+| fields that steer the assistant (show_user, reply_style) | 0 | 0 | pass |
+| summary is three lines | 3 | 3 | pass |
+| agreement recorded for this version | yes -> 2026-11-08.12 | yes -> 2026-11-08.12 | pass |

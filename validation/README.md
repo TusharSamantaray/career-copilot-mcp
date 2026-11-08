@@ -46,4 +46,5 @@ Rules:
 | Case | Proves | Backlog |
 |---|---|---|
 | `resume_rebuild` | A four-version rebuild: invented bullets, level tags and internal names gone, summary led by numbers, same roles, tighter, and a branch that brought problems back is flagged | B-051 |
+| `trust_pack` | Ground rules give no orders to the assistant, and every stored kind of data says where, how long and who can read it | B-043 |
 | `outreach_gate` | Nothing is approved to send without a yes to the exact text, edits and expired approvals are refused, and nothing is stored | B-056 |
