@@ -4,6 +4,24 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-08 | v0.3.0-dev
+**Asked:** A simulation of 5 users creating profiles and 2 recruiters
+with a dummy job description finding them; a way to test it locally.
+**Did:** simulation/run.py starts the real server with one API key per
+made-up person (7), then runs every step over MCP: ground rules,
+profiles, confirmed facts with a planted employer, email and phone,
+persona previews (one line hidden, one kept private), survey, search
+with must-haves, chat (skill, identity and salary questions), intros
+(one yes, one no), reveal, demand digest and a pathway. Nine checks;
+REPORT.md tells the story. --serve keeps the server up for Claude
+Code; --check runs in CI and before commits.
+**Files:** `simulation/`, `.github/workflows/ci.yml`, `.gitignore`,
+`README.md`, `docs/ENGINEERING.md`.
+**Tests:** see commit.
+**Try it:** `uv run simulation/run.py`, then open simulation/REPORT.md.
+**Open:** the run showed the demand digest counting one recruiter twice
+for a skill (survey and search as separate rows); fixed next.
+
+### 2026-11-08 | v0.3.0-dev
 **Asked:** Wrap up the remaining issues; identity reveal (#16).
 **Did:** copilot/intro.py: persona_intro (company, role, checked
 message; a request in the owner's file and a sent note in the

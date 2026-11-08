@@ -26,6 +26,8 @@ jobs:
       - run: uv run tests/test_triage.py
       - name: Validation cases (improvements still hold)
         run: uv run validation/run.py --check
+      - name: Simulation (5 job seekers, 2 recruiters, end to end)
+        run: uv run simulation/run.py --check
       - name: Everything again with encryption on
         run: uv run tests/test_soul.py
         env:

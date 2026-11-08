@@ -22,6 +22,7 @@ test_data/
 test_data_http/
 test_data_features/
 test_data_soul/
+simulation/.data/
 logs/
 *.log
 *.db

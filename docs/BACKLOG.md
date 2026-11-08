@@ -14,6 +14,9 @@
   persona. Confirm it stays in scope. From: GitHub #16 open question.
 
 ## Done
+- B-063 Local simulation: 5 made-up job seekers, 2 made-up recruiters,
+  real server, one key each; 9 privacy and ranking checks; REPORT.md;
+  --serve to chat as any of them. From: owner request, 2026-11-08.
 - B-055 Identity reveal (GitHub #16), direct lane: persona_intro,
   persona_intros, identity_reveal; nothing shared until both confirm;
   declines stay closed; persona notes reveals after the screen. Terms

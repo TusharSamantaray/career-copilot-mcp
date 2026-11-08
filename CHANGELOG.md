@@ -6,6 +6,18 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- A simulation you can run on your own computer: 5 made-up job seekers
+  build profiles and personas, and 2 made-up recruiters bring a job
+  posting, search, ask questions and ask to meet someone (B-063). It
+  uses a real local server with a separate sign-in for each person, then
+  checks that no name, employer, contact or salary reached a recruiter
+  before both sides said yes. It runs before every commit and in CI.
+  With `--serve` it keeps the server running so you can chat as any of
+  them from Claude Code.
+  **Try it:** run `uv run simulation/run.py` and open
+  `simulation/REPORT.md`. You should see 9 checks passed, then the whole
+  story. Then run it with `--serve`, add the Northwind recruiter as
+  `simulation/README.md` shows, and say "I'm hiring a data engineer".
 - Meet a persona only when both sides agree (B-055, GitHub #16). Someone
   hiring asks to meet a persona with their company, role and a short
   message, which is checked first. The persona's owner sees the request
