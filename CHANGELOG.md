@@ -6,6 +6,19 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Send emails, add or cancel calendar events, and post to LinkedIn, only
+  with your yes (B-056). Your assistant drafts it, Career Copilot checks
+  the exact text (no invented numbers, and nothing about a performance
+  plan, urgency or a visa deadline), then shows it to you word for word.
+  Only after you say yes to that message does your own connected app
+  (like Gmail or Google Calendar) send it, and your assistant checks it
+  arrived. Change a word and it asks again. Career Copilot keeps no copy
+  and never sends anything itself. Calendar events get reminders 30
+  minutes and 1 minute before.
+  **Try it:** with Gmail connected, say "Draft a thank-you email to the
+  recruiter and send it after I check it". You should see the exact
+  email and "Send it?"; say yes, and it should confirm it found the
+  email in your sent mail.
 - See how your resume improved, version by version (B-051). Save a dated
   snapshot after each rebuild. Each one is checked for internal level
   tags (like L5), numbers none of your confirmed facts hold, and a
@@ -227,6 +240,11 @@ Every Added or Changed line has a **Try it:** line.
   `data_delete`.
 
 ### Changed
+- The terms now say how sending works: nothing goes out without your yes
+  to the exact text, and your own app does the sending (version
+  2026-11-08.11). You'll be asked to agree once more.
+  **Try it:** say "Show me the ground rules". The terms should include
+  the new sending line, and it should ask if that's OK.
 - The health check now says whether sign-in is invite-only (B-042), next
   to the sign-in method and tool count, so you or a tester's assistant
   can check the server before connecting. It never shows who is invited.

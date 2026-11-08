@@ -59,6 +59,7 @@ from copilot import jobs
 from copilot import journey
 from copilot import loops
 from copilot import nudges
+from copilot import outreach
 from copilot import places
 from copilot import prep
 from copilot import sponsorship as visa_sponsor
@@ -108,6 +109,8 @@ SENSITIVE_ARGS = {"api_key", "token", "password", "authorization",
                   "monthly_core_spend", "current_fund", "monthly_saving",
                   "target_amount", "saved", "current_savings",
                   "monthly_budget", "comp_floor",
+                  # outreach: recipients, drafts and their seals
+                  "to", "subject", "body", "approval_id",
                   # raw emails, calendar events and moods stay out of logs
                   "emails", "events", "mood", "note", "text", "statement",
                   # people's own words: lessons, resume lines, answers
@@ -368,8 +371,11 @@ mcp = FastMCP("career-copilot", version=VERSION, auth=make_auth(),
     "stop all career talk and share the crisis_support resources from "
     "daily_step. Rules: only facts the user confirmed go on a resume; "
     "never invent numbers; money, tax, visa and relocation outputs are "
-    "education, not advice, so say so; never send messages on the user's "
-    "behalf, only draft them. Career Copilot never logs in anywhere: "
+    "education, not advice, so say so; nothing leaves the chat without the "
+    "person's yes to that exact text: run outreach_review, show it word "
+    "for word, and only after a yes call outreach_approve, then send with "
+    "their own connector and check it arrived. Career Copilot never sends "
+    "anything itself and never logs in anywhere: "
     "never ask for passwords, one-time codes or bank logins. To bring in "
     "email, calendar, meetings or bank balances, read them from the user's "
     "own connectors in this chat and pass only the needed fields (see "
@@ -1164,6 +1170,37 @@ def companions(need: str = "") -> dict:
         return {"error": "Unknown need.", "needs": sorted(COMPANIONS)}
     picked = {need: COMPANIONS[need]} if need else COMPANIONS
     return {"companions": picked, "rules": RULES}
+
+
+@mcp.tool
+def outreach_review(channel: str, to: str = "", subject: str = "",
+                    body: str = "", thread_id: str = "", when: str = "",
+                    event_id: str = "") -> dict:
+    """Step 1 before anything leaves the chat: an email, a calendar event
+    or cancellation, or a LinkedIn post or profile change. channel:
+    email, calendar_event, calendar_cancel, linkedin_post or
+    linkedin_profile. Checks the exact text (response_check, plus never
+    mentioning a performance plan, urgency or a visa deadline). If it
+    passes, returns an approval_id for this exact text and show_user:
+    show it word for word and ask "Send it?". Stores nothing."""
+    return outreach.review(current_user(), channel, to, subject, body,
+                           thread_id, when, event_id)
+
+
+@mcp.tool
+def outreach_approve(approval_id: str, channel: str, consent: bool,
+                     to: str = "", subject: str = "", body: str = "",
+                     thread_id: str = "", when: str = "",
+                     event_id: str = "") -> dict:
+    """Step 2, only after the person said yes to that exact message:
+    consent=True with the same fields as outreach_review. Refused if
+    anything changed since review or the approval expired (30 minutes).
+    When approved, send it once with the person's own connector as
+    send_with says, then check as verify says before saying it's done.
+    Career Copilot never sends anything itself and keeps no copy."""
+    return outreach.approve(current_user(), approval_id, channel, to,
+                            subject, body, thread_id, when, event_id,
+                            consent)
 
 
 # ------------------------------------------------------------- guidance

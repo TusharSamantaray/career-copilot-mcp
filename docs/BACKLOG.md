@@ -5,41 +5,41 @@
   paid users. From: ground rules work.
 - B-012 [P2] Delete the old prototype server.py from the project
   folder (it's untracked). From: repo setup.
-- B-042 [P0, owner] Decide who may sign in: keep the invite list, or
-  open to any GitHub user. /health now shows `invite_only`. From: gap
-  spec issue 5.
-- B-043 [P1, owner] Trust pack: keep the source private with invites or
-  make it public; a machine-readable data-handling statement shown before
-  the first save; ground_rules as disclosure, not directions to the host
-  assistant (needs owner OK and a new TERMS_VERSION). From: gap spec
-  issue 7.
+- B-043 [P1, owner] Trust pack, rest: a machine-readable data-handling
+  statement shown before the first save; ground_rules as disclosure, not
+  directions to the host assistant (needs owner OK and a new
+  TERMS_VERSION). Source stays private (owner, 2026-11-08). From: gap
+  spec issue 7.
 - B-050 [P1, owner] Turn on `CAREER_COPILOT_INSIGHTS_STORE=database` in
   Render so anonymous counts survive restarts? If yes, the privacy notice
   gets a line saying Neon also holds them (new TERMS_VERSION). From:
   B-049.
-- B-052 [P1, owner] Persona v1: an anonymous, verified view of the
-  profile that others can find once published (GitHub #12). Needs owner
-  OK: it is the first data one person's record shows to someone else.
-  From: GitHub issue.
-- B-053 [P1, owner] Recruiter search and persona chat: job link to top 5
-  personas (GitHub #13). Needs recruiter accounts. Depends on B-052.
-  From: GitHub issue.
-- B-054 [P1, owner] Recruiter survey, demand digest and pathways
-  (GitHub #14). Stores answers from people other than the user. From:
+- B-052 [P1] Persona v1 (GitHub #12). First step agreed: a private
+  persona preview, nothing published or searchable. How recruiters reach
+  a persona must not need a new website (owner, 2026-11-08). From:
   GitHub issue.
-- B-055 [P2, owner] Identity reveal after both sides agree (GitHub #16).
-  Depends on B-052 and B-053. From: GitHub issue.
-- B-056 [P0, owner] Email read, draft, send with per-message approval
-  (GitHub #8). Sending conflicts with the rule "never send for them".
-  From: GitHub issue.
-- B-057 [P0, owner] Calendar read, create, cancel (GitHub #9). Writing
-  events needs Google sign-in scopes the server doesn't hold. From:
-  GitHub issue.
-- B-058 [P1, owner] LinkedIn update and post (GitHub #10). Conflicts with
-  "never post for them" and "for LinkedIn, return a link, do not
-  automate". From: GitHub issue.
+- B-053 [P1, owner] Recruiter view (GitHub #13, with #14 folded in by
+  the owner on 2026-11-08): job link to top 5 personas, persona chat,
+  recruiter survey, demand digest and pathways. Needs a way for
+  recruiters in without a website. Depends on B-052. From: GitHub
+  issues.
+- B-055 [P2, owner] Identity reveal after both sides agree (GitHub #16);
+  agency lane still to confirm. Depends on B-052 and B-053. From: GitHub
+  issue.
 
 ## Done
+- B-056 Email, calendar and LinkedIn sending (GitHub #8, #9, #10):
+  outreach_review checks the exact text (response_check plus no
+  performance plan, urgency or visa deadline) and seals it;
+  outreach_approve needs consent=True and the unchanged text; the
+  person's own connector sends and the assistant checks it arrived.
+  Nothing stored. Calendar events carry 30 and 1 minute reminders.
+  Reading the calendar stays with the person's connector (companions).
+  Rule change OK'd by the owner on 2026-11-08; terms 2026-11-08.11.
+  Covers B-057 and B-058. From: GitHub issues.
+- B-054 Folded into B-053 by the owner on 2026-11-08.
+- B-042 Sign-in stays invite-only; people who are interested reach out.
+  Owner decision, 2026-11-08. From: gap spec issue 5.
 - B-051 Resume timeline (GitHub #7): resume_snapshot (append-only, hash,
   words, roles, computed checks), resume_timeline (branches and
   regressions shown), resume_diff, resume_proof (Markdown, final resume

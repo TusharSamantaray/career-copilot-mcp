@@ -814,6 +814,55 @@ async def tailor_checks(s):
           "reason, accepted lines saved as a version: OK")
 
 
+async def outreach_checks(s):
+    mail = {"channel": "email", "to": "Jordan@Acme.example",
+            "subject": "Following up on the analyst role",
+            "body": "Hi Jordan, thanks for the call on Monday. I'm keen to "
+                    "keep talking about the analyst role. Best, Sam"}
+    weak = await call(s, "outreach_review", {
+        **mail, "body": mail["body"] + " I'm on a PIP so this is urgent."})
+    assert "approval_id" not in weak, weak
+    found = {i["type"] for i in weak["check"]["issues"]}
+    assert "volunteers_weakness" in found, found
+    review = await call(s, "outreach_review", mail)
+    assert review["check"]["ok"] and review["approval_id"], review
+    assert review["show_user"]["body"] == mail["body"]
+    assert "Nothing" in review["stored"]
+    ticket = review["approval_id"]
+    no = await call(s, "outreach_approve", {**mail, "approval_id": ticket,
+                                            "consent": False})
+    assert no["approved"] is False and no["status"] == "not_sent", no
+    edited = await call(s, "outreach_approve", {
+        **mail, "body": mail["body"] + " P.S. call me", "approval_id": ticket,
+        "consent": True})
+    assert edited["status"] == "refused", edited
+    other = await call(s, "outreach_approve", {
+        **mail, "to": "someone@else.example", "approval_id": ticket,
+        "consent": True})
+    assert other["status"] == "refused", other
+    forged = await call(s, "outreach_approve", {
+        **mail, "approval_id": "9999999999.forged", "consent": True})
+    assert forged["status"] == "refused", forged
+    yes = await call(s, "outreach_approve", {**mail, "approval_id": ticket,
+                                             "consent": True})
+    assert yes["approved"] and "sent mail" in yes["verify"], yes
+    event = {"channel": "calendar_event", "subject": "Acme round 2",
+             "when": "2026-11-12T15:00"}
+    seen = await call(s, "outreach_review", event)
+    assert seen["show_user"]["reminders_minutes_before"] == [30, 1]
+    ok = await call(s, "outreach_approve", {
+        **event, "approval_id": seen["approval_id"], "consent": True})
+    assert ok["reminders_minutes_before"] == [30, 1], ok
+    post = await call(s, "outreach_review", {
+        "channel": "linkedin_post", "body": "Open to analyst roles in "
+        "Seattle. Ask me about SQL dashboards."})
+    assert post["approval_id"], post
+    gone = await call(s, "outreach_review", {"channel": "fax"})
+    assert "error" in gone
+    print("outreach: checked, sealed to the exact text, refused when "
+          "edited or without a yes, sent only by the person's own app: OK")
+
+
 async def timeline_checks(s):
     head = ("Data Engineer | Python, SQL\n"
             "Data engineer who builds reliable ETL pipelines for analytics "
@@ -993,6 +1042,7 @@ async def main():
             await mirror_checks(s)
             await tailor_checks(s)
             await timeline_checks(s)
+            await outreach_checks(s)
             await sponsorship_checks(s)
             await error_checks(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
@@ -1009,6 +1059,7 @@ async def main():
     assert "Zanzibar" not in log, "a bad argument's value leaked into logs"
     assert "Jordan's laptop" not in log, "client hint leaked into logs"
     assert "Wombat" not in log, "a file path leaked into logs"
+    assert "Jordan@Acme" not in log and "keen to keep" not in log,         "outreach recipient or draft leaked into logs"
     assert "bad arguments: finance_dashboard: monthly_burn" in log, \
         "field name not logged"
     assert "issue reported: INTERNAL_ERROR job_search (ref a1b2c3)" in log

@@ -10,7 +10,7 @@ from datetime import date
 from copilot import facts as fact_record
 from copilot import store
 
-TERMS_VERSION = "2026-11-03.10"
+TERMS_VERSION = "2026-11-08.11"
 DOCS = "https://github.com/TusharSamantaray/career-copilot-mcp/blob/main/docs"
 
 # How every reply sounds. People act on short, clear direction; long
@@ -38,7 +38,7 @@ PRIVACY = [
     "It never asks for or stores passwords, one-time codes or bank logins, "
     "and it never logs in anywhere for you.",
     "Email text you share for sorting is not stored, only the application "
-    "update it leads to. Interview titles are kept as reminder text.",
+    "update it leads to. Drafts you approve to send are not stored either. Interview titles are kept as reminder text.",
     "Logs record which tool ran and how long it took. Your words, emails, "
     "money figures and keys are hidden from logs.",
     "Anonymous usage counts help improve it. They contain no names or "
@@ -53,8 +53,10 @@ TERMS = [
     "Career Copilot gives general education and drafts. It is not "
     "financial, tax, legal, immigration or medical advice.",
     "It can't promise a job, an interview or any result.",
-    "You decide and you send. It never applies, posts or messages anyone "
-    "for you.",
+    "You decide what is sent. It never applies for you, and nothing is "
+    "sent, posted or scheduled unless you say yes to that exact text. "
+    "Your own connected app (like Gmail) does the sending; Career Copilot "
+    "never sends anything itself.",
     "Only put true things on your resume and in messages. It won't help "
     "invent experience, numbers or credentials.",
     "Don't use it to harass, deceive or discriminate against anyone.",
@@ -276,6 +278,6 @@ def ground_rules(user, accept=False):
                           "terms": f"{DOCS}/TERMS.md"},
             "show_user": "In three short lines: your data stays yours and "
                          "you can delete it any time; this is education, "
-                         "not advice, and no outcome is promised; you "
-                         "decide and send everything. Then ask if that's "
+                         "not advice, and no outcome is promised; nothing "
+                         "is sent without your yes. Then ask if that's "
                          "OK. Never block someone in crisis."}

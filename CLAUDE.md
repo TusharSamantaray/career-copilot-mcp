@@ -112,8 +112,9 @@ Six principles:
    unsure. Unconfirmed facts never reach a resume, letter or message.
 4. Depth follows progress. Show only tools that fit the stage.
 5. One small step per session, sized to the person's energy.
-6. The person decides and sends. Draft, rank, explain. Never apply,
-   post or message for them. Never ask for a password.
+6. The person decides. Draft, rank, explain. Never apply for them.
+   Nothing is sent, posted or scheduled without their yes to that exact
+   text, and their own connected app sends it. Never ask for a password.
 
 ### Journey stages (not gates; people can skip or go back)
 
@@ -166,7 +167,8 @@ pay below floor is flagged, not hidden; record every role shown and
 report only new ones; only public job-board endpoints and career pages
 (for LinkedIn, return a link, do not automate).
 
-Acting: never apply, post or send; per-message approval; plain direct
+Acting: never apply; send, post or schedule only through the
+person's own connector after outreach_approve for that exact text; plain direct
 voice by default, person can change it; one factual wording for why
 they left a job, always true if asked directly; needs like sponsorship
 stated once, as a filter.
@@ -188,7 +190,7 @@ person may send or rely on passes response_check.
 
 ### What exists today (verified in code on 2026-11-03)
 
-92 tools, 8 resources, 16 prompts. Watches: watch_create, watches,
+94 tools, 8 resources, 16 prompts. Watches: watch_create, watches,
 digest_get. Facts: fact_add, fact_conflicts,
 fact_resolve. Discovery: job_search, jd_analyze, ats_profile_check,
 skill_gap_evidence, ats_keyword_check, recruiter_find,
@@ -207,7 +209,8 @@ Prepare: interview_questions, coding_pattern, system_design,
 study_plan, prep_checklist, nudge_add. Steady: layoff_playbook,
 runway_calc, layoff_fund_plan, finance tools. Glue: daily_step,
 step_done, dashboard, companions, ground_rules, response_check,
-data_export, data_delete, feedback, report_issue (stable error codes
+data_export, data_delete, feedback, report_issue, outreach_review,
+outreach_approve (stable error codes
 in `copilot/errors.py`).
 
 Verified:

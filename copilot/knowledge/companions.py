@@ -57,6 +57,9 @@ RULES = [
     "Read from the user's own connectors; pass Career Copilot only the "
     "fields listed under 'read'.",
     "Confirm with the user before applying changes to their pipeline.",
+    "Send, post or schedule only after outreach_approve says approved for "
+    "that exact text, using the user's own connector; then check it "
+    "arrived.",
     "If a connector isn't available, ask the user to paste or type the "
     "few facts needed instead.",
 ]

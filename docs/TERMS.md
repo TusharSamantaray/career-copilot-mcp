@@ -1,6 +1,6 @@
 # Terms of use
 
-Version 2026-11-03.10. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-08.11. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 By using Career Copilot, you agree to these terms. Career Copilot asks you
@@ -20,8 +20,11 @@ reference content.
   decisions with a qualified professional.
 - **Not a promise.** No job, interview, offer, pay level or financial
   result is promised.
-- **Not an agent that acts for you.** It drafts and suggests. You decide,
-  and you send. It never applies, posts or messages anyone for you.
+- **Not an agent that acts for you.** It drafts and suggests. It never
+  applies for you. An email, calendar change or LinkedIn post goes out
+  only after you see the exact text and say yes to that one message, and
+  then your own connected app (like Gmail or Google Calendar) sends it.
+  Career Copilot never sends anything itself and never logs in anywhere.
 
 ## Your part
 

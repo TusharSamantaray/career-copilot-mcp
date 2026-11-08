@@ -193,3 +193,12 @@ enforces it for drafts, the acceptance tests count questions, and owner
 testing in Claude and Muse is logged in
 [PROMPT_LOG.md](PROMPT_LOG.md). The assistant can still choose to ignore
 instructions; the server can't force it.
+
+**Can the server stop an email being sent without a yes?** Not on its
+own: the person's own connector (Gmail, Calendar) does the sending, in
+their assistant, and Career Copilot never holds those logins, by design.
+What it does enforce: `outreach_approve` only says "approved" for the
+exact text, recipient and channel that passed `outreach_review`, within
+30 minutes, with `consent=True`. Any edit means review again. The seal is
+signed, not stored, so no draft is kept. The server instructions tell the
+assistant to send only after that. Owner decision, 2026-11-08 (B-056).

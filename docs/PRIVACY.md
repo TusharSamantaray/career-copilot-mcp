@@ -1,6 +1,6 @@
 # Privacy notice
 
-Version 2026-11-03.10. This is a plain-English draft. Have a lawyer review it
+Version 2026-11-08.11. This is a plain-English draft. Have a lawyer review it
 before Career Copilot takes paying users.
 
 Career Copilot is run by Tushar Samantaray ("we"). It's a connector that
@@ -42,6 +42,9 @@ Career Copilot's access any time in GitHub under Settings, Applications.
   resulting application update is saved. Interview titles from your
   calendar are kept as reminder text.
 - Account numbers or bank ids. They're dropped when you import balances.
+- Messages you approve to send (emails, calendar changes, LinkedIn posts).
+  Career Copilot checks the text and seals your approval, but keeps no
+  copy, and never sends anything itself: your own connected app does.
 
 ## Logs
 

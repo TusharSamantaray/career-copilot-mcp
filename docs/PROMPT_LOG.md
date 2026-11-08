@@ -4,6 +4,27 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-08 | v0.3.0-dev
+**Asked:** Model sending like Muse: draft, review, then send only on
+the person's yes, from their own linked apps; store nothing. Also:
+keep sign-in invite-only and the source private; fold the recruiter
+survey into the recruiter view; persona access without a new website.
+**Did:** outreach_review and outreach_approve (copilot/outreach.py): a
+signed, stateless seal over the exact text, recipient and channel, 30
+minutes, consent=True required; the person's own connector sends and
+the assistant verifies. Weakness check (performance plan, urgency, visa
+deadline). Terms, privacy notice, server instructions and principle 6
+updated; TERMS_VERSION 2026-11-08.11 (owner OK). Decisions recorded in
+the backlog (B-042 done, B-054 folded into B-053).
+**Files:** `copilot/outreach.py`, `app.py`, `copilot/conduct.py`,
+`docs/TERMS.md`, `docs/PRIVACY.md`, `CLAUDE.md`, `docs/SPEC.md`,
+`docs/BACKLOG.md`, `docs/ENGINEERING.md`, `tests/test_soul.py`.
+**Tests:** see commit.
+**Try it:** with Gmail connected, "Draft a thank-you email to the
+recruiter and send it after I check it".
+**Open:** the server can't stop a host from calling Gmail directly; it
+only approves the exact reviewed text (written down in ENGINEERING.md).
+
+### 2026-11-08 | v0.3.0-dev
 **Asked:** Continue on the updated GitHub issues and new features.
 **Did:** Resume timeline (GitHub #7, B-051): four tools over a new
 append-only "snapshot" record. Checks are computed from saved text
