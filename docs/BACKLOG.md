@@ -17,8 +17,34 @@
   Render so anonymous counts survive restarts? If yes, the privacy notice
   gets a line saying Neon also holds them (new TERMS_VERSION). From:
   B-049.
+- B-052 [P1, owner] Persona v1: an anonymous, verified view of the
+  profile that others can find once published (GitHub #12). Needs owner
+  OK: it is the first data one person's record shows to someone else.
+  From: GitHub issue.
+- B-053 [P1, owner] Recruiter search and persona chat: job link to top 5
+  personas (GitHub #13). Needs recruiter accounts. Depends on B-052.
+  From: GitHub issue.
+- B-054 [P1, owner] Recruiter survey, demand digest and pathways
+  (GitHub #14). Stores answers from people other than the user. From:
+  GitHub issue.
+- B-055 [P2, owner] Identity reveal after both sides agree (GitHub #16).
+  Depends on B-052 and B-053. From: GitHub issue.
+- B-056 [P0, owner] Email read, draft, send with per-message approval
+  (GitHub #8). Sending conflicts with the rule "never send for them".
+  From: GitHub issue.
+- B-057 [P0, owner] Calendar read, create, cancel (GitHub #9). Writing
+  events needs Google sign-in scopes the server doesn't hold. From:
+  GitHub issue.
+- B-058 [P1, owner] LinkedIn update and post (GitHub #10). Conflicts with
+  "never post for them" and "for LinkedIn, return a link, do not
+  automate". From: GitHub issue.
 
 ## Done
+- B-051 Resume timeline (GitHub #7): resume_snapshot (append-only, hash,
+  words, roles, computed checks), resume_timeline (branches and
+  regressions shown), resume_diff, resume_proof (Markdown, final resume
+  appended, response_check). Screenshots aren't rendered; a rendered
+  file path per version is listed instead. From: GitHub issue.
 - B-046 Weekly error report (.github/workflows/triage.yml,
   agents/triage.py): reported codes and failing tools from /insights
   into one "Error report" issue; no code, PRs or deploys. list_changed

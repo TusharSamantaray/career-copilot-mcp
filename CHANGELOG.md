@@ -6,6 +6,18 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- See how your resume improved, version by version (B-051). Save a dated
+  snapshot after each rebuild. Each one is checked for internal level
+  tags (like L5), numbers none of your confirmed facts hold, and a
+  summary written in first person or full of filler. The timeline shows
+  what changed each time and flags a version that brought an old
+  problem back. Nothing is ever overwritten. You can compare any two
+  versions, or get a proof document: dated timeline, before and after
+  table, and the final resume at the end.
+  **Try it:** paste your resume and say "Snapshot my resume as September".
+  Paste a newer one and say "Snapshot this as October", then "Show how
+  my resume improved". You should get a dated table with word counts and
+  checks before and after, and the October resume at the end.
 - A weekly error report for the owner (B-046). Every Monday, GitHub
   turns the anonymous error counts into one "Error report" issue: which
   error codes people hit, on which tool, how many people, and the

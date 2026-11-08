@@ -3,6 +3,24 @@
 What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
+### 2026-11-08 | v0.3.0-dev
+**Asked:** Continue on the updated GitHub issues and new features.
+**Did:** Resume timeline (GitHub #7, B-051): four tools over a new
+append-only "snapshot" record. Checks are computed from saved text
+(level tags, numbers no confirmed fact holds, summary style); branches
+and regressions show in the timeline; the proof is Markdown with the
+final resume appended and response_check on it. rendered_file masked in
+logs. New GitHub issues #8 to #16 added as B-052 to B-058, waiting on
+the owner (they share data between people or send for the person).
+**Files:** `copilot/timeline.py`, `app.py`, `copilot/store.py`,
+`tests/test_soul.py`, `docs/BACKLOG.md`, `docs/SPEC.md`, `docs/TOUR.md`.
+**Tests:** see commit.
+**Try it:** "Snapshot my resume as September", again as October, then
+"Show how my resume improved".
+**Open:** screenshots aren't rendered by the server (a file path per
+version instead); "org names" check from the issue left out (no reliable
+way to tell an internal team name from a real one).
+
 ### 2026-11-07 | v0.3.0-dev
 **Asked:** Keep resolving open issues (B-046).
 **Did:** Weekly error report: agents/triage.py turns the /insights

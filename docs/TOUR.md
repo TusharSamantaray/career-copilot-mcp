@@ -57,8 +57,12 @@ Tools: `direction_options`, `life_compass` (when you don't know yet),
 > **Copilot:** Saved. "Led" overstates your part in the dashboard work;
 > "Built" matches what you told me. Use that?
 
+Later, say "Snapshot my resume as October final" after each rebuild, and
+"Show how my resume improved" for a dated before-and-after.
+
 Tools: `resume_import`, `fact_conflicts`, `fact_resolve`,
-`ownership_check`, `ats_keyword_check`, `cover_letter_draft`.
+`ownership_check`, `ats_keyword_check`, `cover_letter_draft`,
+`resume_snapshot`, `resume_timeline`, `resume_diff`, `resume_proof`.
 
 ## Stop 4: Search
 

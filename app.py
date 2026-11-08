@@ -64,6 +64,7 @@ from copilot import prep
 from copilot import sponsorship as visa_sponsor
 from copilot import store
 from copilot import tailor
+from copilot import timeline
 from copilot import watch
 from copilot.knowledge.money import (DISCLAIMER, ECONOMY_GUIDES, INVEST_GUIDES,
                              LAYOFF_PLAYBOOK)
@@ -112,7 +113,9 @@ SENSITIVE_ARGS = {"api_key", "token", "password", "authorization",
                   # people's own words: lessons, resume lines, answers
                   "add", "bullet", "answer", "posting_text", "resume_text",
                   # pasted error text and app names in report_issue
-                  "error_code", "client_hint"}
+                  "error_code", "client_hint",
+                  # file paths can carry a person's name
+                  "rendered_file"}
 MAX_LOGGED_CHARS = 80
 
 
@@ -1205,6 +1208,53 @@ def resume_merge() -> dict:
     with the user before saving them with experience_add.
     """
     return careers.resume_merge(current_user())
+
+
+@mcp.tool
+def resume_snapshot(text: str = "", label: str = "", note: str = "",
+                    from_version: str = "", rendered_file: str = "",
+                    parent: str = "") -> dict:
+    """Save a dated snapshot of the resume as it is now (write action).
+    Append-only: never replaces an earlier snapshot, so a step back stays
+    visible. Give the text, or from_version (an id from resume_versions).
+    note: what the person says changed. rendered_file: a path or link to
+    the PDF or image of this version, if they have one. parent: the
+    snapshot this was built from, when not the latest (a branch). Returns
+    the computed checks (internal level tags, numbers no confirmed fact
+    holds, summary issues) and any regressions: problems an earlier
+    version had fixed that came back."""
+    return timeline.snapshot(current_user(), text, label, note,
+                             from_version, rendered_file, parent)
+
+
+@mcp.tool
+def resume_timeline() -> dict:
+    """Every resume snapshot in order: date, words, what changed against
+    the version it was built from, branches, and problems that came
+    back."""
+    return timeline.timeline(current_user())
+
+
+@mcp.tool
+def resume_diff(a: str = "", b: str = "") -> dict:
+    """Compare two resume snapshots by id or label (default: the first
+    and the latest): bullets added, removed and reworded, the word-count
+    change, and each check before and after. Computed from saved text."""
+    return timeline.diff(current_user(), a, b)
+
+
+@mcp.tool
+def resume_proof(a: str = "", b: str = "") -> dict:
+    """A Markdown proof of how the resume improved: dated timeline, a
+    before and after table, and the final version appended. Show the
+    markdown as a document. Comes with check, the response_check result
+    for the final resume; fix what it flags before the person shares it."""
+    user = current_user()
+    result = timeline.proof(user, a, b)
+    if "markdown" in result:
+        final = result["markdown"].split("## Final resume", 1)[1]
+        result["check"] = conduct.check(user, final, "resume")
+    return result
 
 
 @mcp.tool

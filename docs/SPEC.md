@@ -142,6 +142,8 @@ flowchart LR
 
 Extra pieces from the blueprint, all built: ats_profile_check,
 skill_gap_evidence, story_coverage, loop_next_round_prep, watches.
+After the build order: the resume timeline (resume_snapshot,
+resume_timeline, resume_diff, resume_proof; B-051, GitHub #7).
 
 ## 8. Acceptance tests
 

@@ -814,6 +814,84 @@ async def tailor_checks(s):
           "reason, accepted lines saved as a version: OK")
 
 
+async def timeline_checks(s):
+    head = ("Data Engineer | Python, SQL\n"
+            "Data engineer who builds reliable ETL pipelines for analytics "
+            "teams across the business.\n"
+            "Hooli, Data Engineer, 2022 - 2026\n")
+    old = (head.replace("Data engineer who", "I am a passionate L5 "
+                        "engineer who") +
+           "- Built Python ETL jobs that cut report lag by 25%\n"
+           "- Grew revenue by 300% with a new data platform\n"
+           "- Wrote runbooks for ETL jobs\n")
+    fixed = (head + "- Built Python ETL jobs that cut report lag by 25%\n"
+             "- Wrote runbooks for the nightly ETL jobs\n")
+    branch = fixed.replace("Data Engineer |", "L5 Data Engineer |") + \
+        "- Grew revenue by 300% with a new data platform\n"
+    none = await call(s, "resume_timeline")
+    assert none["count"] == 0
+    first = await call(s, "resume_snapshot", {
+        "text": old, "label": "Sep pre-rebuild",
+        "rendered_file": "C:/Users/Wombat/cv-sep.pdf"})
+    assert first["checks"]["level_tags"] == ["L5"], first
+    assert first["checks"]["unsupported_numbers"] == [
+        "Grew revenue by 300% with a new data platform"], first
+    assert {"first person", "passionate"} <= set(
+        first["checks"]["summary_issues"]), first
+    second = await call(s, "resume_snapshot", {
+        "text": fixed, "label": "Oct accuracy rebuild",
+        "note": "Removed the invented bullet and level tags"})
+    assert not any(second["checks"].values()), second
+    third = await call(s, "resume_snapshot", {
+        "text": branch, "label": "Oct branch", "parent": second["id"]})
+    assert {r["check"] for r in third["regressions"]} == {
+        "level_tags", "unsupported_numbers"}, third
+    final = await call(s, "resume_snapshot", {
+        "text": fixed + "- Mentored two analysts on SQL reviews\n",
+        "label": "Oct final", "parent": second["id"]})
+    assert "regressions" not in final, final
+    again = await call(s, "resume_snapshot", {"text": fixed,
+                                              "label": "Copy"})
+    assert again["same_as"] == "Oct accuracy rebuild", again
+    bad = await call(s, "resume_snapshot", {"text": fixed, "parent": "nope"})
+    assert "error" in bad
+
+    line = await call(s, "resume_timeline")
+    labels = [v["label"] for v in line["versions"]]
+    assert labels == ["Sep pre-rebuild", "Oct accuracy rebuild",
+                      "Oct branch", "Oct final", "Copy"], labels
+    rows = {v["label"]: v for v in line["versions"]}
+    assert rows["Oct branch"]["regressions"], "regression hidden"
+    assert "branch" in rows["Oct final"], "branch not shown"
+    assert rows["Sep pre-rebuild"]["rendered_file"].endswith("cv-sep.pdf")
+
+    change = await call(s, "resume_diff", {"a": "Sep pre-rebuild",
+                                           "b": "Oct final"})
+    assert change["removed"] == [
+        "Grew revenue by 300% with a new data platform"], change
+    assert change["changed"] == [{
+        "before": "Wrote runbooks for ETL jobs",
+        "after": "Wrote runbooks for the nightly ETL jobs"}], change
+    assert "Mentored two analysts on SQL reviews" in change["added"]
+    assert change["word_delta"] == (change["words"]["after"]
+                                    - change["words"]["before"])
+    assert change["checks"]["level_tags"] == {"before": 1, "after": 0,
+                                              "now": []}
+    missing = await call(s, "resume_diff", {"a": "Nope"})
+    assert "error" in missing
+
+    proof = await call(s, "resume_proof", {"a": "Sep pre-rebuild",
+                                           "b": "Oct final"})
+    md = proof["markdown"]
+    assert "## Timeline" in md and "## Before and after" in md
+    assert "(came back)" in md and "Oct branch" in md
+    assert md.rstrip().endswith("Mentored two analysts on SQL reviews"), md
+    assert "| Internal level tags | 1 | 0 |" in md, md
+    assert proof["check"]["ok"], proof["check"]
+    print("resume timeline: append-only snapshots, computed checks, "
+          "branches and regressions visible, diff and proof: OK")
+
+
 async def sponsorship_checks(s):
     blank = await call(s, "sponsorship_verify", {"company": "Vandelay"})
     assert blank["answer"] == "unstated" and blank["confidence"] == "low"
@@ -914,6 +992,7 @@ async def main():
             await watch_checks(s)
             await mirror_checks(s)
             await tailor_checks(s)
+            await timeline_checks(s)
             await sponsorship_checks(s)
             await error_checks(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
@@ -929,6 +1008,7 @@ async def main():
     print("text sent to response_check kept out of logs: OK")
     assert "Zanzibar" not in log, "a bad argument's value leaked into logs"
     assert "Jordan's laptop" not in log, "client hint leaked into logs"
+    assert "Wombat" not in log, "a file path leaked into logs"
     assert "bad arguments: finance_dashboard: monthly_burn" in log, \
         "field name not logged"
     assert "issue reported: INTERNAL_ERROR job_search (ref a1b2c3)" in log
