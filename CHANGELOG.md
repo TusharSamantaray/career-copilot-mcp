@@ -6,6 +6,14 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- Check what a company actually says about visa sponsorship (B-029).
+  You get yes, no or "not stated", how sure that is, and the exact
+  sentences it's based on, plus what you logged from recruiters. If the
+  posting is silent, it suggests asking the recruiter once, plainly; it
+  never assumes yes. Links to public H-1B filing data are included as
+  background, not a promise.
+  **Try it:** paste a posting and say "Does this company sponsor visas?".
+  You should get yes, no or not stated, with the sentence quoted.
 - Tailor your resume to a posting without stretching the truth (B-026).
   Your assistant suggests lines for the role, and each one must rest on
   facts you've confirmed. A line is held back, with the reason, if it has

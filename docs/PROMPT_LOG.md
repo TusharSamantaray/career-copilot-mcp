@@ -4,6 +4,20 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-07 | v0.3.0-dev
+**Asked:** Keep resolving open issues (B-029 next).
+**Did:** sponsorship_verify: classifies each posting sentence as no, yes
+or unclear and quotes it; adds what the person logged on applications;
+answer is no if any source says no, yes only with explicit evidence,
+otherwise unstated; conflicts flagged; save=true writes an explicit
+posting answer to an application. USCIS and DOL filing links as
+education. 88 tools; spec build status updated.
+**Files:** `copilot/sponsorship.py`, `app.py`, `tests/test_soul.py`,
+`docs/SPEC.md`, `docs/BACKLOG.md`.
+**Tests:** see commit.
+**Try it:** paste a posting and ask "Does this company sponsor visas?"
+**Open:** B-034 and B-046 next.
+
+### 2026-11-07 | v0.3.0-dev
 **Asked:** Keep resolving open issues, with docs and logs in each commit.
 **Did:** resume_tailor (B-026): the assistant proposes lines with the
 fact ids they rest on; the server blocks unconfirmed or missing facts,

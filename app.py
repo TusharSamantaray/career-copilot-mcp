@@ -61,6 +61,7 @@ from copilot import loops
 from copilot import nudges
 from copilot import places
 from copilot import prep
+from copilot import sponsorship as visa_sponsor
 from copilot import store
 from copilot import tailor
 from copilot import watch
@@ -749,6 +750,20 @@ def jd_analyze(text: str, title: str = "", company: str = "",
     short record (title, company, skills asked; never the full text) for
     skill_gap_evidence."""
     return jobs.jd_analyze(current_user(), text, title, company, remember)
+
+
+@mcp.tool
+def sponsorship_verify(company: str, role: str = "", posting_text: str = "",
+                       application_id: str = "", save: bool = False) -> dict:
+    """What's known about visa sponsorship for one role: yes, no or
+    unstated, with confidence and the evidence quoted (posting sentences,
+    and what the person logged on their applications), plus links to
+    public H-1B filing data as education. Never assumes yes. save=true
+    with application_id records an explicit yes or no from the posting on
+    that application (write action). Ask about sponsorship only when
+    matters_for_you is true or the person raises it."""
+    return visa_sponsor.verify(current_user(), company, role, posting_text,
+                               application_id, save)
 
 
 @mcp.tool

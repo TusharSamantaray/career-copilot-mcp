@@ -125,14 +125,12 @@ flowchart LR
 
   s1["1 · Zero-start spine<br/>journey_state · profile_from_text<br/>direction_options"]:::built
   s2["2 · Foundation integrity<br/>facts · conflicts · ownership<br/>keyword check · resume_tailor"]:::built
-  s3["3 · Search loop<br/>job_search · jd_analyze<br/>cover letters · rounds"]:::built
-  s3o["sponsorship_verify<br/>B-029"]:::pending
+  s3["3 · Search loop<br/>job_search · jd_analyze · cover letters<br/>rounds · sponsorship_verify"]:::built
   s4["4 · Pressure mode<br/>deadlines · fast-track<br/>study plans · lessons"]:::built
   s5["5 · Hardening<br/>sign-in · encryption<br/>Neon storage · mirror"]:::built
   s5o["dashboard action strip<br/>B-034"]:::pending
 
   s1 --> s2 --> s3 --> s4 --> s5
-  s3 -.- s3o
   s5 -.- s5o
 ```
 
@@ -140,8 +138,7 @@ flowchart LR
 |---|---|---|
 | 1. Zero-start spine | journey_state, relaxed profile_save, persisted life_compass, profile_from_text, direction_options, server instructions, starter prompts | **Done** |
 | 2. Foundation integrity | Fact record, fact_conflicts, outcome log, ownership_check, ats_keyword_check, resume_tailor with guardrails (B-026) | **Done** |
-| 3. Search loop | job_search, jd_analyze, rejection matching, round log (loop_enrich), cover_letter_draft | **Done** |
-| | sponsorship_verify (B-029) | Open |
+| 3. Search loop | job_search, jd_analyze, rejection matching, round log (loop_enrich), cover_letter_draft, sponsorship_verify (B-029) | **Done** |
 | 4. Pressure mode | deadline_add and fast_track, format-aware study_plan, message_draft voice, lessons | **Done** |
 | 5. Hardening | GitHub sign-in, encryption at rest, recruiter_find, Markdown mirror (data_mirror), pipeline_digest sponsorship column | **Done** |
 | | Persistent disk (B-008, owner), dashboard action strip (B-034) | Open |

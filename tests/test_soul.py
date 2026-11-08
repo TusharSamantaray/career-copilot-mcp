@@ -802,6 +802,40 @@ async def tailor_checks(s):
           "reason, accepted lines saved as a version: OK")
 
 
+async def sponsorship_checks(s):
+    blank = await call(s, "sponsorship_verify", {"company": "Vandelay"})
+    assert blank["answer"] == "unstated" and blank["confidence"] == "low"
+    assert len(blank["public_filings"]) == 2 and "recruiter" in blank["say"]
+    vague = await call(s, "sponsorship_verify", {
+        "company": "Vandelay",
+        "posting_text": "Great team. Tell us about your work authorization."})
+    assert vague["answer"] == "unstated", vague
+    assert vague["evidence"][0]["signal"] == "unclear"
+    for no in ("We are unable to sponsor visas for this role.",
+               "You must be authorized to work in the US without "
+               "sponsorship."):
+        result = await call(s, "sponsorship_verify", {
+            "company": "Vandelay", "posting_text": "Remote. " + no})
+        assert result["answer"] == "no" and result["confidence"] == "high", \
+            result
+        assert result["evidence"][0]["quote"] == no
+    app = await call(s, "application_log", {
+        "company": "Vandelay", "role": "Importer", "status": "applied"})
+    yes = await call(s, "sponsorship_verify", {
+        "company": "Vandelay", "application_id": app["id"], "save": True,
+        "posting_text": "Visa sponsorship is available for this role."})
+    assert yes["answer"] == "yes" and yes["saved"]["sponsorship"] == "yes"
+    await call(s, "application_log", {
+        "company": "Vandelay", "role": "Exporter", "status": "applied",
+        "sponsorship": "no"})
+    mixed = await call(s, "sponsorship_verify", {
+        "company": "Vandelay",
+        "posting_text": "Visa sponsorship is available."})
+    assert mixed["conflict"] and mixed["answer"] == "no", mixed
+    print("sponsorship_verify: quoted evidence, unstated never becomes yes, "
+          "conflicts raised, explicit answers saved: OK")
+
+
 async def error_checks(s):
     stale = await s.call_tool("no_such_tool", {})
     assert stale.isError and \
@@ -868,6 +902,7 @@ async def main():
             await watch_checks(s)
             await mirror_checks(s)
             await tailor_checks(s)
+            await sponsorship_checks(s)
             await error_checks(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
               encoding="utf-8") as handle:

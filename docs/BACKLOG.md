@@ -3,8 +3,6 @@
 ## Open
 - B-010 [P2] Lawyer review of docs/PRIVACY.md and docs/TERMS.md before
   paid users. From: ground rules work.
-- B-029 [P1] sponsorship_verify: posting text plus public filing data,
-  as education. From: spec v2.
 - B-034 [P2] Dashboard action strip. From: spec v2.
 - B-012 [P2] Delete the old prototype server.py from the project
   folder (it's untracked). From: repo setup.
@@ -21,6 +19,10 @@
   issue 9.
 
 ## Done
+- B-029 sponsorship_verify: yes, no or unstated with confidence, quoted
+  posting sentences and the person's own application log, conflicts
+  raised, public H-1B filing links as education; never assumes yes.
+  From: spec v2 and gap spec.
 - B-026 resume_tailor: each tailored line cites confirmed facts; blocks
   unsupported numbers, ownership inflation, merged claims across jobs,
   honest gaps and invented keywords; accepted lines save as a resume
