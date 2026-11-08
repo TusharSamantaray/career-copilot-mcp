@@ -4,6 +4,21 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-07 | v0.3.0-dev
+**Asked:** Keep resolving open issues (B-046).
+**Did:** Weekly error report: agents/triage.py turns the /insights
+summary into Markdown (issue codes with the fix from errors.py, tools
+under 90% success after 10 calls), and .github/workflows/triage.yml
+opens or comments on one "Error report" issue. No pull requests or
+deploys, by decision. list_changed after deploys recorded as not
+applicable. New suite tests/test_triage.py, in CI and the local run.
+**Files:** `agents/triage.py`, `.github/workflows/triage.yml`,
+`.github/workflows/ci.yml`, `tests/test_triage.py`, `docs/OWNER.md`,
+`docs/ENGINEERING.md`.
+**Tests:** see commit.
+**Try it:** Actions → Error report → Run workflow.
+**Open:** reports appear only with 5+ people and B-050 on.
+
+### 2026-11-07 | v0.3.0-dev
 **Asked:** Keep resolving open issues (B-046 investigation).
 **Did:** Found that anonymous counts (insights) lived in a local SQLite
 file, wiped on every free-host restart, so the weekly improver and

@@ -6,6 +6,14 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Added
+- A weekly error report for the owner (B-046). Every Monday, GitHub
+  turns the anonymous error counts into one "Error report" issue: which
+  error codes people hit, on which tool, how many people, and the
+  suggested fix. Quiet weeks stay quiet. It never changes code on its
+  own.
+  **Try it:** on GitHub, open Actions → Error report → Run workflow. With
+  the insights secrets set, you get "Nothing to report" or an issue
+  labelled `triage`.
 - Your dashboard now shows which applications need you (B-034): up to
   five cards at the top of Today and Pipeline, most urgent first:
   overdue, due within two days, no next step yet, or (if you need visa

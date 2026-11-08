@@ -45,6 +45,12 @@ The values are in Render → career-copilot → Environment.
   words.
 - **Test as a stranger:** sign in with a second GitHub account, added to
   the invite list.
+- **Weekly error report:** on Mondays, GitHub opens (or adds to) an
+  issue labelled `triage` when people reported errors or a tool keeps
+  failing. It uses the same secrets as the weekly improver
+  (`INSIGHTS_URL`, `INSIGHTS_ADMIN_KEY`). Run it any time from Actions →
+  Error report → Run workflow. It only reports once 5 different people
+  share a problem, and it needs B-050 turned on to see past a restart.
 - **Is it invite-only right now?** Open the health check. `"invite_only":
   true` means only people on your list can sign in; `false` means anyone
   with a GitHub account can. It never shows who is on the list.

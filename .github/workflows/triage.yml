@@ -1,0 +1,51 @@
+# Weekly error report. Reads the anonymous /insights summary and, when
+# people reported errors or a tool often fails, opens one "Error report"
+# issue (or comments on the open one). It never writes code, opens pull
+# requests or deploys: a person reads the report and fixes by hand.
+#
+# Uses the same repository secrets as improve.yml: INSIGHTS_URL
+# (https://.../insights) and INSIGHTS_ADMIN_KEY. Unset, it does nothing.
+name: Error report
+
+on:
+  schedule:
+    - cron: "0 7 * * 1"        # Mondays 07:00 UTC, after the improver
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    env:
+      INSIGHTS_URL: ${{ secrets.INSIGHTS_URL }}
+      ADMIN_KEY: ${{ secrets.INSIGHTS_ADMIN_KEY }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        if: env.INSIGHTS_URL != ''
+      - name: Fetch anonymous insights (last 7 days)
+        if: env.INSIGHTS_URL != ''
+        run: |
+          curl -sf --retry 3 --retry-delay 20 --max-time 90 \
+            -H "Authorization: Bearer $ADMIN_KEY" \
+            "$INSIGHTS_URL?days=7" -o insights.json
+      - name: Build the report
+        if: env.INSIGHTS_URL != ''
+        run: python3 agents/triage.py insights.json report.md
+      - name: Open or update the issue
+        if: env.INSIGHTS_URL != ''
+        run: |
+          [ -f report.md ] || { echo "Nothing to report."; exit 0; }
+          gh label create triage --color fbca04 --force \
+            --description "Weekly error report"
+          open=$(gh issue list --label triage --state open \
+            --json number --jq '.[0].number')
+          if [ -n "$open" ]; then
+            gh issue comment "$open" --body-file report.md
+          else
+            gh issue create --title "Error report" --label triage \
+              --body-file report.md
+          fi

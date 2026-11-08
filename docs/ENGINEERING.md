@@ -20,8 +20,8 @@ flowchart LR
   classDef person fill:#3B82F61A,stroke:#3B82F6,stroke-width:1.5px
 
   change["A change"]:::person
-  local["Local run<br/>8 suites"]:::copilot
-  ci1["CI job: test<br/>8 suites + main suite encrypted"]:::guard
+  local["Local run<br/>9 suites"]:::copilot
+  ci1["CI job: test<br/>9 suites + main suite encrypted"]:::guard
   ci2["CI job: postgres<br/>real Postgres 16, encrypted"]:::guard
   deploy["Render deploys main"]:::copilot
   live["Live checks<br/>/health · sign-in · tools"]:::store
@@ -40,6 +40,7 @@ flowchart LR
 | `test_oauth.py` | Full GitHub sign-in against a fake GitHub; invite list; same token after a restart that wipes the disk | Server over HTTP, fake GitHub |
 | `test_crypto.py` | Records encrypted on disk, bound to person and record, delete destroys the key | Store directly |
 | `test_acceptance.py` | Spec acceptance tests A (Lost) and B (On a clock) as scripted conversations with a fresh person | Server over stdio |
+| `test_triage.py` | The weekly error report: quiet on a healthy week, lists codes, tools, people and the fix otherwise | Script only |
 | `test_postgres.py` | Postgres backend: per-person rows, encryption, a fresh process after a wiped disk still sees the data, URL never printed | Real Postgres (skips without one) |
 
 ### Acceptance tests from the spec
@@ -94,6 +95,16 @@ One decision from the tester incident, kept so it isn't relitigated:
 fixes can ship after tests pass; code changes stay a pull request a
 person merges. A server holding resumes and job-search data must not
 rewrite and ship itself.
+
+Two more, from the same incident:
+- **The weekly error report opens an issue, not a pull request.** It
+  says which error codes people reported and which tools fail, with the
+  fix from `copilot/errors.py`; a person fixes and merges.
+- **No `tools/list_changed` after deploys.** A deploy restarts the
+  server, which ends every session, so there is no open session to
+  notify; the assistant reconnects and fetches the new list. An
+  assistant that still calls an old tool gets `[UNKNOWN_TOOL]` with
+  "reconnect" as the fix.
 
 ## 3. The two that mattered most
 

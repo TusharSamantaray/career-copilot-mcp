@@ -17,11 +17,13 @@
   Render so anonymous counts survive restarts? If yes, the privacy notice
   gets a line saying Neon also holds them (new TERMS_VERSION). From:
   B-049.
-- B-046 [P2] Triage Action on reported issues that proposes a fix as a
-  PR (human merges), and tools/list_changed after deploys. From: gap spec
-  issue 9.
 
 ## Done
+- B-046 Weekly error report (.github/workflows/triage.yml,
+  agents/triage.py): reported codes and failing tools from /insights
+  into one "Error report" issue; no code, PRs or deploys. list_changed
+  after deploys decided against (restarts end sessions; UNKNOWN_TOOL
+  covers stale lists). From: gap spec issue 9.
 - B-049 Anonymous counts can live in Postgres
   (CAREER_COPILOT_INSIGHTS_STORE=database), 400-day limit there,
   JSON-safe summary, forget works; /health shows where. Off by default.
