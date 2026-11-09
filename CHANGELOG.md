@@ -5,6 +5,15 @@ Every Added or Changed line has a **Try it:** line.
 
 ## [Unreleased]
 
+### Fixed
+- The weekly "Improve knowledge" job no longer fails on GitHub while it
+  isn't set up (B-068). Without its three secrets it now skips with a
+  note saying which to add. Once set up, it waits for the sleeping server
+  and runs every test, the validation cases and the simulation before
+  merging anything.
+  **Try it:** on GitHub, Actions → Improve knowledge → Run workflow. It
+  should finish green, with a "Skipped" note naming the three secrets.
+
 ### Changed
 - The guides now match what Career Copilot does today (B-065). The
   architecture page has a new diagram of what someone hiring can see and

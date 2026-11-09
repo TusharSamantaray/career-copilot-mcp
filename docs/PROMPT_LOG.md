@@ -4,6 +4,20 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-09 | v0.3.0-dev
+**Asked:** The last build failed; check what's wrong.
+**Did:** CI on the latest commit passed; the failure was the scheduled
+"Improve knowledge" workflow. No repository secrets are set, so its
+fetch hit an empty URL (curl exit 3). Added a setup check that skips all
+steps with a notice when secrets are missing, curl retries like the error
+report, and the verify gate now runs all 9 suites plus validation and
+the simulation.
+**Files:** `.github/workflows/improve.yml`, `docs/ENGINEERING.md`.
+**Tests:** see commit.
+**Try it:** Actions → Improve knowledge → Run workflow: green, "Skipped".
+**Open:** set the secrets to turn the improver on (needs B-050 to see
+much); the owner decides.
+
+### 2026-11-09 | v0.3.0-dev
 **Asked:** Is all the technical documentation up to date? Make sure it's
 accurate.
 **Did:** Checked every guide against the code (tool, resource and prompt

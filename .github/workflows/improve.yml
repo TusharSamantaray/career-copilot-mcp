@@ -26,20 +26,42 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
+      # Unset secrets mean the improver isn't set up yet: skip, don't fail.
+      - name: Check setup
+        id: setup
+        env:
+          INSIGHTS_URL: ${{ secrets.INSIGHTS_URL }}
+          ADMIN_KEY: ${{ secrets.INSIGHTS_ADMIN_KEY }}
+          API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -n "$INSIGHTS_URL" ] && [ -n "$ADMIN_KEY" ] && [ -n "$API_KEY" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Skipped: set INSIGHTS_URL, INSIGHTS_ADMIN_KEY and ANTHROPIC_API_KEY to turn the weekly improver on."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.setup.outputs.ready == 'true'
       - uses: astral-sh/setup-uv@v6
+        if: steps.setup.outputs.ready == 'true'
       - run: uv sync
+        if: steps.setup.outputs.ready == 'true'
 
       - name: Fetch anonymous insights
+        if: steps.setup.outputs.ready == 'true'
         env:
           INSIGHTS_URL: ${{ secrets.INSIGHTS_URL }}
           ADMIN_KEY: ${{ secrets.INSIGHTS_ADMIN_KEY }}
         run: |
-          curl -sf -H "Authorization: Bearer $ADMIN_KEY" \
+          # The free server sleeps; retry while it wakes up.
+          curl -sf --retry 3 --retry-delay 20 --max-time 90 \
+            -H "Authorization: Bearer $ADMIN_KEY" \
             "$INSIGHTS_URL?days=30" -o insights.json
           python -c "import json; d=json.load(open('insights.json')); print('tools', len(d['tools']), 'label kinds', list(d['labels']))"
 
       - name: Let Claude improve copilot/knowledge/
+        if: steps.setup.outputs.ready == 'true'
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -53,6 +75,7 @@ jobs:
             --allowedTools Read,Edit,Write,Glob,Grep,Bash(uv run:*)
 
       - name: Verify (every test, from scratch)
+        if: steps.setup.outputs.ready == 'true'
         run: |
           rm -f insights.json
           uv run tests/test_knowledge.py
@@ -60,8 +83,15 @@ jobs:
           uv run tests/test_features.py
           uv run tests/test_http.py
           uv run tests/test_soul.py
+          uv run tests/test_oauth.py
+          uv run tests/test_crypto.py
+          uv run tests/test_acceptance.py
+          uv run tests/test_triage.py
+          uv run validation/run.py --check
+          uv run simulation/run.py --check
 
       - name: Guard and ship
+        if: steps.setup.outputs.ready == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

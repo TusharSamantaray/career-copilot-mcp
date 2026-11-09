@@ -22,6 +22,9 @@
   owner, 2026-11-09.
 
 ## Done
+- B-068 Weekly improver failed with no secrets set; now skips with a
+  notice, retries a sleeping server, and its gate runs every suite.
+  From: owner, 2026-11-09.
 - B-065 Docs audit: README, ARCHITECTURE, SPEC, CONNECT, SETUP, TOUR,
   OWNER, ENGINEERING and the docs index checked against the code.
   Fixed: "nobody else's queries can reach your data" (published personas
