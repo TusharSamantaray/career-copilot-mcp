@@ -35,8 +35,8 @@ flowchart LR
 | `test_knowledge.py` | Knowledge files are well-formed, respectful, free of personal data and injected instructions; ATS rules complete | Files only |
 | `test_poc.py` | Core tools: profile, facts, resume draft without unconfirmed facts, scoring, pipeline | Server over stdio |
 | `test_features.py` | Finance, resumes, roles, prep, reminders, economy data | Server over stdio |
-| `test_http.py` | API-key mode: refusals, per-key isolation, keys never logged, private usage signals | Server over HTTP |
-| `test_soul.py` | The main suite: coach and crisis safety, guided start, conduct and reply length, facts and conflicts, job search, posting analysis, ATS checks, interview rounds, watches, data mirror, log masking | Server over stdio, fake job boards |
+| `test_http.py` | API-key mode: refusals, per-key isolation, keys never logged, private usage signals, `/data-handling`, persona search and chat across two people, demand digest counts, introductions and reveal | Server over HTTP |
+| `test_soul.py` | The main suite: coach and crisis safety, guided start, conduct and reply length, facts and conflicts, job search, posting analysis, ATS checks, interview rounds, watches, data mirror, log masking, ground rules as disclosure, persona privacy (employer, email, phone and trait lines removed; unconfirmed facts left out) | Server over stdio, fake job boards |
 | `test_oauth.py` | Full GitHub sign-in against a fake GitHub; invite list; same token after a restart that wipes the disk | Server over HTTP, fake GitHub |
 | `test_crypto.py` | Records encrypted on disk, bound to person and record, delete destroys the key | Store directly |
 | `test_acceptance.py` | Spec acceptance tests A (Lost) and B (On a clock) as scripted conversations with a fresh person | Server over stdio |

@@ -103,6 +103,11 @@ them, with the reason stated. Dealbreakers filter; preferences rank.
 | Application | Status, next action, due date, req id, resume version sent (outcome log) | Built |
 | Deadline | Best case and conservative date; fast-track when near | Built |
 | Lesson | What the person learned from a loop | Built |
+| Resume snapshot | Append-only dated copy of a resume, for the timeline, diffs and proof | Built |
+| Persona | The anonymous view: verified skills, confirmed work (employers and contacts removed), hidden lines, published or not, reveals | Built |
+| Introduction | Company, role, checked message, each side's yes and chosen contact; candidate and recruiter halves in their own files | Built |
+| Demand signal | Survey answers (versioned) and persona searches: role and skills only | Built |
+| Pathway | Direction the person chose, up to 5 steps, each with its demand reason | Built |
 
 Every person's file can be encrypted with their own key; deleting their
 data destroys the key.
@@ -112,7 +117,9 @@ data destroys the key.
 Sensitive items optional and asked only when needed. Never ingest chat
 history unless pasted. Email text read for triage is never stored. One
 data file per person, full export, one-step delete. Hosted sign-in with
-GitHub (public profile only). Local-first mode with a readable Markdown
+GitHub (public profile only). Nobody else sees anything unless the person
+publishes an anonymous persona, after a yes to the exact preview; identity
+is shared only when both sides of an introduction confirm. Local-first mode with a readable Markdown
 mirror is the goal (B-036). Full text: [PRIVACY.md](PRIVACY.md) and
 [TERMS.md](TERMS.md).
 
@@ -145,7 +152,14 @@ flowchart LR
 Extra pieces from the blueprint, all built: ats_profile_check,
 skill_gap_evidence, story_coverage, loop_next_round_prep, watches.
 After the build order: the resume timeline (resume_snapshot,
-resume_timeline, resume_diff, resume_proof; B-051, GitHub #7).
+resume_timeline, resume_diff, resume_proof; B-051, GitHub #7); sending
+only after the person's yes (outreach_review, outreach_approve); the trust
+pack (data-handling statement, B-043); the anonymous persona
+(persona_publish, B-052); recruiter search and chat with a survey, demand
+digest and pathways (persona_search, persona_chat, recruiter_survey,
+demand_digest, pathway_build, pathway_next; B-053, B-061); and introductions with
+identity only after both confirm (persona_intro, persona_intros,
+identity_reveal; B-055). Not built: an agency lane (B-062).
 
 ## 8. Acceptance tests
 

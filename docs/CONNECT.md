@@ -66,7 +66,9 @@ sign in with GitHub.
 
 ## Claude Code
 
-Local (data stays on your computer):
+Local (data stays on your computer). While the repository is private,
+the local commands below work only for people the owner gave read access
+on GitHub; everyone else uses the hosted address.
 
 ```
 claude mcp add --scope user career-copilot -- uvx --from git+https://github.com/TusharSamantaray/career-copilot-mcp career-copilot --stdio
@@ -176,6 +178,8 @@ up to a minute to wake.
 - "I'm good at SQL, Python and dashboards. What directions could I test?"
 - "Here are my old resumes. Merge the best bullets."
 - "I have an interview on the 20th."
+- "Show me what my anonymous persona would look like."
+- Hiring instead? "I'm hiring a data engineer. Here's the posting: …"
 
 Client settings move around between releases. If a path above has changed,
 search the client's docs for "MCP server".

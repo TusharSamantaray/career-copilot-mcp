@@ -69,9 +69,15 @@ uv run tests/test_http.py       # health, key required, wrong key rejected,
 uv run tests/test_knowledge.py  # knowledge is valid, no personal data
 uv run tests/test_soul.py       # coach, safety, guided start, conduct
 uv run tests/test_oauth.py      # GitHub sign-in mode: no sign-in, no access
+uv run tests/test_crypto.py     # encryption at rest, delete destroys the key
+uv run tests/test_acceptance.py # spec acceptance tests as scripted chats
+uv run tests/test_triage.py     # the weekly error report
+uv run validation/run.py        # each improvement still measures as it should
+uv run simulation/run.py        # 5 job seekers and 2 recruiters, end to end
 ```
 
-Each one should end with `ALL PASSED`.
+Each one should end with `ALL PASSED` (validation and simulation print a
+pass count). `tests/test_postgres.py` needs a throwaway `DATABASE_URL`.
 
 ## 4. Connect an AI client
 

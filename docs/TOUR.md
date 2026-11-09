@@ -95,3 +95,20 @@ Tools: `runway_calc`, `deadline_add`, `daily_step`, `finance_dashboard`,
 `layoff_fund_plan`.
 
 All money, tax, visa and relocation answers are education, not advice.
+
+## After the tour: being found
+
+Not part of the six stops, but there when you want it.
+
+> **You:** Show me what my anonymous persona would look like.
+> **Copilot:** Here's what someone hiring would see: your Spark and
+> Airflow work, no employer, no contacts. Hide any line, or publish it
+> as is?
+
+People hiring connect the same way and say "I'm hiring". They see up to
+five anonymous personas and can ask about the work. Nobody learns who you
+are unless you both say yes.
+
+Tools: `persona_publish`, `persona_unpublish`, `persona_intros`,
+`identity_reveal`, `demand_digest`, `pathway_build`. For someone hiring:
+`persona_search`, `persona_chat`, `persona_intro`, `recruiter_survey`.

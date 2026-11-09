@@ -50,14 +50,18 @@ claude mcp add --scope user career-copilot -- uvx --from git+https://github.com/
 ```
 
 Nothing to clone and no sign-in. Your data stays in `~/CareerCopilot/` on
-your computer. For Claude Desktop, Cursor, VS Code and others, see
+your computer. While the repository is private, this works only for people
+the owner has given read access on GitHub; everyone else uses option A. For Claude Desktop, Cursor, VS Code and others, see
 [docs/CONNECT.md](docs/CONNECT.md).
 
 ### C. Host your own copy for free
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/TusharSamantaray/career-copilot-mcp)
 
-Render builds it and gives you an `https://….onrender.com` address. Then
+Render builds it and gives you an `https://….onrender.com` address.
+While the repository is private, only people with read access can deploy
+it, and hosting it for others needs the owner's written permission
+([LICENSE](LICENSE)). Then
 add a GitHub sign-in app (5 minutes, once) so your address is safe to
 share. Step by step: [docs/SETUP.md](docs/SETUP.md#6-free-demo-hosting-render).
 
@@ -116,6 +120,10 @@ sequenceDiagram
 | "Round 1 at Acme went OK. Prep me for round 2." | What round 1 covered, which story to bring next (and whether that panel heard it already), and one thing to do today |
 | "I have an interview on the 20th." | A prep plan with reminders, and the one thing to do today |
 | "Show my dashboard." | Your progress as a visual page |
+| "Show me what my anonymous persona would look like." | Your verified skills and work with names, employers and contacts taken out. It's published only after you say yes to that exact view, and you can hide any line |
+| "Any introduction requests?" | Who asked to meet your persona (company, role, message). Nobody learns who you are unless you both say yes |
+| "What are recruiters asking for in data engineering?" | Which skills people hiring named, how many of them, and the source. Then one step at a time toward it |
+| "I'm hiring a data engineer. Here's the posting: …" (someone hiring) | Up to 5 anonymous personas ranked by verified work, never names, contacts or salary |
 
 ## 4. How it talks to you
 
@@ -180,12 +188,16 @@ flowchart LR
 ```
 
 Colours mean the same thing in every diagram: blue is you, green is
-Career Copilot, amber is stored data, grey is an outside service, orange
+Career Copilot, amber is stored data, grey is an outside service, red
 is something it never does ([full legend](docs/ARCHITECTURE.md#how-to-read-the-diagrams)).
 
 - **Yours alone.** Your records are kept apart from everyone else's and
   encrypted with your own key. Say "export my data" to see everything,
   or "delete my data" to erase it for good.
+- **Seen only if you choose.** Nobody else sees anything of yours unless
+  you publish an anonymous persona, and you see exactly what it shows
+  first. People hiring can search it and ask it about your work, never
+  your name, employer, contacts or pay. Taking it down is one step.
 - **No passwords, ever.** GitHub handles sign-in, and Career Copilot
   stores only a scrambled id. It never logs in anywhere for you.
 - **Masked logs.** Your words, emails, money figures and keys never reach
@@ -246,7 +258,7 @@ flowchart LR
 | Network calls out | GitHub (sign-in), public job boards (Greenhouse, Lever, Ashby; read-only, cached), World Bank API |
 | AI model costs | None: the person's own assistant runs the model |
 | Health check | `GET /health` |
-| Tests | 9 suites, run on every push (the main one twice: plain and encrypted) |
+| Tests | 10 suites on every push: 9 in the main job (the main one twice, plain and encrypted), plus Postgres in its own job |
 | Simulation | [simulation/](simulation/README.md): 5 made-up job seekers and 2 recruiters on a local server, end to end, with the privacy rules checked; `--serve` lets you chat as any of them |
 | Validation | [validation/](validation/README.md): each improvement measured with made-up people; scoreboard in `RESULTS.md`, dated `HISTORY.md` |
 
@@ -276,10 +288,22 @@ copilot/
   guide.py             Next steps from what's stored
   economy.py           Live World Bank data
   insights.py          Anonymous usage signals
-  store.py             Per-person SQLite storage
+  store.py             Per-person storage: SQLite files or Postgres, encrypted per person
   scoring.py           Ten-check resume rubric
+  tailor.py            Tailoring a resume to a posting without rewriting history
+  timeline.py          Resume snapshots, timeline, diffs and a proof
+  outreach.py          Review, then the person's yes, then their own app sends
+  sponsorship.py       What's actually known about visa sponsorship for one role
+  persona.py           The anonymous persona: verified skills, names and contacts removed
+  recruiter.py         Someone hiring: search personas for a job, ask them questions
+  intro.py             Introductions: identity only after both sides confirm
+  demand.py            Recruiter survey, demand digest, pathways with reasons
+  signin.py            Sign in with GitHub, nothing kept on the server
+  errors.py            Stable error codes and what to do about each
   knowledge/           Reference content the weekly bot may update
-tests/                 9 test suites
+tests/                 10 test suites
+validation/            Each improvement measured with made-up people
+simulation/            5 job seekers and 2 recruiters, end to end, on a local server
 docs/                  Guides, spec, blueprint, backlog
 ```
 
@@ -290,12 +314,15 @@ uv sync
 uv run tests/test_knowledge.py   # knowledge is valid, respectful, no personal data
 uv run tests/test_poc.py         # core tools
 uv run tests/test_features.py    # finance, resumes, roles, prep, reminders
-uv run tests/test_http.py        # API keys, data isolation, private usage signals
+uv run tests/test_http.py        # API keys, data isolation, personas, intros, demand
 uv run tests/test_soul.py        # coach, safety, guided start, conduct checks
 uv run tests/test_oauth.py       # GitHub sign-in mode
 uv run tests/test_crypto.py      # encryption at rest, delete destroys the key
 uv run tests/test_acceptance.py  # Spec v2 acceptance tests as scripted chats
+uv run tests/test_triage.py      # the weekly error report
 uv run tests/test_postgres.py    # Postgres storage (needs a throwaway DATABASE_URL)
+uv run validation/run.py         # every improvement still measures as it should
+uv run simulation/run.py         # 5 job seekers and 2 recruiters, end to end
 ```
 
 Hosted mode locally: `CAREER_COPILOT_API_KEY=dev-key uv run app.py`, then
@@ -319,8 +346,8 @@ The ground rules sit outside that folder on purpose.
 
 ## License
 
-Copyright © 2026 Tushar Samantaray. All rights reserved. The source is
-public so people can read and check it, and you can run it for your own
-personal use. Hosting it for others, selling it or redistributing it needs
+Copyright © 2026 Tushar Samantaray. All rights reserved. The repository
+is private for now; people given access can read and check it, and run it
+for their own personal use. Hosting it for others, selling it or redistributing it needs
 written permission ([LICENSE](LICENSE)). For licensing, partnership or
 investment, reach out through [GitHub](https://github.com/TusharSamantaray).

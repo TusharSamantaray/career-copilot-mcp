@@ -13,7 +13,8 @@ The values are in Render → career-copilot → Environment.
 | Sign-in | GitHub OAuth app "Career Copilot", callback `/auth/callback` |
 | Health check | https://career-copilot-cg2k.onrender.com/health |
 | Keep-awake | GitHub Action `keep-awake.yml`, repo variable `HEALTH_URL` |
-| Local copy (Claude Code) | The uvx one-liner in [CONNECT.md](CONNECT.md), data in `~/CareerCopilot/` |
+| Local copy (Claude Code) | The uvx one-liner in [CONNECT.md](CONNECT.md), data in `~/CareerCopilot/`. Works only for people with read access while the repo is private |
+| Local test with made-up people | `uv run simulation/run.py --serve`, see [simulation/README.md](../simulation/README.md) |
 
 ## Settings in Render (names only)
 
@@ -104,8 +105,8 @@ Add their GitHub username to the invite list first.
 > Nobody is contacted automatically, and a persona can't tell you who
 > they are.
 
-If you make the repository public (B-043), swap the source line for its
-link.
+If you make the repository public, swap the source line in the tester
+message for its link.
 
 ## Working with Claude on it
 

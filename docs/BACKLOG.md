@@ -12,8 +12,22 @@
 - B-062 [P2, owner] Agency lane for introductions: an agency holds the
   candidate's identity until the offer, and the company sees only the
   persona. Confirm it stays in scope. From: GitHub #16 open question.
+- B-066 [P1, owner] LICENSE says the source "is published so people can
+  read, review and evaluate it", but the repository is private. Reword
+  the license, or make the repo public? License text only changes with
+  the owner's OK. From: docs audit 2026-11-09.
+- B-067 [P1, owner] Share with friends: one link to join, feedback and
+  issue reports the owner can actually read with a handful of testers
+  (today counts show only once 5 people report the same thing). From:
+  owner, 2026-11-09.
 
 ## Done
+- B-065 Docs audit: README, ARCHITECTURE, SPEC, CONNECT, SETUP, TOUR,
+  OWNER, ENGINEERING and the docs index checked against the code.
+  Fixed: "nobody else's queries can reach your data" (published personas
+  can be searched), local install and Deploy button need repo access
+  while private, README said the source is public, missing modules,
+  suites and tools, simulation check count. From: owner, 2026-11-09.
 - B-064 Demand digest counted one recruiter twice (survey and search as
   separate rows); now once per skill with all sources. From: the
   simulation, 2026-11-08.

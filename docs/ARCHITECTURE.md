@@ -174,7 +174,10 @@ flowchart LR
 ```
 
 - **Per person.** Every row carries your user id (a salted hash of your
-  GitHub id, never your name). Nobody else's queries can reach it.
+  GitHub id, never your name). Other people's tools can't read your
+  records. Two exceptions, both your choice: a persona you published is
+  searchable (section 10), and an introduction request someone sends you
+  is written into your file for you to answer.
 - **Delete means gone.** `data_delete` removes your data key first, then
   your rows. Even an old backup of the rows can't be read afterwards.
 - **Two backends, same code.** Postgres when `DATABASE_URL` is set
@@ -294,7 +297,52 @@ flowchart LR
 The ground rules (`copilot/conduct.py`) sit outside `copilot/knowledge/`
 on purpose, so the bot can never weaken them.
 
-## 9. The choices, in one table
+## 9. Being found without being named
+
+*Question: what can someone hiring see, and when does anyone learn who
+you are?*
+
+There's no shared table of candidates. Each persona lives in its owner's
+own file; a search reads only the ones marked published. Survey answers
+and searches stay in the recruiter's file, and the demand digest only
+counts them.
+
+```mermaid
+flowchart LR
+  classDef person fill:#3B82F61A,stroke:#3B82F6,stroke-width:1.5px
+  classDef copilot fill:#10B9811A,stroke:#10B981,stroke-width:1.5px
+  classDef store fill:#F59E0B1A,stroke:#F59E0B,stroke-width:1.5px
+  classDef guard fill:#A855F71A,stroke:#A855F7,stroke-width:1.5px
+  classDef never fill:#EF44441A,stroke:#EF4444,stroke-width:1.5px,stroke-dasharray:4 3
+
+  seeker(["Job seeker"]):::person
+  rec(["Someone hiring"]):::person
+  facts[("Confirmed facts<br/>in the seeker's file")]:::store
+  scrub["Persona builder<br/>drops employers, emails, links,<br/>phones, personal-trait lines"]:::guard
+  preview["Preview with an id<br/>publish only on yes to that view"]:::guard
+  persona[("Published persona<br/>in the seeker's file")]:::store
+  search["persona_search · persona_chat<br/>top 5, no pay, no identity answers"]:::copilot
+  intro[("Intro request<br/>in the seeker's file")]:::store
+  both{"Both said yes?"}:::guard
+  reveal["Each sees only the contact<br/>the other chose to share"]:::copilot
+  never["Never: name, employer, contacts<br/>or pay before both say yes"]:::never
+
+  seeker --> facts --> scrub --> preview -- "yes" --> persona
+  rec --> search --> persona
+  rec -- "persona_intro" --> intro --> both
+  seeker -- "identity_reveal" --> both
+  both -- yes --> reveal
+  search -.- never
+```
+
+Code: [copilot/persona.py](../copilot/persona.py),
+[copilot/recruiter.py](../copilot/recruiter.py),
+[copilot/intro.py](../copilot/intro.py),
+[copilot/demand.py](../copilot/demand.py). The
+[simulation](../simulation/README.md) runs the whole flow with seven
+made-up people and checks that nothing leaked.
+
+## 10. The choices, in one table
 
 | Layer | Choice | Why |
 |---|---|---|
@@ -305,4 +353,4 @@ on purpose, so the bot can never weaken them.
 | Storage | Neon Postgres (free) hosted, SQLite local | Data survives restarts; local stays private |
 | Encryption | AES-GCM per person, key wrapped by a master key | Delete destroys the key |
 | Knowledge | Plain Python data plus validation tests | Easy to review, safe to auto-edit |
-| Tests | 9 suites in CI, plus Postgres and encrypted runs | See [ENGINEERING.md](ENGINEERING.md) |
+| Tests | 9 suites in CI, plus Postgres and encrypted runs, the validation cases and the simulation | See [ENGINEERING.md](ENGINEERING.md) |

@@ -3,6 +3,24 @@
 What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
+### 2026-11-09 | v0.3.0-dev
+**Asked:** Is all the technical documentation up to date? Make sure it's
+accurate.
+**Did:** Checked every guide against the code (tool, resource and prompt
+counts were already right: 105, 9, 17). Fixed: the architecture claim
+that nobody else's queries reach your data; a new diagram for personas,
+search and reveal; README layout (10 missing modules), test lists, the
+"source is public" line, local install and Deploy needing repo access;
+spec data model and build status; tour and connect examples; setup test
+list; engineering suite rows; docs index; simulation check count (10).
+LICENSE wording flagged for the owner (B-066), not changed.
+**Files:** `README.md`, `docs/ARCHITECTURE.md`, `docs/SPEC.md`,
+`docs/CONNECT.md`, `docs/SETUP.md`, `docs/TOUR.md`, `docs/OWNER.md`,
+`docs/ENGINEERING.md`, `docs/README.md`, `docs/BACKLOG.md`.
+**Tests:** see commit (docs only).
+**Try it:** open `docs/ARCHITECTURE.md`, section 9.
+**Open:** B-066 license wording; B-067 sharing with friends.
+
 ### 2026-11-08 | v0.3.0-dev
 **Asked:** (Found by the simulation.) The digest listed the same
 recruiter twice for one skill.

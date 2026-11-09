@@ -5,6 +5,18 @@ Every Added or Changed line has a **Try it:** line.
 
 ## [Unreleased]
 
+### Changed
+- The guides now match what Career Copilot does today (B-065). The
+  architecture page has a new diagram of what someone hiring can see and
+  when anyone learns who you are, and no longer says nobody else can
+  reach your data (a persona you publish can be searched). The README,
+  spec, connect guide and tour cover personas, recruiters and
+  introductions. They also say plainly that the local install and the
+  Deploy button need read access while the repository is private.
+  **Try it:** open `docs/ARCHITECTURE.md` on GitHub and find "Being
+  found without being named"; the diagram should match what the
+  simulation report shows.
+
 ### Added
 - A simulation you can run on your own computer: 5 made-up job seekers
   build profiles and personas, and 2 made-up recruiters bring a job
@@ -15,7 +27,7 @@ Every Added or Changed line has a **Try it:** line.
   With `--serve` it keeps the server running so you can chat as any of
   them from Claude Code.
   **Try it:** run `uv run simulation/run.py` and open
-  `simulation/REPORT.md`. You should see 9 checks passed, then the whole
+  `simulation/REPORT.md`. You should see 10 checks passed, then the whole
   story. Then run it with `--serve`, add the Northwind recruiter as
   `simulation/README.md` shows, and say "I'm hiring a data engineer".
 - Meet a persona only when both sides agree (B-055, GitHub #16). Someone
