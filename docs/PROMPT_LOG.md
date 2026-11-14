@@ -4,6 +4,24 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-14 | v0.3.0-dev
+**Asked:** GitHub #33 linkedin_feed_scan. Owner chose: rank pasted
+posts; the server never touches LinkedIn (spec rule kept).
+**Did:** New `copilot/hiring_posts.py` and tool hiring_posts_rank.
+Reads poster, role, company, place, pay ($, £, €), contact (email or
+"DM the poster"), link and date ("2d", "3 weeks ago", ISO) from
+each post. Not hiring: set aside. Older than 7 days or breaking a
+dealbreaker: filtered with the reason. Fit via jd_analyze (not
+remembered). Flags: stretch, pay below floor, outside places,
+unknown date, sponsorship read. Nothing stored; `posts` masked in
+logs.
+**Files:** `copilot/hiring_posts.py`, `app.py`,
+`tests/test_outreach_kit.py`, `validation/cases/hiring_posts.py`.
+**Tests:** 10 suites passed, validation all cases pass (new:
+hiring_posts), simulation passed.
+**Try it:** paste three hiring posts: "Rank these for me."
+**Open:** rank by proficiency tier once #18 lands.
+
+### 2026-11-14 | v0.3.0-dev
 **Asked:** GitHub #34 company_research and #35 one_pager_build.
 **Did:** New `copilot/company.py`. company_research reads the
 company's home page (meta description, its own words) and its

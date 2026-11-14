@@ -35,6 +35,12 @@
   TERMS_VERSION, so it waits for the next privacy change. From: B-070.
 
 ## Done
+- B-079 Rank hiring posts the person pastes (GitHub #33): poster, role,
+  company, place, pay, contact, link and date read from each; older
+  than 7 days or breaking a dealbreaker set aside with the reason;
+  ranked by fit. Career Copilot never opens LinkedIn (owner chose this
+  over automating the feed, 2026-11-14). Proficiency tiers (#18) would
+  sharpen the ranking. From: owner, GitHub #33.
 - B-078 Company research and a one-page brief (GitHub #34, #35):
   public facts with sources (home page, job board, linked search
   results), and a one-pager where every line cites a source and no

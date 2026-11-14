@@ -57,6 +57,7 @@ from copilot import evidence
 from copilot import facts as fact_record
 from copilot import finance
 from copilot import guide
+from copilot import hiring_posts
 from copilot import insights
 from copilot import intro
 from copilot import jobs
@@ -851,6 +852,21 @@ def jd_analyze(text: str, title: str = "", company: str = "",
     short record (title, company, skills asked; never the full text) for
     skill_gap_evidence."""
     return jobs.jd_analyze(current_user(), text, title, company, remember)
+
+
+@mcp.tool
+def hiring_posts_rank(posts: list[str], top: int = 5,
+                      today: str = "") -> dict:
+    """Rank hiring posts the person copied in (for example from their
+    LinkedIn feed), one string per post. Reads who posted, role, company,
+    location, pay, contact, link and date from each. Drops posts older
+    than 7 days and those that break a dealbreaker (with the reason),
+    sets aside posts that aren't hiring, and flags stretch roles, pay
+    below the floor and places outside their list (never hidden). Ranks
+    by fit to their confirmed facts. Career Copilot never opens LinkedIn
+    or scrolls a feed; the person brings the posts. Read-only: nothing
+    is stored, and nobody is contacted."""
+    return hiring_posts.rank(current_user(), posts, top, today or None)
 
 
 @mcp.tool

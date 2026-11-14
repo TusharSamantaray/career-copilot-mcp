@@ -42,12 +42,50 @@ async def setup(s):
     await call(s, "ground_rules", {"accept": True})
     await call(s, "profile_save", {"target_role": "Data Engineer",
                                    "comp_floor": "90k",
-                                   "locations": ["London", "Remote"]})
+                                   "locations": ["London", "Remote"],
+                                   "dealbreakers": ["needs visa "
+                                                    "sponsorship"]})
     for line in ("Built Airflow pipelines in Python that cut report time "
                  "40%",
                  "Led a team of 4 data engineers on a Spark migration"):
         await call(s, "fact_add", {"statement": line, "confirmed": True,
                                    "apply": True})
+
+
+POSTS = [
+    "Jordan Avery • 2nd\nTalent Partner at Northwind Talent\n2d •\nWe're "
+    "hiring a Senior Data Engineer to join our team in London (hybrid). "
+    "Python, Airflow, Spark, SQL. £85k-£100k. DM me or email "
+    "jordan@northwind.example\n"
+    "https://www.linkedin.com/posts/jordan-avery_hiring-activity-1",
+    "Priya Nair\nFounder, Lumen Labs\n3w •\nLumen Labs is hiring a Founding "
+    "ML Engineer. Remote. $180k-$220k. Send me a DM.",
+    "Chris Okafor\n1d •\nGreat conference this week, thanks everyone!",
+    "Alex Morgan • 3rd+\n5h •\n#hiring Staff Platform Engineer at Contoso "
+    "Cloud, remote. We cannot sponsor visas. Kubernetes, Go, Terraform.",
+    "Sam Lee\nWe're looking for a Data Analyst at Fabrikam in Paris. SQL, "
+    "Excel, Tableau.",
+]
+
+
+async def hiring_posts(s):
+    result = await call(s, "hiring_posts_rank", {
+        "posts": POSTS, "today": TODAY.isoformat()})
+    top = result["top"]
+    assert top[0]["company"] == "Northwind Talent", top
+    first = top[0]
+    assert first["role"] == "Senior Data Engineer" and first["pay"] == \
+        "£85k–£100k" and first["contact"] == "jordan@northwind.example"
+    assert first["url"].startswith("https://www.linkedin.com/posts/")
+    assert "airflow" in first["fit_reason"].lower(), first
+    why = {d["n"]: d["why"] for d in result["filtered_out"]}
+    assert "older than 7" in why[2] and "dealbreaker" in why[4], why
+    assert result["not_hiring_posts"] == [3], result
+    paris = next(p for p in top if p["company"] == "Fabrikam")
+    assert "outside your places" in paris["flags"] and \
+        "date unknown: check it's recent" in paris["flags"], paris
+    print("hiring posts: read, stale and dealbreaker posts dropped, the "
+          "rest ranked with flags: OK")
 
 
 async def research_and_one_pager(s):
@@ -128,11 +166,13 @@ async def main():
             await s.initialize()
             await setup(s)
             await research_and_one_pager(s)
+            await hiring_posts(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
               encoding="utf-8") as handle:
         log = handle.read()
     assert "report time" not in log and "20-minute call" not in log \
-        and "Sam Example" not in log, \
+        and "Sam Example" not in log and "Jordan Avery" not in log \
+        and "jordan@" not in log, \
         "one-pager lines leaked into the log"
     print("one-pager lines and offers kept out of the log: OK")
     shutil.rmtree(TEST_DIR, ignore_errors=True)

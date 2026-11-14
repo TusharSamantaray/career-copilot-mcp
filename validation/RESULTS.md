@@ -41,6 +41,20 @@ Score: 10/10
 | terms readable from the server | yes | yes | pass |
 | terms links into the private repo | 0 | 0 | pass |
 
+## Rank pasted hiring posts by fit, with the freshness rule (B-079)
+
+Before: Finding hiring posts meant scrolling LinkedIn by hand and judging each one alone (GitHub #33).
+
+Score: 5/5
+
+| Measure | Expected | Measured | |
+|---|---|---|---|
+| posts ranked | 1 | 1 | pass |
+| fields read from the top post | {'poster': 'Jordan Avery', 'role': 'Data Engineer', 'company': 'Northwind', 'contact': 'DM the poster', 'posted': '2026-11-13'} | {'poster': 'Jordan Avery', 'role': 'Data Engineer', 'company': 'Northwind', 'contact': 'DM the poster', 'posted': '2026-11-13'} | pass |
+| filtered out, with the reason | breaks your dealbreaker, posted 14 days ago | breaks your dealbreaker, posted 14 days ago | pass |
+| not a hiring post, set aside | 4 | 4 | pass |
+| records stored from the posts | 0 | 0 | pass |
+
 ## Identity revealed only when both sides confirm (B-055)
 
 Before: No introduction step: the only way to meet a persona would be to learn who they are first.

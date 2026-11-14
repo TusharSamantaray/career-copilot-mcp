@@ -34,6 +34,17 @@ Every Added or Changed line has a **Try it:** line.
   assistant: every step should match what you see.
 
 ### Added
+- Paste hiring posts and get them ranked for you (GitHub #33, B-079).
+  Copy a few "we're hiring" posts from LinkedIn into the chat.
+  Career Copilot reads who posted, the role, company, place, pay,
+  how to reach them, the link and the date. Posts older than a week
+  or that break a dealbreaker are set aside with the reason. The
+  rest are ranked by fit, with one line on why and flags for
+  stretch roles, pay below your floor and places outside your list.
+  It never opens LinkedIn or contacts anyone.
+  **Try it:** paste three hiring posts and say "Rank these for me."
+  You should get the best one first, with role, company and one
+  reason, and a line on any that were set aside and why.
 - Company research and a one-page brief for outreach (GitHub #34, #35,
   B-078). Ask about a company and Career Copilot reads its home page
   (what they do, in their own words) and its public job board (how
