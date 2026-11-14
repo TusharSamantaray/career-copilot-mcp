@@ -20,7 +20,7 @@ this change.
 **Files:** `copilot/proficiency.py`, `copilot/store.py`, `app.py`,
 `tests/test_proficiency.py`, `validation/cases/proficiency.py`,
 `validation/RESULTS.md`, `validation/HISTORY.md`,
-`.github/workflows/ci.yml`, `README.md`, `CLAUDE.md`,
+`README.md`, `CLAUDE.md`,
 `docs/ARCHITECTURE.md`, `docs/TOUR.md`, `docs/BACKLOG.md`,
 `CHANGELOG.md`.
 **Tests:** 10 suites passed (9 existing + new test_proficiency), validation
@@ -30,7 +30,10 @@ test_postgres needs a live Postgres server, so it runs in CI only.
 proficiency evidence for Domain knowledge and Scope of work", then
 "What is my proficiency?"
 **Open:** the verification engine (#19) takes over the verification
-field; the recruiter view (#21) shows these tiers on the persona.
+field; the recruiter view (#21) shows these tiers on the persona. The
+CI line (`uv run tests/test_proficiency.py`) still needs adding to
+`.github/workflows/ci.yml`: the GitHub App used to push this change
+cannot write workflow files.
 
 ### 2026-11-13 | v0.3.0-dev
 **Asked:** Fix the open authentication issue (GitHub #17: a first-time
