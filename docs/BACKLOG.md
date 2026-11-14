@@ -22,6 +22,11 @@
   owner, 2026-11-09.
 
 ## Done
+- B-070 Proficiency model (GitHub #18): tiers Foundational to Expert
+  across Domain knowledge, Stack depth and Scope of work, computed
+  from verified evidence only; record, list, remove and get tools,
+  tests and a validation case. Verification engine still open
+  (GitHub #19). From: owner, 2026-11-13.
 - B-069 First-connect `invalid_token` (GitHub #17): truthful 401 wording
   (not signed in yet vs sign-in no longer valid), invite-only page names
   the username, log says which case. Waiting on the tester to confirm.

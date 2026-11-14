@@ -14,3 +14,4 @@ commit behind each row.
 | 2026-11-08 | 0.3.0 | demand_pathway | B-061 | 10/10 |
 | 2026-11-08 | 0.3.0 | identity_reveal | B-055 | 8/8 |
 | 2026-11-08 | 0.3.0 | demand_pathway | B-061 | 11/11 |
+| 2026-11-14 | 0.3.0 | proficiency | B-070 | 11/11 |

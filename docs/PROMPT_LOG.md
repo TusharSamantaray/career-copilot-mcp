@@ -4,6 +4,38 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-13 | v0.3.0-dev
+**Asked:** Build the proficiency model from the new designs (GitHub
+#18): tiers from evidence, not self-report.
+**Did:** New `copilot/proficiency.py`: tiers Foundational to Expert
+across Domain knowledge, Stack depth and Scope of work, computed from
+verified evidence only (1/3/6/9 verified items per dimension).
+Evidence records carry kind, dimensions, topics, source and
+verification depth (submitted, corroborated, verified); only verified
+items move a tier, the rest show as pending. Four new tools:
+proficiency_evidence_add, proficiency_evidence_list,
+proficiency_evidence_remove, proficiency_get. No tier is ever taken in
+as input, and no game words appear anywhere in the output. The
+verification engine that checks evidence itself is GitHub #19, not
+this change.
+**Files:** `copilot/proficiency.py`, `copilot/store.py`, `app.py`,
+`tests/test_proficiency.py`, `validation/cases/proficiency.py`,
+`validation/RESULTS.md`, `validation/HISTORY.md`,
+`README.md`, `CLAUDE.md`,
+`docs/ARCHITECTURE.md`, `docs/TOUR.md`, `docs/BACKLOG.md`,
+`CHANGELOG.md`.
+**Tests:** 10 suites passed (9 existing + new test_proficiency), validation
+71/71 across 8 cases, simulation passed, encrypted test_soul passed.
+test_postgres needs a live Postgres server, so it runs in CI only.
+**Try it:** say "Record my notification system as verified
+proficiency evidence for Domain knowledge and Scope of work", then
+"What is my proficiency?"
+**Open:** the verification engine (#19) takes over the verification
+field; the recruiter view (#21) shows these tiers on the persona. The
+CI line (`uv run tests/test_proficiency.py`) still needs adding to
+`.github/workflows/ci.yml`: the GitHub App used to push this change
+cannot write workflow files.
+
+### 2026-11-13 | v0.3.0-dev
 **Asked:** Fix the open authentication issue (GitHub #17: a first-time
 tester got invalid_token on first connect).
 **Did:** Found that the live server sends that exact message to any

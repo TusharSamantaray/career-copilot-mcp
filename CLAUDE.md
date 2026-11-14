@@ -192,7 +192,7 @@ person may send or rely on passes response_check.
 
 ### What exists today (verified in code on 2026-11-03)
 
-105 tools, 9 resources, 17 prompts. Watches: watch_create, watches,
+109 tools, 9 resources, 17 prompts. Watches: watch_create, watches,
 digest_get. Facts: fact_add, fact_conflicts,
 fact_resolve. Discovery: job_search, jd_analyze, ats_profile_check,
 skill_gap_evidence, ats_keyword_check, recruiter_find,
@@ -214,8 +214,11 @@ step_done, dashboard, companions, ground_rules, response_check,
 data_export, data_delete, feedback, report_issue, outreach_review,
 outreach_approve. Persona: persona_publish, persona_unpublish, persona_search,
 persona_chat, recruiter_survey, demand_digest, pathway_build,
-pathway_next, persona_intro, persona_intros, identity_reveal (stable error codes
-in `copilot/errors.py`).
+pathway_next, persona_intro, persona_intros, identity_reveal.
+Proficiency: proficiency_evidence_add, proficiency_evidence_list,
+proficiency_evidence_remove, proficiency_get (tiers computed from
+verified evidence, never typed in; stable error codes in
+`copilot/errors.py`).
 
 Verified:
 - profile_save no longer requires target_role; it merges answers one at
