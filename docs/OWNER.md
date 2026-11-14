@@ -28,6 +28,7 @@ The values are in Render → career-copilot → Environment.
 | `CAREER_COPILOT_MASTER_KEY` | Encrypts everyone's data, each with their own key. Add a long random value once. **Never change it**: stored data would become unreadable |
 | `CAREER_COPILOT_API_KEY` | Old fallback, unused while sign-in is on. Safe to delete |
 | `CAREER_COPILOT_INSIGHTS_SALT`, `CAREER_COPILOT_ADMIN_KEY` | Anonymous usage counts and the `/insights` page |
+| `CAREER_COPILOT_RATE_PER_MINUTE`, `CAREER_COPILOT_DAILY_QUOTA` | Fair-use limits per person: 60 calls a minute and 1,500 a day unless set. `0` turns one off |
 | `CAREER_COPILOT_INSIGHTS_STORE` | Not set (or `file`): anonymous counts are wiped on every restart, so the weekly improver sees little. `database`: kept in Neon for 400 days. Your call (B-050); `/health` shows which |
 
 ## Everyday tasks
@@ -60,6 +61,28 @@ The values are in Render → career-copilot → Environment.
 - **Is it invite-only right now?** Open the health check. `"invite_only":
   true` means only people on your list can sign in; `false` means anyone
   with a GitHub account can. It never shows who is on the list.
+
+## Fair use and the abuse alarm
+
+Each person may make 60 calls a minute and 1,500 a day (a long, busy
+session is about 200). Over the minute limit, their assistant is told to
+wait a few seconds; over the daily one, to come back after midnight UTC.
+Nobody else is affected, and nothing is lost. `/health` shows the limits
+and how many people hit one today, never who.
+
+**If the abuse alarm fires** (the Keep awake run fails with "Unusual
+use", and GitHub emails you):
+
+1. Render → Logs, search `limit reached`. Each line names a hashed id
+   (like `gh_3fa1…`), never a person.
+2. One id, once: probably an assistant stuck in a loop. Nothing to do.
+3. One id, every day, or many ids at once: someone is scripting it.
+   While the server is invite-only, take people off the list. If it's
+   open, turn the invite list back on, or lower
+   `CAREER_COPILOT_DAILY_QUOTA`.
+
+Counts reset when the server restarts, so a restart also clears the
+alarm.
 
 ## Message to send a tester
 

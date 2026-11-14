@@ -8,12 +8,15 @@ import time
 
 import httpx
 from fastmcp import Client
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from copilot.limits import Limits  # noqa: E402
 from fastmcp.client.transports import StreamableHttpTransport
 
 PORT = 8765
 BASE = f"http://127.0.0.1:{PORT}"
 TEST_DIR = "./test_data_http"
-KEYS = ["key-alice-test", "key-bob-test"]
+KEYS = ["key-alice-test", "key-bob-test", "key-flood-test"]
 ADMIN = "admin-key-test"
 
 
@@ -235,7 +238,53 @@ async def main():
     print("insights: admin-only, k-anonymous, scrubbed: OK")
 
 
+def limits_logic():
+    """Fair-use limits with a fake clock (GitHub #27)."""
+    now = [5 * 86400 + 3600.0]                  # 01:00 UTC on some day
+    lim = Limits(per_minute=3, per_day=5, clock=lambda: now[0])
+    assert [lim.check("a") for _ in range(3)] == [None] * 3
+    code, wait, first = lim.check("a")
+    assert (code, first) == ("RATE_LIMITED", True) and 1 <= wait <= 60
+    assert lim.check("a")[2] is False, "logged once, not on every refusal"
+    assert lim.check("b") is None, "one person's limit never blocks another"
+    now[0] += 61                                # a minute later: fine again
+    assert lim.check("a") is None and lim.check("a") is None
+    now[0] += 61
+    code, wait, _ = lim.check("a")              # 5 used: out for today
+    assert code == "DAILY_LIMIT" and 22 * 3600 < wait <= 23 * 3600, wait
+    assert lim.summary() == {"per_minute": 3, "per_day": 5,
+                             "people_limited_today": 1,
+                             "people_out_for_today": 1}
+    now[0] += 23 * 3600                         # past midnight UTC: reset
+    assert lim.check("a") is None
+    assert lim.summary()["people_limited_today"] == 0
+    assert Limits(per_minute=0, per_day=0).check("a") is None, "0 = off"
+    print("limits: per minute, per day, per person, reset at midnight: OK")
+
+
+async def flood():
+    """One account sends calls in a loop: it's slowed down with a clear
+    code, everyone else carries on, and the owner can see it happened."""
+    async with client(KEYS[2]) as loop:
+        refused = None
+        for _ in range(65):
+            try:
+                await loop.call_tool("profile_get", {})
+            except Exception as exc:
+                refused = str(exc)
+                break
+    assert refused and refused.startswith("[RATE_LIMITED]"), refused
+    assert "Wait" in refused and "seconds" in refused, refused
+    async with client(KEYS[0]) as alice:
+        await alice.call_tool("profile_get", {})
+    limits = httpx.get(f"{BASE}/health").json()["limits"]
+    assert limits["per_minute"] == 60 and limits["people_limited_today"] == 1
+    print("a looping account is slowed down, others unaffected, /health "
+          "counts it without names: OK")
+
+
 def run():
+    limits_logic()
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     env = {**os.environ, "PORT": str(PORT), "HOST": "127.0.0.1",
            "CAREER_COPILOT_API_KEY": ",".join(KEYS),
@@ -266,10 +315,13 @@ def run():
                    <= set(row) for row in handling["stored"])
         print("data-handling statement readable before sign-in: OK")
         asyncio.run(main())
+        asyncio.run(flood())
         log = os.path.join(TEST_DIR, "logs", "mcp_server.log")
         with open(log, encoding="utf-8") as handle:
             text = handle.read()
         assert "tool done: profile_save in" in text
+        assert text.count("limit reached: RATE_LIMITED user=u_") == 1,             "the first refusal is logged once, by hashed id"
+        assert "key-flood-test" not in text
         assert "key-alice-test" not in text, "API key leaked into logs"
         assert "alice.v@" not in text and "What salary" not in text \
             and "bob.b@" not in text and "order pipeline" not in text, \

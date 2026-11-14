@@ -300,6 +300,7 @@ copilot/
   demand.py            Recruiter survey, demand digest, pathways with reasons
   signin.py            Sign in with GitHub, nothing kept on the server
   errors.py            Stable error codes and what to do about each
+  limits.py            Fair-use limits per person (per minute, per day)
   knowledge/           Reference content the weekly bot may update
 tests/                 10 test suites
 validation/            Each improvement measured with made-up people

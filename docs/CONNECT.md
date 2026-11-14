@@ -172,6 +172,8 @@ can see what's breaking.
 | `NOT_INVITED` | Signed in, not on the invite list | No | Ask the owner to add your username |
 | `UNKNOWN_TOOL` / `UNKNOWN_RESOURCE` | The assistant's tool list is from before an update | No | Disconnect and reconnect, or start a new chat |
 | `BAD_ARGUMENTS` | A value was missing or the wrong type; the message names the fields, never the values | No | Fix the named fields and call again |
+| `RATE_LIMITED` | Too many requests from one account in a minute (usually an assistant stuck in a loop) | Yes, after the wait | Wait the seconds the message names. If it repeats, start a new chat |
+| `DAILY_LIMIT` | This account used today's fair-use quota | No | It resets at midnight UTC; data is safe. Tell the owner with `report_issue` if you need more |
 | `INTERNAL_ERROR` | A server fault, logged with a 6-character `ref` | Yes, once | Retry after 2 to 5 seconds. If it fails again, stop retrying, call `report_issue` with the code and ref, and try another step |
 
 Retry rule for clients: only `INTERNAL_ERROR` is worth retrying, at most

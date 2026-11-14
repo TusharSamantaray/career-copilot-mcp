@@ -13,6 +13,14 @@ Every Added or Changed line has a **Try it:** line.
   green.
 
 ### Added
+- Fair-use limits on the hosted server (GitHub #27, B-074): each person
+  can make 60 requests a minute and 1,500 a day. An assistant stuck in a
+  loop is told to wait a few seconds; nobody else slows down. `/health`
+  shows the limits and how many people hit one today (never who), and
+  the Keep awake check fails, so GitHub emails the owner, when use looks
+  unusual.
+  **Try it:** open `https://career-copilot-cg2k.onrender.com/health`. You
+  should see `"limits": {"per_minute": 60, "per_day": 1500, ...}`.
 - Free security checks on every change and every Monday (B-073):
   published holes in our libraries (pip-audit), risky code (bandit),
   plain bugs (ruff) and secrets anywhere in git history (gitleaks).

@@ -130,6 +130,8 @@ To try it, ask the assistant *"I just got laid off"* or
 | `PORT` | No | `8080` | HTTP port (hosts usually set this) |
 | `HOST` | No | `0.0.0.0` | Bind address |
 | `COPILOT_DATA_DIR` | No | `./data` | Where per-user SQLite files live |
+| `CAREER_COPILOT_RATE_PER_MINUTE` | No | `60` | Fair use: most calls one person may make in any minute. `0` turns it off |
+| `CAREER_COPILOT_DAILY_QUOTA` | No | `1500` | Fair use: most calls one person may make per UTC day. `0` turns it off |
 | `CAREER_COPILOT_LOG_DIR` | No | `logs` | Rolling log directory |
 | `CAREER_COPILOT_LOG_LEVEL` | No | `INFO` | `DEBUG` for more detail |
 | `CAREER_COPILOT_USER_HEADER` | No | none | Gateway header that names the subscriber |

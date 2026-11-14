@@ -30,6 +30,15 @@ CODES = {
         "A tool was called with a missing or wrongly typed value.", False,
         "The message names the fields. Call the tool again with them "
         "fixed; if the assistant keeps doing it, refresh the tool list."),
+    "RATE_LIMITED": (
+        "Too many requests from this account in one minute.", True,
+        "Wait the seconds the message names, then carry on. Nothing was "
+        "lost. If it keeps happening, the assistant may be stuck in a "
+        "loop: start a new chat."),
+    "DAILY_LIMIT": (
+        "This account used today's fair-use quota.", False,
+        "It resets at midnight UTC. Your data is safe. If you need more, "
+        "tell the owner with report_issue."),
     "INTERNAL_ERROR": (
         "Something failed on the server. It was logged with a reference.",
         True, "Try once more after a few seconds. If it fails again, report "

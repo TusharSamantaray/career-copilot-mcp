@@ -1,7 +1,15 @@
 # Free hosts sleep when idle, and a cold start can make claude.ai or
-# ChatGPT give up on the first connect. This pings /health every 10 minutes.
-# Set the repo variable HEALTH_URL (Settings → Secrets and variables →
-# Actions → Variables) to https://<server>/health. Unset, it does nothing.
+# ChatGPT give up on the first connect. This pings /health. Set the repo
+# variable HEALTH_URL (Settings → Secrets and variables → Actions →
+# Variables) to https://<server>/health. Unset, it does nothing.
+#
+# GitHub runs scheduled jobs late and sometimes skips them on a quiet
+# repo (often hours apart), so this alone won't keep a free server awake.
+# Use a free uptime pinger as well: docs/OWNER.md, "Keep it awake".
+#
+# It also raises the abuse alarm: the run fails (and GitHub emails the
+# owner) when /health says someone used a whole day's quota, or 3 or more
+# people hit the per-minute limit today. It never sees who.
 name: Keep awake
 on:
   schedule:
@@ -13,4 +21,18 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ vars.HEALTH_URL != '' }}
     steps:
-      - run: curl -fsS --retry 3 --retry-delay 20 --max-time 90 "${{ vars.HEALTH_URL }}"
+      - run: curl -fsS --retry 3 --retry-delay 20 --max-time 90 "${{ vars.HEALTH_URL }}" -o health.json
+      - name: Abuse alarm (fair-use limits)
+        run: |
+          python3 - <<'EOF'
+          import json
+          limits = json.load(open("health.json")).get("limits") or {}
+          out = limits.get("people_out_for_today", 0)
+          slowed = limits.get("people_limited_today", 0)
+          print(f"fair use today: {slowed} slowed down, {out} out of quota")
+          if out >= 1 or slowed >= 3:
+              print("::error::Unusual use: check the Render log for "
+                    "'limit reached' (hashed ids only). docs/OWNER.md, "
+                    "'If the abuse alarm fires'.")
+              raise SystemExit(1)
+          EOF

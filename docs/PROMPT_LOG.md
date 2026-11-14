@@ -4,6 +4,21 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-14 | v0.3.0-dev
+**Asked:** GitHub #27: rate limits and quotas before opening sign-up.
+**Did:** `copilot/limits.py`: per-person sliding minute window (60) and
+UTC daily quota (1,500), in memory, refused calls not counted. Checked
+in the middleware after sign-in, hosted mode only. New stable codes
+RATE_LIMITED and DAILY_LIMIT. `/health` reports limits and counts of
+people limited (no ids). First refusal per kind per day logged by hashed
+id. Keep awake run fails on unusual use, so GitHub emails the owner.
+**Files:** `copilot/limits.py`, `app.py`, `copilot/errors.py`,
+`tests/test_http.py`, `.github/workflows/keep-awake.yml`, docs.
+**Tests:** 9 suites passed, 0 failed; validation and simulation pass.
+**Try it:** /health shows `limits`.
+**Open:** counts reset on restart; the sign-in pages aren't limited
+(stateless and cheap).
+
+### 2026-11-14 | v0.3.0-dev
 **Asked:** Add a maturity layer: free ways to find errors and security
 problems.
 **Did:** New Security workflow (push, PR, Mondays): pip-audit on

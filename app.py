@@ -14,6 +14,7 @@ Auth, hosted: either
 import asyncio
 import hashlib
 import hmac
+import math
 import os
 import re
 import sys
@@ -73,6 +74,7 @@ from copilot import timeline
 from copilot import watch
 from copilot.knowledge.money import (DISCLAIMER, ECONOMY_GUIDES, INVEST_GUIDES,
                              LAYOFF_PLAYBOOK)
+from copilot.limits import Limits
 from copilot.scoring import score_resume
 
 VERSION = "0.3.0"
@@ -232,8 +234,33 @@ def current_user() -> str:
     return "u_" + hashlib.sha256(seed.encode()).hexdigest()[:16]
 
 
+LIMITS = Limits()
+
+
+def check_limits(kind, name, user, error_cls):
+    """Fair use on the hosted server (copilot/limits.py). The first
+    refusal per person per day is logged as a warning, by hashed id."""
+    if STDIO:
+        return
+    over = LIMITS.check(user)
+    if not over:
+        return
+    code, wait, first = over
+    if first:
+        logger.warning(f"limit reached: {code} user={user}")
+    if code == "RATE_LIMITED":
+        text = (f"Too many requests in one minute. Wait {wait} seconds, "
+                "then carry on. Nothing was lost.")
+    else:
+        text = (f"This account reached today's limit of {LIMITS.per_day} "
+                f"requests. It resets in about {math.ceil(wait / 3600)} "
+                "hours (midnight UTC). Your data is safe.")
+    raise error_cls(errors.message(code, text))
+
+
 class AuthAndAudit(Middleware):
-    """Checks the key, logs the call, times it and contains failures."""
+    """Checks the key and fair-use limits, logs the call, times it and
+    contains failures."""
 
     async def on_call_tool(self, context: MiddlewareContext, call_next):
         message = context.message
@@ -251,6 +278,7 @@ class AuthAndAudit(Middleware):
             logger.warning(f"{kind} denied: {name} (bad or missing key)")
             raise error_cls(str(exc)) from None
         user = current_user()
+        check_limits(kind, name, user, error_cls)
         logger.info(f"{kind} call: {name} user={user} "
                     f"args={mask_args(args)}")
         start = time.perf_counter()
@@ -413,7 +441,8 @@ async def health(request: Request) -> JSONResponse:
     "off (stdio)". invite_only says whether sign-in is limited to the
     owner's list (never who is on it). insights says where anonymous
     usage counts live: file (wiped on a free host's restart) or
-    database."""
+    database. limits gives the fair-use limits and how many people hit
+    one today (never who)."""
     if STDIO:
         auth_mode = "off (stdio)"
     elif OAUTH:
@@ -428,6 +457,7 @@ async def health(request: Request) -> JSONResponse:
                          "auth_mode": auth_mode,
                          "invite_only": bool(OAUTH and ALLOWED_GITHUB),
                          "insights": insights.location(),
+                         "limits": None if STDIO else LIMITS.summary(),
                          "tool_count": len(tools)})
 
 

@@ -29,6 +29,9 @@
   TERMS_VERSION, so it waits for the next privacy change. From: B-070.
 
 ## Done
+- B-074 Fair-use limits per person (60 a minute, 1,500 a day), clear
+  RATE_LIMITED and DAILY_LIMIT codes, counts on /health, abuse alarm in
+  the Keep awake run. From: GitHub #27.
 - B-073 Free security checks: pip-audit, bandit, ruff, gitleaks on every
   push and weekly; Dependabot alerts and update PRs. From: owner,
   2026-11-14.
