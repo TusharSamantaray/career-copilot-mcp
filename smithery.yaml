@@ -1,0 +1,9 @@
+# Smithery configuration for Career Copilot (hosted URL listing).
+# Docs: https://smithery.ai/docs/build/publish
+# The server is hosted on Render; Smithery Gateway proxies to our endpoint.
+# Auth is GitHub OAuth on the server itself (401, not 403, for
+# unauthenticated requests), so there is no config schema: users sign in
+# with GitHub when they connect, nothing to configure.
+startCommand:
+  type: url
+  url: https://career-copilot-cg2k.onrender.com/mcp
