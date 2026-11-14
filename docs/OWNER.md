@@ -72,7 +72,7 @@ connecting.
 >
 > 1. In your assistant, add a custom connector with this address:
 >    `https://career-copilot-cg2k.onrender.com/mcp`
-> 2. When you connect, you'll be asked to **sign in with GitHub**. It
+> 2. When you connect, click **Allow and sign in with GitHub**. It
 >    only reads your public GitHub profile (username and id), to keep
 >    your data separate from everyone else's. No API key, no password.
 >    It's invite-only, and I've added your GitHub username.

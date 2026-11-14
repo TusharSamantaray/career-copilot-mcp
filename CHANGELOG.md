@@ -5,6 +5,20 @@ Every Added or Changed line has a **Try it:** line.
 
 ## [Unreleased]
 
+### Security
+- Connecting now shows a Career Copilot page first: "Connect Career
+  Copilot?", naming the app and where the sign-in goes, with **Allow** and
+  **Don't allow** (B-070). The sign-in only finishes in the browser that
+  clicked Allow. Before this, someone could send a Career Copilot user a
+  GitHub link that, with one click, gave the sender's app access to that
+  user's data, because GitHub skips its own screen for people who approved
+  it before. We found this through a published flaw (CVE-2026-27124) in
+  the library's own GitHub sign-in, which we don't use but had copied the
+  pattern of. Nobody needs to sign in again.
+  **Try it:** remove Career Copilot from claude.ai and add it again. You
+  should see "Connect Career Copilot?" naming Claude, then GitHub, then
+  the tools work.
+
 ### Fixed
 - Signing in for the first time no longer shows a scary "invalid_token"
   error that blames a token you never had (B-069, GitHub #17). If your

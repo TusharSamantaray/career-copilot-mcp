@@ -3,6 +3,22 @@
 What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
+### 2026-11-14 | v0.3.0-dev
+**Asked:** Work the new tickets, update onboarding docs, and add free
+error and security scanning. The owner OK'd a sign-in change after the
+scan found a hole.
+**Did:** pip-audit flagged CVE-2026-27124 (FastMCP OAuth proxy confused
+deputy). Our stateless GitHub sign-in had the same flaw. Added an Allow
+page that names the app and the redirect host, a per-browser cookie
+checked on Allow (CSRF) and on GitHub's return, and no-frame headers.
+Existing tokens keep working.
+**Files:** `copilot/signin.py`, `tests/test_oauth.py`,
+`docs/ARCHITECTURE.md`, `docs/CONNECT.md`, `docs/OWNER.md`.
+**Tests:** 9 suites passed, 0 failed; validation and simulation pass.
+**Try it:** re-add the connector in claude.ai: "Connect Career Copilot?"
+page, then GitHub.
+**Open:** PRIVACY.md could mention the cookie (B-071, owner).
+
 ### 2026-11-13 | v0.3.0-dev
 **Asked:** Fix the open authentication issue (GitHub #17: a first-time
 tester got invalid_token on first connect).

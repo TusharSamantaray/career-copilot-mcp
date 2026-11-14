@@ -6,6 +6,9 @@ the apps already hold:
 
 - an app's registration is sealed into its own client id;
 - a sign-in in progress rides in the state sent through GitHub;
+- the browser that clicked Allow holds a short-lived cookie, and the
+  sign-in only finishes in that browser (so nobody can send a person a
+  ready-made GitHub link that quietly signs them in for someone else);
 - codes and tokens carry the person's GitHub id and username, sealed.
 
 Sealing uses a key from the environment (CAREER_COPILOT_JWT_KEY), which
@@ -21,7 +24,7 @@ import json
 import logging
 import secrets
 import time
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse
 
 import httpx
 from cryptography.fernet import Fernet, InvalidToken
@@ -59,6 +62,13 @@ ACCESS_SECONDS = 30 * 24 * 3600
 REFRESH_SECONDS = 365 * 24 * 3600
 KEPT_METADATA = ("redirect_uris", "grant_types", "response_types",
                  "token_endpoint_auth_method", "scope", "client_name")
+COOKIE = "cc_signin_"
+# Our sign-in pages must never load inside another site's frame, and the
+# links on them must not leak where the person came from.
+PAGE_HEADERS = {"X-Frame-Options": "DENY",
+                "Content-Security-Policy": "frame-ancestors 'none'",
+                "Cache-Control": "no-store",
+                "Referrer-Policy": "no-referrer"}
 log = logging.getLogger("career_copilot.signin")
 
 
@@ -102,10 +112,11 @@ def use_clear_messages():
 
 def _page(title, text, status):
     return HTMLResponse(
-        f"<!doctype html><meta charset=utf-8><title>{title}</title>"
-        f"<body style='font-family:system-ui;max-width:32rem;margin:4rem "
-        f"auto;padding:0 1rem'><h1>{title}</h1><p>{text}</p></body>",
-        status_code=status)
+        f"<!doctype html><meta charset=utf-8>"
+        f"<meta name=viewport content='width=device-width'><title>{title}"
+        f"</title><body style='font-family:system-ui;max-width:32rem;"
+        f"margin:4rem auto;padding:0 1rem'><h1>{title}</h1><p>{text}</p>"
+        f"</body>", status_code=status, headers=PAGE_HEADERS)
 
 
 class StatelessGitHubProvider(OAuthProvider):
@@ -172,19 +183,91 @@ class StatelessGitHubProvider(OAuthProvider):
                                           client_secret=secret, **meta)
 
     # ---------------------------------------------------------- sign-in
+    # 1. authorize: the app sends the person to our Allow page.
+    # 2. Allow page (GET): names the app and where it will send the
+    #    sign-in, and gives this browser a one-time cookie.
+    # 3. Allow (POST, same cookie): on to GitHub, the cookie's value
+    #    sealed in the state.
+    # 4. callback: finishes only if this browser has that same cookie.
+    # GitHub skips its own consent screen for people who said yes once,
+    # so without 2 to 4 anyone could send a person a GitHub link that
+    # signs them in to the sender's app (a "confused deputy").
+    def _base(self):
+        return str(self.base_url).rstrip("/")
+
     async def authorize(self, client, params: AuthorizationParams) -> str:
-        state = self._seal("state", {
+        ask = self._seal("ask", {
             "cid": client.client_id, "uri": str(params.redirect_uri),
             "exp_uri": params.redirect_uri_provided_explicitly,
             "pkce": params.code_challenge, "st": params.state,
             "sc": params.scopes or [SCOPE], "res": params.resource,
         }, STATE_SECONDS)
+        return f"{self._base()}/auth/consent?{urlencode({'t': ask})}"
+
+    def _cookie_kwargs(self):
+        return {"httponly": True, "samesite": "lax", "path": "/auth",
+                "secure": self._base().startswith("https://")}
+
+    async def consent(self, request: Request):
+        form = await request.form() if request.method == "POST" else {}
+        ask = self._open("ask", str(form.get("t") or
+                                    request.query_params.get("t", "")))
+        if ask is None:
+            return _page("Sign-in expired", "Please go back to your "
+                         "assistant and click Connect again.", 400)
+        client = await self.get_client(ask["cid"])
+        if client is None:
+            return _page("Sign-in didn't finish", "Your assistant's "
+                         "registration wasn't recognized. Remove Career "
+                         "Copilot from it, add it again, and sign in.", 400)
+        if request.method == "GET":
+            return self._ask_page(client, ask)
+        nonce = str(form.get("n", ""))
+        held = request.cookies.get(COOKIE + nonce[:8], "")
+        if not nonce or not hmac.compare_digest(held, nonce):
+            log.info("sign-in refused: Allow came from another page")
+            return _page("Sign-in didn't finish", "That Allow click didn't "
+                         "come from this browser's Career Copilot page. Go "
+                         "back to your assistant and click Connect again.",
+                         400)
+        if form.get("go") != "allow":
+            return RedirectResponse(construct_redirect_uri(
+                ask["uri"], error="access_denied", state=ask["st"]),
+                status_code=302, headers=PAGE_HEADERS)
+        body = {k: v for k, v in ask.items() if k not in ("k", "x")}
+        state = self._seal("state", {**body, "n": nonce}, STATE_SECONDS)
         query = urlencode({"client_id": self.gh_id,
-                           "redirect_uri": f"{str(self.base_url).rstrip('/')}"
-                                           "/auth/callback",
+                           "redirect_uri": f"{self._base()}/auth/callback",
                            "scope": SCOPE, "state": state,
                            "allow_signup": "true"})
-        return f"{self.gh_base}/login/oauth/authorize?{query}"
+        return RedirectResponse(
+            f"{self.gh_base}/login/oauth/authorize?{query}", status_code=302,
+            headers=PAGE_HEADERS)
+
+    def _ask_page(self, client, ask):
+        nonce = secrets.token_urlsafe(24)
+        app = html.escape(client.client_name or "An app")
+        where = html.escape(urlparse(ask["uri"]).netloc or ask["uri"])
+        body = {k: v for k, v in ask.items() if k not in ("k", "x")}
+        sealed = html.escape(self._seal("ask", body, STATE_SECONDS))
+        button = "style='padding:.6rem 1.2rem;font:inherit'"
+        page = _page(
+            "Connect Career Copilot?",
+            f"<b>{app}</b> wants to use your Career Copilot. After you sign "
+            f"in with GitHub, it will be sent to <b>{where}</b>.</p><p>Only "
+            "allow this if you just clicked Connect in your own assistant. "
+            "If someone sent you this link, close this page."
+            f"<form method=post action='{self._base()}/auth/consent' "
+            "style='display:flex;flex-wrap:wrap;gap:.75rem;"
+            "margin-top:1.5rem'>"
+            f"<input type=hidden name=t value='{sealed}'>"
+            f"<input type=hidden name=n value='{nonce}'>"
+            f"<button name=go value=allow {button}>Allow and sign in with "
+            f"GitHub</button><button name=go value=deny {button}>Don't "
+            "allow</button></form>", 200)
+        page.set_cookie(COOKIE + nonce[:8], nonce, max_age=STATE_SECONDS,
+                        **self._cookie_kwargs())
+        return page
 
     async def _github_user(self, code):
         try:
@@ -215,6 +298,15 @@ class StatelessGitHubProvider(OAuthProvider):
         if state is None:
             return _page("Sign-in expired", "Please go back to your "
                          "assistant and click Connect again.", 400)
+        nonce = state.get("n", "")
+        held = request.cookies.get(COOKIE + nonce[:8], "")
+        if not nonce or not hmac.compare_digest(held, nonce):
+            log.info("sign-in refused: finished in a different browser")
+            return _page("Sign-in didn't finish", "This sign-in was started "
+                         "in a different browser, or from a link someone "
+                         "sent you. If you were connecting your own "
+                         "assistant, click Connect again there. Otherwise "
+                         "close this page: nothing was shared.", 400)
         code = request.query_params.get("code")
         try:
             user = await self._github_user(code) if code else None
@@ -239,8 +331,11 @@ class StatelessGitHubProvider(OAuthProvider):
             "uri": state["uri"], "exp_uri": state["exp_uri"],
             "pkce": state["pkce"], "sc": state["sc"], "res": state["res"],
         }, CODE_SECONDS)
-        return RedirectResponse(construct_redirect_uri(
-            state["uri"], code=our_code, state=state["st"]), status_code=302)
+        done = RedirectResponse(construct_redirect_uri(
+            state["uri"], code=our_code, state=state["st"]), status_code=302,
+            headers=PAGE_HEADERS)
+        done.delete_cookie(COOKIE + nonce[:8], **self._cookie_kwargs())
+        return done
 
     async def load_authorization_code(self, client, authorization_code):
         body = self._open("code", authorization_code)
@@ -298,4 +393,5 @@ class StatelessGitHubProvider(OAuthProvider):
 
     def get_routes(self, mcp_path=None):
         return super().get_routes(mcp_path) + [
+            Route("/auth/consent", self.consent, methods=["GET", "POST"]),
             Route("/auth/callback", self.callback, methods=["GET"])]

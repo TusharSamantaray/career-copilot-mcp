@@ -119,6 +119,13 @@ The free host wipes its disk on every restart, so nothing about sign-in
 is stored on it. Everything travels sealed (encrypted and signed) with a
 key kept in the host's settings, which survive restarts.
 
+GitHub skips its own approval screen for anyone who approved Career
+Copilot once, so Career Copilot shows its own **Allow** page first. It
+names the app and the website the sign-in goes to. The browser that
+clicks Allow gets a 10-minute cookie, and the sign-in only finishes in
+that browser. Nobody can send you a ready-made link that signs you in
+for their app.
+
 ```mermaid
 sequenceDiagram
   autonumber
@@ -134,9 +141,12 @@ sequenceDiagram
   A->>C: register (first connect)
   C-->>A: client id = the app's details, sealed
   A->>C: authorize
-  C-->>A: go to GitHub, state = this sign-in, sealed
+  C-->>A: Allow page: "<app> wants to use your Career Copilot"
+  A->>C: you click Allow (this browser gets a one-time cookie)
+  C-->>A: go to GitHub, state = this sign-in + cookie value, sealed
   A->>G: you approve "public profile only"
   G-->>C: code
+  Note over C: refused unless this browser holds the same cookie
   C->>G: who is this?
   G-->>C: GitHub id and username
   Note over C: GitHub's token is dropped here
@@ -147,7 +157,8 @@ sequenceDiagram
 
 Code: [copilot/signin.py](../copilot/signin.py). Test that proves it:
 `tests/test_oauth.py` signs in, wipes the disk, restarts, and uses the
-same token.
+same token. It also plays the attacker: a GitHub link opened in another
+browser, a forged Allow click, and Don't allow are all refused.
 
 ## 4. How your data is stored and protected
 

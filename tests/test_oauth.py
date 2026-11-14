@@ -1,14 +1,18 @@
 """GitHub sign-in mode, end to end, against a fake GitHub.
 
 Checks: plain /mcp URL, nothing works without signing in, apps can find
-and register for sign-in, a full sign-in works, and (the free-host case)
+and register for sign-in, the Allow page ties a sign-in to one browser
+(nobody can send you a link that signs you in for them), a full sign-in
+works, and (the free-host case)
 the same sign-in still works after a restart that wipes the disk.
 """
 import asyncio
 import base64
 import hashlib
+import html
 import json
 import os
+import re
 import secrets
 import shutil
 import subprocess
@@ -103,29 +107,53 @@ def stop(server):
     server.wait(timeout=10)
 
 
-def sign_in(github_code):
-    """Do what claude.ai does: register, authorize, GitHub, token."""
+def register(name="test app"):
     meta = httpx.get(f"{BASE}/.well-known/oauth-authorization-server").json()
     reg = httpx.post(meta["registration_endpoint"], json={
-        "client_name": "test app", "redirect_uris": [APP_REDIRECT],
+        "client_name": name, "redirect_uris": [APP_REDIRECT],
         "grant_types": ["authorization_code", "refresh_token"],
         "response_types": ["code"],
         "token_endpoint_auth_method": "client_secret_post"})
     assert reg.status_code == 201, reg.text
-    app_client = reg.json()
+    return meta, reg.json()
+
+
+def start(meta, app_client, browser):
+    """authorize, then the Allow page: returns its hidden form fields."""
     verifier = secrets.token_urlsafe(48)
     challenge = base64.urlsafe_b64encode(hashlib.sha256(
         verifier.encode()).digest()).decode().rstrip("=")
-    go = httpx.get(meta["authorization_endpoint"], params={
+    go = browser.get(meta["authorization_endpoint"], params={
         "response_type": "code", "client_id": app_client["client_id"],
         "redirect_uri": APP_REDIRECT, "state": "app-state",
         "code_challenge": challenge, "code_challenge_method": "S256"})
     assert go.status_code == 302, go.text
-    to_github = urlparse(go.headers["location"])
+    to_consent = urlparse(go.headers["location"])
+    assert to_consent.path == "/auth/consent", go.headers["location"]
+    page = browser.get(go.headers["location"])
+    assert page.status_code == 200, page.text
+    form = dict(re.findall(r"name=(\w) value='([^']*)'", page.text))
+    return verifier, page, {k: html.unescape(v) for k, v in form.items()}
+
+
+def allow(browser, form, choice="allow"):
+    """Click a button on the Allow page: returns where it redirects."""
+    sent = browser.post(f"{BASE}/auth/consent", data={**form, "go": choice})
+    assert sent.status_code == 302, sent.text
+    return urlparse(sent.headers["location"])
+
+
+def sign_in(github_code):
+    """Do what claude.ai does: register, authorize, Allow, GitHub, token."""
+    meta, app_client = register()
+    browser = httpx.Client()       # keeps cookies, like a real browser
+    verifier, page, form = start(meta, app_client, browser)
+    assert "<b>test app</b>" in page.text and "127.0.0.1:9" in page.text
+    to_github = allow(browser, form)
     assert to_github.netloc == f"127.0.0.1:{GH_PORT}"
     state = parse_qs(to_github.query)["state"][0]
-    back = httpx.get(f"{BASE}/auth/callback",
-                     params={"code": github_code, "state": state})
+    back = browser.get(f"{BASE}/auth/callback",
+                       params={"code": github_code, "state": state})
     if back.status_code != 302:
         return app_client, None, back
     to_app = urlparse(back.headers["location"])
@@ -187,6 +215,8 @@ def first_run():
     print("GitHub user not on the invite list is turned away, told which "
           "username to send: OK")
 
+    no_one_else_can_finish_your_sign_in()
+
     _, _, garbled = sign_in("garbled-code")
     assert garbled.status_code == 502, garbled.status_code
     assert "Couldn't reach GitHub" in garbled.text
@@ -197,6 +227,43 @@ def first_run():
     assert profile["target_role"] == "Staff SRE"
     print("full sign-in: register, GitHub, code, token, tools: OK")
     return app_client, tokens
+
+
+def no_one_else_can_finish_your_sign_in():
+    """The 'confused deputy' attack (CVE-2026-27124 in FastMCP's own
+    proxy): an attacker starts a sign-in for their app, then sends the
+    GitHub link to someone who already approved Career Copilot on GitHub,
+    so GitHub skips its screen. It must not finish in the victim's browser."""
+    meta, evil = register('<script>alert(1)</script>"evil')
+    attacker, victim = httpx.Client(), httpx.Client()
+    _, page, form = start(meta, evil, attacker)
+    # The Allow page names the app safely, refuses frames, isn't cached.
+    assert "<script>alert" not in page.text and "&lt;script&gt;" in page.text
+    assert "frame-ancestors 'none'" in page.headers["content-security-policy"]
+    assert page.headers["x-frame-options"] == "DENY"
+    # 1. Victim follows the attacker's GitHub link: refused, no code.
+    to_github = allow(attacker, form)
+    state = parse_qs(to_github.query)["state"][0]
+    back = victim.get(f"{BASE}/auth/callback",
+                      params={"code": "good-code", "state": state})
+    assert back.status_code == 400 and "location" not in back.headers
+    assert "different browser" in back.text
+    # 2. A hidden form on the attacker's site posts Allow for the victim.
+    _, _, form = start(meta, evil, attacker)
+    forged = victim.post(f"{BASE}/auth/consent", data={**form, "go": "allow"})
+    assert forged.status_code == 400 and "location" not in forged.headers
+    # 3. A made-up state, and an Allow page link that expired or was edited.
+    assert victim.get(f"{BASE}/auth/callback", params={
+        "code": "good-code", "state": "junk"}).status_code == 400
+    assert victim.get(f"{BASE}/auth/consent",
+                      params={"t": "junk"}).status_code == 400
+    # 4. Don't allow: back to the app with access_denied, never GitHub.
+    _, _, form = start(meta, evil, victim)
+    said_no = allow(victim, form, choice="deny")
+    assert said_no.netloc == "127.0.0.1:9"
+    assert parse_qs(said_no.query)["error"] == ["access_denied"]
+    print("a sign-in only finishes in the browser that clicked Allow; "
+          "forged Allow, shared GitHub links and Don't allow all refused: OK")
 
 
 def after_restart(app_client, tokens):

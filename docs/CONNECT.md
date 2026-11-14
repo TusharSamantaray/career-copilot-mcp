@@ -39,16 +39,21 @@ https://<server>/mcp
 
 For the demo server that's `https://career-copilot-cg2k.onrender.com/mcp`.
 There's no key in it, so it's safe to share. The first time you connect,
-your assistant opens a **Sign in with GitHub** page. Each person who signs
-in gets their own private data. If the server is invite-only, ask its owner
-to add your GitHub username.
+your assistant opens a Career Copilot page that asks **Connect Career
+Copilot?** and names your assistant. Click **Allow and sign in with
+GitHub**, then approve on GitHub. Each person who signs in gets their own
+private data. If the server is invite-only, ask its owner to add your
+GitHub username.
+
+Only click Allow right after you clicked Connect yourself. If someone
+sends you a Career Copilot or GitHub sign-in link, close it.
 
 ## Claude.ai (web and mobile)
 
 1. Settings → Connectors → **Add custom connector**.
 2. Name: `Career Copilot`. URL: `https://<server>/mcp`. Leave the OAuth
    fields empty.
-3. Click **Connect** and sign in with GitHub.
+3. Click **Connect**, then **Allow and sign in with GitHub**.
 4. In a chat, turn it on from the tools menu. It also appears in the Claude
    mobile app.
 
@@ -144,6 +149,7 @@ No connector? Just paste or type the facts.
 | You see | What it means | Do this |
 |---|---|---|
 | "Reconnect to use it again" | Your sign-in was made before the November 3 update, or the owner changed a sign-in setting | Click **Connect** once. Restarts no longer sign you out |
+| "This sign-in was started in a different browser" | The sign-in finished in a different browser from the one that clicked Allow (some apps open a second browser), or it came from a link someone sent you | Click Connect again in your assistant and finish every step in the browser it opens. If someone sent you the link, close it |
 | "This Career Copilot is invite-only" | Your GitHub username isn't on the owner's list. The page shows the username you signed in as | Send that username to the owner; once added, remove and re-add the connector and sign in |
 | "Not signed in yet" | Your assistant reached Career Copilot before you finished signing in, or sign-in stopped on an error page | Look at the browser page sign-in opened. Fix what it said (often invite-only), then remove and re-add the connector and sign in |
 | "This sign-in is no longer valid" (older servers said "invalid_token … invalid, expired, or no longer recognized") | The sign-in your assistant saved expired, or the owner changed a sign-in setting | Remove Career Copilot from your assistant, add it again, and sign in |
