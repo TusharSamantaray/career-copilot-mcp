@@ -12,6 +12,16 @@ Every Added or Changed line has a **Try it:** line.
   **Try it:** Actions → Security → the "Known holes in libraries" step is
   green.
 
+### Changed
+- Getting-started steps match what new people now see: the "Connect
+  Career Copilot?" page, and that the first connect can take up to a
+  minute while the free server wakes (B-075). The owner's runbook explains
+  why the GitHub keep-awake ping isn't enough on its own (GitHub runs it
+  hours late) and how to add a free pinger, plus the exact steps to open
+  sign-in to everyone (GitHub #24, #25).
+  **Try it:** read README section 1, option A, and follow it from a fresh
+  assistant: every step should match what you see.
+
 ### Added
 - Fair-use limits on the hosted server (GitHub #27, B-074): each person
   can make 60 requests a minute and 1,500 a day. An assistant stuck in a

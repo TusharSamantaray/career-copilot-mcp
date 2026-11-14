@@ -154,7 +154,7 @@ No connector? Just paste or type the facts.
 | "Not signed in yet" | Your assistant reached Career Copilot before you finished signing in, or sign-in stopped on an error page | Look at the browser page sign-in opened. Fix what it said (often invite-only), then remove and re-add the connector and sign in |
 | "This sign-in is no longer valid" (older servers said "invalid_token … invalid, expired, or no longer recognized") | The sign-in your assistant saved expired, or the owner changed a sign-in setting | Remove Career Copilot from your assistant, add it again, and sign in |
 | An empty account | You signed in with a different GitHub account, or data was saved before the hosted database was set up | Check which GitHub account you used; otherwise re-enter it once |
-| The first answer is slow | The free server or database was asleep | Wait a few seconds; it wakes on the first request |
+| The first answer is slow, or Connect gives up | The free server was asleep; waking takes up to a minute | Wait a minute and try again (click **Connect** again if it gave up). It stays awake while in use |
 | "Couldn't reach GitHub" while signing in | GitHub didn't answer properly | Wait a minute and click **Connect** again |
 | An error starting with a code in brackets | See the table below | Or say "What does this error mean?" and your assistant will look it up |
 

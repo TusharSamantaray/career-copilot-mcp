@@ -4,6 +4,18 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-14 | v0.3.0-dev
+**Asked:** Bring onboarding docs up to date, no gaps.
+**Did:** README quick start and CONNECT troubleshooting now show the
+Allow page and the real cold-start wait. OWNER.md: "Keep it awake"
+(Actions schedule ran every 3 to 8 hours, not 10 minutes; free pinger
+steps) and "Open sign-in to everyone" (#25 steps). SECURITY.md and
+CONTRIBUTING.md were corrected in the security-checks commit.
+**Files:** `README.md`, `docs/CONNECT.md`, `docs/OWNER.md`.
+**Tests:** docs only; 9 suites passed earlier on this tree.
+**Try it:** follow README option A from a fresh assistant.
+**Open:** the pinger and opening sign-in are owner actions.
+
+### 2026-11-14 | v0.3.0-dev
 **Asked:** GitHub #27: rate limits and quotas before opening sign-up.
 **Did:** `copilot/limits.py`: per-person sliding minute window (60) and
 UTC daily quota (1,500), in memory, refused calls not counted. Checked

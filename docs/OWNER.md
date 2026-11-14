@@ -12,7 +12,7 @@ The values are in Render → career-copilot → Environment.
 | Connector address (share this) | `https://career-copilot-cg2k.onrender.com/mcp` |
 | Sign-in | GitHub OAuth app "Career Copilot", callback `/auth/callback` |
 | Health check | https://career-copilot-cg2k.onrender.com/health |
-| Keep-awake | GitHub Action `keep-awake.yml`, repo variable `HEALTH_URL` |
+| Keep-awake | GitHub Action `keep-awake.yml` (repo variable `HEALTH_URL`, also the abuse alarm), plus a free uptime pinger: see "Keep it awake" |
 | Local copy (Claude Code) | The uvx one-liner in [CONNECT.md](CONNECT.md), data in `~/CareerCopilot/`. Works only for people with read access while the repo is private |
 | Local test with made-up people | `uv run simulation/run.py --serve`, see [simulation/README.md](../simulation/README.md) |
 
@@ -61,6 +61,36 @@ The values are in Render → career-copilot → Environment.
 - **Is it invite-only right now?** Open the health check. `"invite_only":
   true` means only people on your list can sign in; `false` means anyone
   with a GitHub account can. It never shows who is on the list.
+
+## Keep it awake
+
+Render's free plan sleeps after 15 idle minutes, and waking takes 30 to
+60 seconds, long enough for a first connect to give up. The Keep awake
+GitHub Action pings every 10 minutes on paper, but GitHub delays and
+skips scheduled runs on quiet repos: on 2026-11-13/14 it actually ran
+every 3 to 8 hours (GitHub #24). So add a free pinger too (5 minutes,
+once, your account):
+
+1. Sign up at cron-job.org (free) or UptimeRobot (free plan, 5-minute
+   checks, and it emails you when the server is down).
+2. Add a check for `https://career-copilot-cg2k.onrender.com/health`,
+   every 5 minutes (cron-job.org can do every 10; under 15 is enough).
+3. Next day, open `/health` cold: it should answer in a second or two.
+
+Keep the GitHub Action anyway: it carries the abuse alarm. If pinging
+isn't enough, Render's Starter plan (about $7 a month) never sleeps.
+
+## Open sign-in to everyone (GitHub #25)
+
+Fair-use limits and the abuse alarm are in place, so this is now a
+settings change, done when you choose:
+
+1. Render → Environment: delete `CAREER_COPILOT_ALLOWED_GITHUB_USERS`,
+   save (it restarts).
+2. `/health` should say `"invite_only": false`.
+3. Ask someone you never added to connect. It should just work.
+4. In the tester message below, drop "It's invite-only, and I've added
+   your GitHub username." To go back, add the setting again.
 
 ## Fair use and the abuse alarm
 

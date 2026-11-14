@@ -34,8 +34,11 @@ Pick the way that fits you.
    - **ChatGPT:** Settings → Apps & Connectors → Advanced → **Developer
      mode** → Create. Paste the address and choose **OAuth**.
    - **Muse:** add a custom connector with the same address.
-3. Click **Connect** and **sign in with GitHub**. That keeps your data
-   private to you. Career Copilot never sees your password.
+3. Click **Connect**. A Career Copilot page asks "Connect Career
+   Copilot?": click **Allow and sign in with GitHub**, then approve on
+   GitHub. That keeps your data private to you. Career Copilot never sees
+   your password. The free server sleeps when idle, so the first connect
+   can take up to a minute; if it gives up, click **Connect** again.
 4. Open a new chat and say **"get started"**.
 
 Connectors you add on claude.ai also work in the Claude phone app.

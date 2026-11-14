@@ -29,6 +29,9 @@
   TERMS_VERSION, so it waits for the next privacy change. From: B-070.
 
 ## Done
+- B-075 Onboarding docs: the Allow page, the first-connect wait, a free
+  uptime pinger (GitHub's schedule runs hours late), and the steps to open
+  sign-in. From: owner, 2026-11-14, GitHub #24 and #25.
 - B-074 Fair-use limits per person (60 a minute, 1,500 a day), clear
   RATE_LIMITED and DAILY_LIMIT codes, counts on /health, abuse alarm in
   the Keep awake run. From: GitHub #27.
