@@ -26,3 +26,11 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 only-include = ["app.py", "copilot"]
+
+# `uvx ruff check` (and the Security workflow): only checks that catch
+# real bugs, not style.
+[tool.ruff]
+extend-exclude = ["docs/archive", ".agents", "server.py"]
+
+[tool.ruff.lint]
+select = ["F", "E9", "B"]

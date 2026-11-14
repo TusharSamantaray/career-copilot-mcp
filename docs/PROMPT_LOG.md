@@ -4,6 +4,23 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-14 | v0.3.0-dev
+**Asked:** Add a maturity layer: free ways to find errors and security
+problems.
+**Did:** New Security workflow (push, PR, Mondays): pip-audit on
+uv.lock with three documented ignores, bandit medium+, ruff bug rules,
+gitleaks over full history with a checksum-verified binary. Dependabot
+config (uv and Actions, majors left to people); turned on Dependabot
+alerts and security-fix PRs in repo settings. Fixed the three ruff hits
+and marked the 0.0.0.0 bind. Bumped dnspython to 2.9.2 (separate commit).
+**Files:** `.github/workflows/security.yml`, `.github/dependabot.yml`,
+`pyproject.toml`, `docs/ENGINEERING.md`, `SECURITY.md`, `CONTRIBUTING.md`.
+**Tests:** 9 suites passed, 0 failed; validation and simulation pass;
+ruff, bandit and pip-audit clean locally.
+**Try it:** Actions → Security → Run workflow: three green jobs.
+**Open:** gitleaks couldn't run locally; its first CI run is the history
+audit for GitHub #28. CodeQL needs a public repo. FastMCP 3 is B-072.
+
+### 2026-11-14 | v0.3.0-dev
 **Asked:** Work the new tickets, update onboarding docs, and add free
 error and security scanning. The owner OK'd a sign-in change after the
 scan found a hole.

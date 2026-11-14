@@ -84,7 +84,7 @@ def money_content():
         for key, guide in group.items():
             check(guide.get("title") and len(guide.get("points", [])) >= 2,
                   f"guide {key} needs a title and 2+ points")
-    for name, (code, label) in money.WORLD_BANK_INDICATORS.items():
+    for code, _label in money.WORLD_BANK_INDICATORS.values():
         check(re.fullmatch(r"[A-Z0-9.]+", code), f"bad indicator {code}")
     check(len(money.LAYOFF_PLAYBOOK) >= 3, "layoff playbook too short")
     check(connect.CLIENTS, "no client connection docs")

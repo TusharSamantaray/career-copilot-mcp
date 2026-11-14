@@ -294,7 +294,7 @@ async def answers(run, ids, intros):
                 "intro_id": intro_id, "confirm": yes,
                 "share": share if yes else ""})
             if yes:
-                run.say(person["name"], f'"Yes, share my name and email."')
+                run.say(person["name"], '"Yes, share my name and email."')
                 run.say("Career Copilot", f"both confirmed; "
                         f"{person['name']} sees: \"{done['they_shared']}\"")
             else:

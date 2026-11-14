@@ -1,0 +1,69 @@
+# Free checks that look for problems the tests don't: known holes in the
+# libraries we use, risky code, leaked secrets anywhere in git history,
+# and simple bugs (a name used but never defined). Runs on every push and
+# every Monday, so a hole published this week shows up even if nobody
+# pushed. What each finding means and what to do: docs/ENGINEERING.md,
+# "Security checks".
+name: Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dependencies:
+    name: Known holes in libraries (pip-audit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv export --frozen --no-hashes --no-dev --format requirements-txt > req.txt
+      # Each ignore says why it can't reach Career Copilot. Remove the
+      # line once the fix is in (B-072 tracks the FastMCP 3 upgrade).
+      # PYSEC-2026-2447 diskcache: needs write access to the server's
+      #   cache folder; we don't use FastMCP's disk cache.
+      # PYSEC-2026-2475 fastmcp: the `fastmcp install` command on
+      #   Windows; the server never runs it.
+      # PYSEC-2026-2476 fastmcp: its OAuth proxy; we use our own
+      #   sign-in, which has the fix (B-070).
+      - run: >-
+          uvx pip-audit@2.7.3 -r req.txt --disable-pip --no-deps --desc
+          --ignore-vuln PYSEC-2026-2447
+          --ignore-vuln PYSEC-2026-2475
+          --ignore-vuln PYSEC-2026-2476
+
+  code:
+    name: Risky code and simple bugs (bandit, ruff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Security lint, medium severity and up
+        run: uvx bandit@1.8.0 -r app.py copilot -ll
+      - name: Bugs a test might miss (undefined names, unused loops)
+        run: uvx ruff@0.8.6 check
+
+  secrets:
+    name: Secrets in git history (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install gitleaks 8.21.2 (checksum verified)
+        run: |
+          v=8.21.2
+          base=https://github.com/gitleaks/gitleaks/releases/download/v$v
+          curl -sSLO "$base/gitleaks_${v}_linux_x64.tar.gz"
+          curl -sSLO "$base/gitleaks_${v}_checksums.txt"
+          grep "gitleaks_${v}_linux_x64.tar.gz" "gitleaks_${v}_checksums.txt" | sha256sum -c -
+          tar xzf "gitleaks_${v}_linux_x64.tar.gz" gitleaks
+      - name: Scan every commit (found values are hidden in the log)
+        run: ./gitleaks git --redact --verbose .

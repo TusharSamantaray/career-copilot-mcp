@@ -23,10 +23,11 @@ flowchart LR
   local["Local run<br/>9 suites"]:::copilot
   ci1["CI job: test<br/>9 suites + main suite encrypted"]:::guard
   ci2["CI job: postgres<br/>real Postgres 16, encrypted"]:::guard
+  sec["Security checks<br/>libraries · code · secrets"]:::guard
   deploy["Render deploys main"]:::copilot
   live["Live checks<br/>/health · sign-in · tools"]:::store
 
-  change --> local -- "all pass" --> ci1 & ci2
+  change --> local -- "all pass" --> ci1 & ci2 & sec
   ci1 & ci2 -- "both green" --> deploy --> live
 ```
 
@@ -37,13 +38,36 @@ flowchart LR
 | `test_features.py` | Finance, resumes, roles, prep, reminders, economy data | Server over stdio |
 | `test_http.py` | API-key mode: refusals, per-key isolation, keys never logged, private usage signals, `/data-handling`, persona search and chat across two people, demand digest counts, introductions and reveal | Server over HTTP |
 | `test_soul.py` | The main suite: coach and crisis safety, guided start, conduct and reply length, facts and conflicts, job search, posting analysis, ATS checks, interview rounds, watches, data mirror, log masking, ground rules as disclosure, persona privacy (employer, email, phone and trait lines removed; unconfirmed facts left out) | Server over stdio, fake job boards |
-| `test_oauth.py` | Full GitHub sign-in against a fake GitHub; invite list; same token after a restart that wipes the disk | Server over HTTP, fake GitHub |
+| `test_oauth.py` | Full GitHub sign-in against a fake GitHub, through the Allow page; invite list; clear 401 wording; attacker cases (a shared GitHub link, a forged Allow click) refused; same token after a restart that wipes the disk | Server over HTTP, fake GitHub |
 | `test_crypto.py` | Records encrypted on disk, bound to person and record, delete destroys the key | Store directly |
 | `test_acceptance.py` | Spec acceptance tests A (Lost) and B (On a clock) as scripted conversations with a fresh person | Server over stdio |
 | `test_triage.py` | The weekly error report: quiet on a healthy week, lists codes, tools, people and the fix otherwise | Script only |
 | `simulation/run.py` | 5 made-up job seekers and 2 recruiters on a real local server, one key each: profiles, personas, search, chat, intros, reveal, pathway; checks no PII or salary reached a recruiter before both agreed; writes `simulation/REPORT.md` | CI (`--check`) and before every commit |
 | `validation/run.py` | Each improvement measured (expected against measured), with made-up people; writes `validation/RESULTS.md` and a dated row in `HISTORY.md` when a score changes | CI (`--check`) and before every commit |
 | `test_postgres.py` | Postgres backend: per-person rows, encryption, a fresh process after a wiped disk still sees the data, URL never printed | Real Postgres (skips without one) |
+
+### Security checks
+
+*Question: what finds problems the tests can't?*
+
+Tests prove the code does what we meant. These free tools look for what
+nobody meant: holes published in libraries we use, risky code patterns,
+and secrets that slipped into git. They run in the **Security** workflow
+(`.github/workflows/security.yml`) on every push and pull request, and
+every Monday, so a hole published this week shows up even in a quiet
+week. Any finding turns the run red.
+
+| Check | Finds | When it's red |
+|---|---|---|
+| pip-audit | Published holes (CVEs) in any library in `uv.lock` | Update the library (`uv lock --upgrade-package <name>`). If the hole can't reach us, add `--ignore-vuln <id>` with a one-line reason in the workflow, and a backlog item to remove it |
+| bandit | Risky Python: shell commands from input, weak randomness for secrets, unsafe parsing (medium severity and up) | Fix it. If it's a false alarm, add `# nosec <id>` on that line with the reason above it |
+| ruff | Plain bugs: names used but never defined, unused loop values, syntax errors (`[tool.ruff]` in `pyproject.toml`) | Fix it |
+| gitleaks | Keys, tokens and passwords in any commit, ever (values hidden in the log) | Treat the secret as leaked: rotate it first, then remove it from history |
+| Dependabot | Alerts on GitHub, and a weekly pull request when a library or GitHub Action has a fix (`.github/dependabot.yml`) | Merge when CI and Security are green. Major versions wait for a person |
+
+CodeQL (GitHub's deeper code scanner) is free only for public
+repositories; turn it on in Settings, Code security, if the repo goes
+public (GitHub #28).
 
 ### Acceptance tests from the spec
 
@@ -183,6 +207,13 @@ it stores state on disk. On a host without a persistent disk, that means
 sign-ins vanish. The stateless provider trades per-token revocation for
 surviving restarts; removing someone from the invite list still blocks
 them on the next request.
+
+**Could someone trick a person into signing in for them?** Not any
+more (B-070). GitHub skips its approval screen for people who approved
+Career Copilot before, so a shared GitHub link could have finished a
+sign-in for the sender's app. Now our own Allow page comes first, names
+the app and where the sign-in goes, and gives that browser a 10-minute
+cookie. The Allow click and GitHub's return must both carry it.
 
 **Can an authorization code be replayed?** Within its 5 minutes, in
 theory, because nothing is stored to mark it used. PKCE means a stolen

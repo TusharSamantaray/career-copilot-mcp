@@ -6,6 +6,20 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Security
+- Fixed a published hole in dnspython, a library pulled in by FastMCP
+  (GHSA-vvf4-9x63-8xvv; it could be made to use too much memory). You
+  won't notice anything.
+  **Try it:** Actions → Security → the "Known holes in libraries" step is
+  green.
+
+### Added
+- Free security checks on every change and every Monday (B-073):
+  published holes in our libraries (pip-audit), risky code (bandit),
+  plain bugs (ruff) and secrets anywhere in git history (gitleaks).
+  Dependabot is on: GitHub alerts on new holes and opens a weekly pull
+  request with fixes.
+  **Try it:** on GitHub, Actions → Security → Run workflow. All three jobs
+  should finish green. Security → Dependabot shows any open alerts.
 - Connecting now shows a Career Copilot page first: "Connect Career
   Copilot?", naming the app and where the sign-in goes, with **Allow** and
   **Don't allow** (B-070). The sign-in only finishes in the browser that

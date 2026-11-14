@@ -9,8 +9,20 @@ small too.
 uv sync
 ```
 
-Then run the five test suites (see the README, section 11). All of them
-must end with `ALL PASSED` before you open a pull request.
+Then run every test suite, the validation cases and the simulation (the
+list is in the README, "Develop and test"). All of them must end with
+`ALL PASSED` before you open a pull request.
+
+The free security checks run on GitHub for every pull request. To run
+them first:
+
+```bash
+uvx ruff@0.8.6 check                    # plain bugs
+uvx bandit@1.8.0 -r app.py copilot -ll  # risky code
+```
+
+What each check means, and what to do when one is red:
+[docs/ENGINEERING.md](docs/ENGINEERING.md#security-checks).
 
 ## Where changes go
 
@@ -33,6 +45,9 @@ must end with `ALL PASSED` before you open a pull request.
 4. **Education, not advice.** Money, tax, visa and relocation outputs must
    say so.
 5. **No new dependencies** unless they're really needed. Say why in the PR.
+6. **No secrets in git.** Keys live in `.env` (never committed) or the
+   host's settings. If one slips in, rotate it first: a removed commit
+   may already be copied.
 
 ## Automated changes
 

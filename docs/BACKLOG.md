@@ -20,11 +20,18 @@
   issue reports the owner can actually read with a handful of testers
   (today counts show only once 5 people report the same thing). From:
   owner, 2026-11-09.
+- B-072 [P1] Move to FastMCP 3 (3.2.0+) to clear its two published
+  holes. Neither reaches us today (we don't use its OAuth proxy or its
+  Windows install command), so the Security check ignores them until
+  then. Needs code changes and a full test pass. From: B-073.
 - B-071 [P2, owner] Mention the 10-minute sign-in cookie (random value,
   nothing about the person) in docs/PRIVACY.md? Needs a new
   TERMS_VERSION, so it waits for the next privacy change. From: B-070.
 
 ## Done
+- B-073 Free security checks: pip-audit, bandit, ruff, gitleaks on every
+  push and weekly; Dependabot alerts and update PRs. From: owner,
+  2026-11-14.
 - B-070 Sign-in "confused deputy" (found via CVE-2026-27124): an Allow
   page, and a sign-in only finishes in the browser that clicked Allow.
   From: dependency scan, 2026-11-14.

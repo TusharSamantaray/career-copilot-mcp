@@ -323,6 +323,7 @@ uv run tests/test_triage.py      # the weekly error report
 uv run tests/test_postgres.py    # Postgres storage (needs a throwaway DATABASE_URL)
 uv run validation/run.py         # every improvement still measures as it should
 uv run simulation/run.py         # 5 job seekers and 2 recruiters, end to end
+uvx ruff@0.8.6 check             # plain bugs (security checks: docs/ENGINEERING.md)
 ```
 
 Hosted mode locally: `CAREER_COPILOT_API_KEY=dev-key uv run app.py`, then

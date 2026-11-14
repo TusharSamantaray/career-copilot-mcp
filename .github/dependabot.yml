@@ -1,0 +1,25 @@
+# Dependabot (free) opens a pull request when a library or a GitHub
+# Action we use has a fix. CI and the Security checks run on each one;
+# merge only when both are green. Major versions (like FastMCP 3) are
+# left to a person: they need code changes (B-072).
+version: 2
+updates:
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      small-updates:
+        update-types: [minor, patch]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]

@@ -76,7 +76,9 @@ from copilot.knowledge.money import (DISCLAIMER, ECONOMY_GUIDES, INVEST_GUIDES,
 from copilot.scoring import score_resume
 
 VERSION = "0.3.0"
-HOST = os.environ.get("HOST", "0.0.0.0")
+# Hosts route traffic in from outside the container, so listen on all
+# interfaces; set HOST=127.0.0.1 to keep a local server private.
+HOST = os.environ.get("HOST", "0.0.0.0")  # nosec B104
 PORT = int(os.environ.get("PORT", "8080"))
 LOG_DIR = os.environ.get("CAREER_COPILOT_LOG_DIR",
                          str(HOME_DIR / "logs") if STDIO else "logs")
