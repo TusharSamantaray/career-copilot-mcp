@@ -18,3 +18,4 @@ commit behind each row.
 | 2026-11-14 | 0.3.0 | front_door | B-076 | 10/10 |
 | 2026-11-14 | 0.3.0 | one_pager | B-078 | 11/11 |
 | 2026-11-14 | 0.3.0 | hiring_posts | B-079 | 5/5 |
+| 2026-11-14 | 0.3.0 | outreach_drill | B-080 | 7/7 |

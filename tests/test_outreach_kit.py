@@ -143,6 +143,57 @@ async def research_and_one_pager(s):
           "built with sources: OK")
 
 
+async def drill(s):
+    flow = await call(s, "outreach_from_post", {
+        "post": POSTS[0], "domain": "northwind.example", "me": "Sam"})
+    assert flow["post"]["company"] == "Northwind Talent"
+    assert flow["fit"]["verdict"].startswith("apply"), flow["fit"]
+    draft = flow["draft"]
+    assert draft and draft["check"]["ok"], draft
+    assert "Senior Data Engineer" in draft["body"] and "Hi Jordan" in \
+        draft["body"] and draft["fact_used"].lower().rstrip(".") in         draft["body"].lower(), draft["body"]
+    assert flow["to"] == "jordan@northwind.example"
+    assert [st["step"] for st in flow["steps"]][-4:] == [
+        "review", "their yes", "send", "log"]
+    assert flow["next"]["step"] in ("company research", "message")
+    print("outreach from a post: read, fit, research, draft, checklist: OK")
+
+    base = {"channel": "linkedin_message", "to": "Jordan Avery",
+            "subject": draft["subject"],
+            "body": draft["body"].replace(
+                "Would you be open", "My visa deadline is in mid-March, so I "
+                "can start soon. Would you be open")}
+    blocked = await call(s, "outreach_review", base)
+    assert "approval_id" not in blocked, blocked
+    assert "share_anyway" in json.dumps(blocked["check"]["issues"])
+    bad = await call(s, "outreach_review", {**base,
+                                            "share_anyway": ["salary"]})
+    assert "error" in bad, bad
+    chosen = await call(s, "outreach_review", {
+        **base, "share_anyway": ["visa deadline"]})
+    ticket = chosen["approval_id"]
+    assert chosen["shared_by_choice"] == ["visa deadline"]
+    assert "visa deadline" in chosen["ask"]
+    without = await call(s, "outreach_approve", {
+        **base, "approval_id": ticket, "consent": True})
+    assert not without["approved"], "the choice is sealed in"
+    ok = await call(s, "outreach_approve", {
+        **base, "approval_id": ticket, "consent": True,
+        "share_anyway": ["visa deadline"]})
+    assert ok["approved"] and ok["shared_by_choice"]["mentions"] == [
+        "visa deadline"] and "LinkedIn" in ok["send_with"], ok
+    rude = await call(s, "outreach_review", {
+        **base, "body": base["body"] + " Your other candidates are idiots.",
+        "share_anyway": ["visa deadline"]})
+    assert "approval_id" not in rude, "a choice never unlocks rudeness"
+    logged = await call(s, "application_log", {
+        "company": "Northwind Talent", "role": "Senior Data Engineer",
+        "status": "applied", "next_action": "Follow up on the outreach"})
+    assert logged.get("id"), logged
+    print("visa deadline only by explicit choice, sealed to the exact "
+          "text; rudeness still blocked; application logged: OK")
+
+
 async def main():
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     os.makedirs(TEST_DIR)
@@ -167,6 +218,7 @@ async def main():
             await setup(s)
             await research_and_one_pager(s)
             await hiring_posts(s)
+            await drill(s)
     with open(os.path.join(TEST_DIR, "logs", "mcp_server.log"),
               encoding="utf-8") as handle:
         log = handle.read()
@@ -174,7 +226,8 @@ async def main():
         and "Sam Example" not in log and "Jordan Avery" not in log \
         and "jordan@" not in log, \
         "one-pager lines leaked into the log"
-    print("one-pager lines and offers kept out of the log: OK")
+    assert "visa deadline is" not in log, "outreach text leaked into log"
+    print("drafts, offers, posts and names kept out of the log: OK")
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     print("ALL PASSED")
 

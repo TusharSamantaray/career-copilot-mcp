@@ -92,6 +92,22 @@ Score: 11/11
 | company sources listed on the page | yes | yes | pass |
 | sized for one page (words) | yes | yes | pass |
 
+## Hiring post to approved outreach in one guided flow (B-080)
+
+Before: The drill was hand-run across six tools, and a visa deadline could never be mentioned, even when the person chose to (GitHub #36).
+
+Score: 7/7
+
+| Measure | Expected | Measured | |
+|---|---|---|---|
+| draft ready from a confirmed fact, passing checks | yes | yes | pass |
+| review, yes, send and log left for the person | todo, todo, todo, todo | todo, todo, todo, todo | pass |
+| records stored by the flow | 0 | 0 | pass |
+| weakness mentioned without a choice gets approval | no | no | pass |
+| mentioned by the person's choice gets approval | yes | yes | pass |
+| approved without restating the choice | no | no | pass |
+| approved with the same choice and a yes | yes | yes | pass |
+
 ## Send only after a yes to the exact text (B-056)
 
 Before: Drafts only: every outreach dead-ended at a draft the person copied by hand, and nothing checked the exact text sent.

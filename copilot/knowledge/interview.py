@@ -148,6 +148,10 @@ TEMPLATES = {
         "{company}. Before I decide, I'd like to discuss the package. "
         "Based on the scope of the role and {detail}, is there flexibility "
         "on the total compensation?\n\nBest,\n{me}"),
+    "hiring_post_reply": ("Your {role} post",
+        "Hi {name},\n\nI saw your post about the {role} role at {company}. "
+        "{detail}\n\nWould you be open to a short conversation about it? "
+        "Happy to send my resume.\n\nBest,\n{me}"),
     "withdraw": ("Withdrawing from the {role} process",
         "Hi {name},\n\nThank you for your time and consideration. I've "
         "decided to withdraw from the {role} process. I really appreciated "

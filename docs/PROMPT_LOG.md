@@ -4,6 +4,29 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-14 | v0.3.0-dev
+**Asked:** GitHub #36 outreach_from_post, with a per-message user
+override for the visa deadline check (explicit consent recorded).
+**Did:** New `copilot/drill.py` and tool outreach_from_post: parse
+post, jd_analyze (not remembered), company_research, one-pager
+material, a hiring_post_reply draft from the best-matching
+confirmed fact with response_check, and a checklist whose review,
+yes, send and log stay separate tools. outreach_review and
+outreach_approve take share_anyway (names from the weakness list
+only): the check becomes a note and the choice is part of the HMAC
+seal, so approval needs the same choice and text. Consent is
+recorded in the seal, not stored (outreach stays stateless). Conduct
+checks still block. New channel linkedin_message (the person pastes
+it). Spec line added to CLAUDE.md.
+**Files:** `copilot/drill.py`, `copilot/outreach.py`,
+`copilot/knowledge/interview.py`, `app.py`,
+`tests/test_outreach_kit.py`, `validation/cases/outreach_drill.py`.
+**Tests:** 10 suites passed, validation all cases pass (new:
+outreach_drill), simulation passed.
+**Try it:** paste a post: "Help me reach out to this person."
+**Open:** a day number in a date is flagged as an invented number
+(B-081, conduct.py, owner OK).
+
+### 2026-11-14 | v0.3.0-dev
 **Asked:** GitHub #33 linkedin_feed_scan. Owner chose: rank pasted
 posts; the server never touches LinkedIn (spec rule kept).
 **Did:** New `copilot/hiring_posts.py` and tool hiring_posts_rank.

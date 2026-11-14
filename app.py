@@ -50,6 +50,7 @@ from copilot import company as company_kit
 from copilot import conduct
 from copilot import dashboard as dash
 from copilot import deadlines
+from copilot import drill
 from copilot import demand
 from copilot import economy
 from copilot import errors
@@ -1317,32 +1318,56 @@ def companions(need: str = "") -> dict:
 @mcp.tool
 def outreach_review(channel: str, to: str = "", subject: str = "",
                     body: str = "", thread_id: str = "", when: str = "",
-                    event_id: str = "") -> dict:
-    """Step 1 before anything leaves the chat: an email, a calendar event
-    or cancellation, or a LinkedIn post or profile change. channel:
-    email, calendar_event, calendar_cancel, linkedin_post or
-    linkedin_profile. Checks the exact text (response_check, plus never
-    mentioning a performance plan, urgency or a visa deadline). If it
-    passes, returns an approval_id for this exact text and show_user:
-    show it word for word and ask "Send it?". Stores nothing."""
+                    event_id: str = "",
+                    share_anyway: list[str] | None = None) -> dict:
+    """Step 1 before anything leaves the chat: an email, a LinkedIn
+    message, a calendar event or cancellation, or a LinkedIn post or
+    profile change. channel: email, linkedin_message, calendar_event,
+    calendar_cancel, linkedin_post or linkedin_profile. Checks the exact
+    text (response_check, plus never mentioning a performance plan,
+    urgency or a visa deadline). share_anyway: only when the person said
+    they want one of those in THIS message (e.g. ["visa deadline"]); it
+    becomes a note, and the choice is sealed into the approval with the
+    exact text. If it passes, returns an approval_id and show_user: show
+    it word for word and ask "Send it?". Stores nothing."""
     return outreach.review(current_user(), channel, to, subject, body,
-                           thread_id, when, event_id)
+                           thread_id, when, event_id,
+                           share_anyway=share_anyway)
 
 
 @mcp.tool
 def outreach_approve(approval_id: str, channel: str, consent: bool,
                      to: str = "", subject: str = "", body: str = "",
                      thread_id: str = "", when: str = "",
-                     event_id: str = "") -> dict:
+                     event_id: str = "",
+                     share_anyway: list[str] | None = None) -> dict:
     """Step 2, only after the person said yes to that exact message:
-    consent=True with the same fields as outreach_review. Refused if
+    consent=True with the same fields (and share_anyway) as
+    outreach_review. Refused if
     anything changed since review or the approval expired (30 minutes).
     When approved, send it once with the person's own connector as
     send_with says, then check as verify says before saying it's done.
     Career Copilot never sends anything itself and keeps no copy."""
     return outreach.approve(current_user(), approval_id, channel, to,
                             subject, body, thread_id, when, event_id,
-                            consent)
+                            consent, share_anyway=share_anyway)
+
+
+@mcp.tool
+def outreach_from_post(post: str, domain: str = "",
+                       channel: str = "linkedin_message", me: str = "",
+                       voice: str = "") -> dict:
+    """The hiring-post drill in one guided flow: from one hiring post the
+    person pasted to a reviewed, approved message and a logged
+    application. Reads the post, judges fit, researches the company
+    (domain: its website, if known), gathers one-pager material and
+    drafts a reply from their confirmed facts. Returns the checklist
+    (research gaps, one-pager, message, review, their yes, send, log)
+    and the one next step. channel: linkedin_message (default) or email.
+    It never sends, stores or skips their yes: outreach_review,
+    outreach_approve and application_log stay separate steps."""
+    voice = voice or journey.profile(current_user()).get("voice", "plain")
+    return drill.run(current_user(), post, domain, channel, me, voice)
 
 
 # -------------------------------------------------------------- persona
@@ -1802,6 +1827,7 @@ def message_draft(kind: str, company: str = "", role: str = "",
     """Draft a job-search message for the user to send themselves.
 
     kind: thank_you, follow_up, assessment_extension, recruiter_reply,
+    hiring_post_reply,
     level_question, referral_request, offer_negotiation, withdraw.
     voice: plain (default), warm or formal; empty uses the profile's
     voice (save it with profile_save(voice=...)). The draft comes with

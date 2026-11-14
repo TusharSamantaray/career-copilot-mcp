@@ -5,6 +5,11 @@ Every Added or Changed line has a **Try it:** line.
 
 ## [Unreleased]
 
+### Knowledge
+- A message template for replying to a hiring post (GitHub #36).
+  **Try it:** "Draft a reply to this hiring post" gives a short
+  note that names the role and one thing you did.
+
 ### Security
 - Fixed a published hole in dnspython, a library pulled in by FastMCP
   (GHSA-vvf4-9x63-8xvv; it could be made to use too much memory). You
@@ -34,6 +39,19 @@ Every Added or Changed line has a **Try it:** line.
   assistant: every step should match what you see.
 
 ### Added
+- From a hiring post to a sent message in one guided flow (GitHub #36,
+  B-080). Paste a post and say "help me reach out". Career Copilot
+  reads it, says how well it fits, looks up the company, drafts a
+  reply that quotes one thing you confirmed you did, and lays out the
+  steps: check it, your yes to the exact text, you send it (LinkedIn
+  messages are pasted by you), then it's logged with a follow-up date.
+  It never sends for you. Messages still never mention a visa
+  deadline, urgency or a performance plan, unless you say you want it
+  in that one message; then the choice is tied to that exact text.
+  **Try it:** paste a hiring post and say "Help me reach out to
+  this person." You should get a fit verdict, a short draft and one
+  next step. Add "my visa deadline is in March": it should ask you
+  to confirm you want that in, and only then let it through.
 - Paste hiring posts and get them ranked for you (GitHub #33, B-079).
   Copy a few "we're hiring" posts from LinkedIn into the chat.
   Career Copilot reads who posted, the role, company, place, pay,

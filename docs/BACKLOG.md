@@ -24,6 +24,11 @@
   holes. Neither reaches us today (we don't use its OAuth proxy or its
   Windows install command), so the Security check ignores them until
   then. Needs code changes and a full test pass. From: B-073.
+- B-081 [P2, owner] A date in a message ("my visa deadline is 15
+  March") is flagged as an invented number, because the day isn't in
+  a confirmed fact. Teach response_check that a day next to a month
+  name is a date? It lives in conduct.py, so it needs the owner's OK.
+  Until then, write "mid-March". From: B-080.
 - B-077 [P1, owner] ground_rules still links to docs/PRIVACY.md and
   TERMS.md on GitHub, which 404s for anyone not invited while the repo is
   private, and PRIVACY.md's contact link points at the private issues
@@ -35,6 +40,14 @@
   TERMS_VERSION, so it waits for the next privacy change. From: B-070.
 
 ## Done
+- B-080 Hiring-post drill as one flow (GitHub #36): outreach_from_post
+  reads the post, judges fit, researches the company, gathers
+  one-pager material and drafts a reply from a confirmed fact, then
+  hands back a checklist; review, the person's yes, sending and the
+  log stay separate. New linkedin_message channel. A visa deadline
+  (or urgency, or a performance plan) can go in a message only when
+  the person chooses it for that message (share_anyway), sealed into
+  the approval. From: owner, GitHub #36.
 - B-079 Rank hiring posts the person pastes (GitHub #33): poster, role,
   company, place, pay, contact, link and date read from each; older
   than 7 days or breaking a dealbreaker set aside with the reason;

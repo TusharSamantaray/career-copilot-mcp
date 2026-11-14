@@ -117,6 +117,9 @@ Six principles:
 6. The person decides. Draft, rank, explain. Never apply for them.
    Nothing is sent, posted or scheduled without their yes to that exact
    text, and their own connected app sends it. Never ask for a password.
+   Outreach never mentions a performance plan, urgency or a visa
+   deadline unless the person chooses to, for that one message
+   (share_anyway, sealed into the approval with the exact text).
 
 ### Journey stages (not gates; people can skip or go back)
 
@@ -192,7 +195,7 @@ person may send or rely on passes response_check.
 
 ### What exists today (verified in code on 2026-11-03)
 
-108 tools, 9 resources, 17 prompts. Watches: watch_create, watches,
+109 tools, 9 resources, 17 prompts. Watches: watch_create, watches,
 digest_get. Facts: fact_add, fact_conflicts,
 fact_resolve. Discovery: job_search, jd_analyze, ats_profile_check,
 skill_gap_evidence, ats_keyword_check, recruiter_find,
@@ -212,7 +215,7 @@ study_plan, prep_checklist, nudge_add. Steady: layoff_playbook,
 runway_calc, layoff_fund_plan, finance tools. Glue: daily_step,
 step_done, dashboard, companions, ground_rules, response_check,
 data_export, data_delete, feedback, report_issue, outreach_review,
-outreach_approve. Persona: persona_publish, persona_unpublish, persona_search,
+outreach_approve, outreach_from_post. Persona: persona_publish, persona_unpublish, persona_search,
 persona_chat, recruiter_survey, demand_digest, pathway_build,
 pathway_next, persona_intro, persona_intros, identity_reveal (stable error codes
 in `copilot/errors.py`).
