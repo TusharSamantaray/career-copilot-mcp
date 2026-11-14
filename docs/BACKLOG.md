@@ -35,6 +35,11 @@
   TERMS_VERSION, so it waits for the next privacy change. From: B-070.
 
 ## Done
+- B-078 Company research and a one-page brief (GitHub #34, #35):
+  public facts with sources (home page, job board, linked search
+  results), and a one-pager where every line cites a source and no
+  number is invented. Print-ready HTML, saved as PDF from the browser.
+  From: owner, GitHub #34 and #35.
 - B-076 Demo-ready front door: a try-it page at the server's address
   (copy button, setup for Claude and ChatGPT, first words, promises,
   fair use), and the privacy notice and terms served by the server.

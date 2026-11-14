@@ -46,6 +46,7 @@ from copilot import ats
 from copilot import autopilot
 from copilot import careers
 from copilot import coach
+from copilot import company as company_kit
 from copilot import conduct
 from copilot import dashboard as dash
 from copilot import deadlines
@@ -129,6 +130,11 @@ SENSITIVE_ARGS = {"api_key", "token", "password", "authorization",
                   "question", "message", "share",
                   # pasted error text and app names in report_issue
                   "error_code", "client_hint",
+                  # one-pager lines and offers quote the person's work;
+                  # pasted hiring posts name the people who wrote them
+                  "lines", "offer", "posts", "post",
+                  # the person's own name, as signed on drafts
+                  "me",
                   # file paths can carry a person's name
                   "rendered_file"}
 MAX_LOGGED_CHARS = 80
@@ -845,6 +851,43 @@ def jd_analyze(text: str, title: str = "", company: str = "",
     short record (title, company, skills asked; never the full text) for
     skill_gap_evidence."""
     return jobs.jd_analyze(current_user(), text, title, company, remember)
+
+
+@mcp.tool
+def company_research(company: str, domain: str = "",
+                     found: list[dict] | None = None,
+                     fetch: bool = True) -> dict:
+    """Public facts about one company, each with its source, to tailor a
+    pitch: what they do (their home page, in their own words), hiring
+    context (their public job board: open roles, locations, newest
+    date), plus facts you found with your own web search, passed as
+    found=[{kind, statement, source}] where source is an https link.
+    kind: what_they_do, service_line, size, offices, differentiator,
+    news, hiring_context, other. A fact without a link is listed as
+    unverified and can't go on a one-pager. Returns gaps and searches to
+    run next; never fill a gap from memory. Nothing is stored: pass the
+    record to one_pager_build."""
+    return company_kit.research(company, domain, found, fetch)
+
+
+@mcp.tool
+def one_pager_build(research: dict, role: str = "",
+                    lines: list[dict] | None = None, offer: str = "",
+                    me: str = "") -> dict:
+    """A one-page brief for one company: The fit / How I plug into your
+    system / What changes, by line / Why this, why now / The offer.
+    research is the record from company_research. Without lines, returns
+    the sourced material for each section (company facts and the
+    person's confirmed facts, with ids). Write short lines, then call
+    again with lines=[{section, text, sources}] (section: fit, plugs_in,
+    what_changes, why_now, offer) and offer (the person's own words,
+    e.g. "a 20-minute call"). Every line must cite sources; any number
+    must be in a cited source; wording must pass response_check; it must
+    fit one page. Passing returns print-ready html (show it as an
+    artifact; print or save as PDF). The person reviews it before it
+    goes anywhere."""
+    return company_kit.one_pager(current_user(), research, role, lines,
+                                 offer, me)
 
 
 @mcp.tool

@@ -24,6 +24,7 @@ jobs:
       - run: uv run tests/test_crypto.py
       - run: uv run tests/test_acceptance.py
       - run: uv run tests/test_triage.py
+      - run: uv run tests/test_outreach_kit.py
       - name: Validation cases (improvements still hold)
         run: uv run validation/run.py --check
       - name: Simulation (5 job seekers, 2 recruiters, end to end)

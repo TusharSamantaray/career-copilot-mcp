@@ -34,6 +34,22 @@ Every Added or Changed line has a **Try it:** line.
   assistant: every step should match what you see.
 
 ### Added
+- Company research and a one-page brief for outreach (GitHub #34, #35,
+  B-078). Ask about a company and Career Copilot reads its home page
+  (what they do, in their own words) and its public job board (how
+  many roles are open, where, and the newest one). Anything else your
+  assistant finds must come with a link, or it's set aside as
+  unverified. Then it builds a one-page brief: The fit, How I plug
+  into your system, What changes by line, Why this why now, The
+  offer. Every line has to point at a source (the company's public
+  facts or your own confirmed work), any number has to be in that
+  source, and it has to fit on one page. Sources are listed at the
+  bottom. Print it or save it as PDF from your browser.
+  **Try it:** say "Research Northwind Talent, northwindtalent.com,
+  and build me a one-pager for a data engineering role." You should
+  get one line on what they do with its link, then a one-page brief
+  to review. Ask it to add "you grew 300% this year" and it should
+  refuse unless a source says so.
 - Fair-use limits on the hosted server (GitHub #27, B-074): each person
   can make 60 requests a minute and 1,500 a day. An assistant stuck in a
   loop is told to wait a few seconds; nobody else slows down. `/health`

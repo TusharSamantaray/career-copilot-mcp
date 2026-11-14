@@ -4,6 +4,27 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-14 | v0.3.0-dev
+**Asked:** GitHub #34 company_research and #35 one_pager_build.
+**Did:** New `copilot/company.py`. company_research reads the
+company's home page (meta description, its own words) and its
+public Greenhouse, Lever or Ashby board, and takes facts the
+assistant found only with an https link (others listed as
+unverified). Nothing stored. Fetching is https only, public host
+names only (private and IP addresses refused), same-site redirect,
+400 KB cap. one_pager_build: draft mode gives sourced material per
+section; build mode checks each line cites known sources, numbers
+appear in a cited source, response_check passes, and it fits one
+page, then renders print-ready HTML with source footnotes. PDF comes
+from the browser (no new dependency). The person's name (`me`) is
+now masked in logs for every tool.
+**Files:** `copilot/company.py`, `app.py`,
+`tests/test_outreach_kit.py`, `validation/cases/one_pager.py`.
+**Tests:** 10 suites passed, validation all cases pass (new:
+one_pager), simulation passed.
+**Try it:** "Research Northwind Talent and build me a one-pager."
+**Open:** proficiency tiers (#18) would sharpen the fit section.
+
+### 2026-11-14 | v0.3.0-dev
 **Asked:** Make it usable and demo ready, like a free trial to share.
 **Did:** New `copilot/welcome.py` and `welcome.html`: a try-it page at
 `/` (address with copy button, setup per assistant, starter phrases,

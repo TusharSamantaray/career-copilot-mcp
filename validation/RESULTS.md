@@ -58,6 +58,26 @@ Score: 8/8
 | persona notes the reveal came after the merit screen | yes | yes | pass |
 | declined intro can still be revealed | no | no | pass |
 
+## Company research and a one-page brief, every line sourced (B-078)
+
+Before: Company research was manual web search, and the one-pager was hand-built HTML with nothing checking its claims (GitHub #34, #35).
+
+Score: 11/11
+
+| Measure | Expected | Measured | |
+|---|---|---|---|
+| their own words read from the home page | yes | yes | pass |
+| every fact kept has an https source | yes | yes | pass |
+| a fact without a link is held back as unverified | 1 | 1 | pass |
+| gaps come with searches to run | yes | yes | pass |
+| private or non-web addresses refused | False, False, False | False, False, False | pass |
+| draft mode offers sourced material, writes nothing | draft -> no | draft -> no | pass |
+| a number no cited source has is refused | yes | yes | pass |
+| a line with no source is refused | no | no | pass |
+| clean lines build a page | yes | yes | pass |
+| company sources listed on the page | yes | yes | pass |
+| sized for one page (words) | yes | yes | pass |
+
 ## Send only after a yes to the exact text (B-056)
 
 Before: Drafts only: every outreach dead-ended at a draft the person copied by hand, and nothing checked the exact text sent.

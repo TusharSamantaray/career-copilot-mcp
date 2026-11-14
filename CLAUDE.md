@@ -192,12 +192,12 @@ person may send or rely on passes response_check.
 
 ### What exists today (verified in code on 2026-11-03)
 
-105 tools, 9 resources, 17 prompts. Watches: watch_create, watches,
+107 tools, 9 resources, 17 prompts. Watches: watch_create, watches,
 digest_get. Facts: fact_add, fact_conflicts,
 fact_resolve. Discovery: job_search, jd_analyze, ats_profile_check,
 skill_gap_evidence, ats_keyword_check, recruiter_find,
-sponsorship_verify. Truth:
-ownership_check, cover_letter_draft, resume_tailor. Loops: loop_round_log,
+sponsorship_verify, company_research. Truth:
+ownership_check, cover_letter_draft, resume_tailor, one_pager_build. Loops: loop_round_log,
 loop_next_round_prep, story_coverage, lessons. Pressure: deadline_add
 (fast-track). Data: data_mirror. Orient: journey_state, life_compass,
 direction_options, profile_from_text, career_move,
