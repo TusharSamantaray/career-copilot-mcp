@@ -7,7 +7,7 @@ license = { text = "Proprietary. Copyright (c) 2026 Tushar Samantaray. All right
 authors = [{ name = "Tushar Samantaray" }]
 requires-python = ">=3.11"
 dependencies = [
-    "fastmcp>=2.12,<3",
+    "fastmcp>=2.12,<4",
     "httpx>=0.27",
     "loguru>=0.7",
     "cryptography>=42",

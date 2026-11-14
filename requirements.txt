@@ -1,5 +1,5 @@
 # Mirrors pyproject.toml for hosts that install with pip.
-fastmcp>=2.12,<3
+fastmcp>=2.12,<4
 httpx>=0.27
 loguru>=0.7
 cryptography>=42
