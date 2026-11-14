@@ -37,6 +37,23 @@ Every Added or Changed line has a **Try it:** line.
   simulation report shows.
 
 ### Added
+- Proficiency tiers from verified work (B-070, GitHub #18). Your
+  experience now shows as a tier in each of three dimensions, Domain
+  knowledge, Stack depth and Scope of work, from Foundational to
+  Expert. You record the work (a shipped system, a design doc, code
+  history, peer review, coursework with real artifacts) and say which
+  dimensions it shows; the tier is computed from verified evidence
+  only, so nothing is a claim you typed about yourself. With no
+  verified work every dimension is Foundational, honestly. Each tier
+  lists the work behind it, and new verified work updates the tiers
+  automatically. Verification depth is recorded for now; the engine
+  that checks evidence against independent sources is still to come
+  (GitHub #19).
+  **Try it:** say "Record my notification system as verified
+  proficiency evidence for Domain knowledge and Scope of work", then
+  "What is my proficiency?" Domain knowledge and Scope of work should
+  show Developing, with the notification system listed behind each;
+  Stack depth stays Foundational.
 - A simulation you can run on your own computer: 5 made-up job seekers
   build profiles and personas, and 2 made-up recruiters bring a job
   posting, search, ask questions and ask to meet someone (B-063). It

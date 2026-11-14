@@ -65,6 +65,7 @@ from copilot import outreach
 from copilot import persona
 from copilot import places
 from copilot import prep
+from copilot import proficiency
 from copilot import recruiter
 from copilot import sponsorship as visa_sponsor
 from copilot import store
@@ -1333,6 +1334,58 @@ def pathway_next(done: bool = False) -> dict:
     """The one next step on the person's pathway, with its reason.
     done=true marks the current step done first (write action)."""
     return demand.next_step(current_user(), done)
+
+
+# ---------------------------------------------------------- proficiency
+
+@mcp.tool
+def proficiency_evidence_add(title: str, kind: str,
+                             dimensions: list[str],
+                             topics: list[str] | None = None,
+                             source: str = "",
+                             verification: str = "submitted") -> dict:
+    """Record one piece of work as proficiency evidence (write action).
+    title: what the work is, in one line. kind: shipped_system,
+    code_history, design_doc, peer_review, employment, or coursework.
+    dimensions: which of domain, stack_depth, scope this work
+    demonstrates (at least one). topics: skills or subjects it covers.
+    source: where it can be checked (a repo, doc or reference).
+    verification: submitted (default), corroborated, or verified; only
+    verified evidence moves a tier, and for now the depth is recorded as
+    given (the verification engine will own checking it). Never ask the
+    person for a tier or a rating: tiers are computed from evidence."""
+    return proficiency.add_evidence(current_user(), title, kind,
+                                    dimensions, topics, source,
+                                    verification)
+
+
+@mcp.tool
+def proficiency_evidence_list(dimension: str = "", kind: str = "",
+                              verification: str = "") -> dict:
+    """The proficiency evidence recorded so far, newest last. Filter by
+    dimension (domain, stack_depth, scope), kind, or verification
+    (submitted, corroborated, verified)."""
+    return proficiency.list_evidence(current_user(), dimension, kind,
+                                     verification)
+
+
+@mcp.tool
+def proficiency_evidence_remove(evidence_id: str) -> dict:
+    """Take one proficiency evidence record out (write action): a
+    mistake, or work that should not count. Tiers recompute from what
+    is left."""
+    return proficiency.remove_evidence(current_user(), evidence_id)
+
+
+@mcp.tool
+def proficiency_get() -> dict:
+    """The person's proficiency: one tier per dimension (Domain
+    knowledge, Stack depth, Scope of work), each with the verified
+    evidence behind it and what is still pending. Tiers run Foundational
+    to Expert and are computed from verified evidence only, so with no
+    verified work every dimension is Foundational. Show the tier with
+    its evidence; never present a tier as a claim the person made."""
+    return proficiency.compute(current_user())
 
 
 # ------------------------------------------------------------- guidance
