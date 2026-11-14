@@ -38,6 +38,8 @@ https://<server>/mcp
 ```
 
 For the demo server that's `https://career-copilot-cg2k.onrender.com/mcp`.
+Its home page, https://career-copilot-cg2k.onrender.com/ , has the same
+steps with a copy button, plus the privacy notice and terms.
 There's no key in it, so it's safe to share. The first time you connect,
 your assistant opens a Career Copilot page that asks **Connect Career
 Copilot?** and names your assistant. Click **Allow and sign in with

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A free career coach inside your AI assistant. One small step at a time.">
+<title>Try Career Copilot</title>
+<style>
+:root{--bg:#f7f6f2;--card:#fff;--fg:#1d1f1c;--muted:#5d625a;--line:#e3e1d8;--accent:#1f7a55;--accent-fg:#fff;--soft:#e7f2ec;--warn:#8a5a00;--warn-bg:#fff4dc}
+@media (prefers-color-scheme:dark){:root{--bg:#141614;--card:#1c1f1c;--fg:#ecebe6;--muted:#a3a89f;--line:#2e322d;--accent:#5cc497;--accent-fg:#0d1a13;--soft:#1d2d25;--warn:#f0c26b;--warn-bg:#2d2615;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:44rem;margin:0 auto;padding:3rem max(16px,env(safe-area-inset-left)) 4rem max(16px,env(safe-area-inset-right));display:grid;gap:1.5rem}
+h1{font-size:2.1rem;line-height:1.15;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h2{font-size:1.15rem;margin:0 0 .6rem}
+p{margin:0}
+.lede{font-size:1.15rem;color:var(--muted);max-width:36rem}
+.tag{display:inline-block;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.25rem 1.35rem;display:grid;gap:.75rem;min-width:0}
+.url{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.url code{flex:1 1 16rem;min-width:0;overflow-wrap:anywhere;font:600 .95rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;background:var(--soft);padding:.65rem .8rem;border-radius:10px}
+button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:.65rem 1rem;background:var(--accent);color:var(--accent-fg);cursor:pointer}
+.note{font-size:.92rem;color:var(--muted)}
+.warn{background:var(--warn-bg);color:var(--warn);border-radius:10px;padding:.7rem .9rem;font-size:.95rem}
+ol,ul{margin:0;padding-left:1.25rem;display:grid;gap:.35rem}
+details{border-top:1px solid var(--line);padding-top:.7rem}
+details:first-of-type{border-top:0;padding-top:0}
+summary{cursor:pointer;font-weight:600}
+details>ol,details>p{margin-top:.6rem}
+.say{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;padding:0}
+.say li{background:var(--soft);border-radius:999px;padding:.35rem .85rem;font-size:.95rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:1rem}
+footer{font-size:.88rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:.4rem 1.2rem}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<main>
+<header>
+<span class="tag">Free to try · works inside your AI assistant</span>
+<h1>Career Copilot</h1>
+<p class="lede">A career coach that lives in Claude or ChatGPT. Tell it where you are, even "I don't know what I want", and it helps you take one small next step. No forms first.</p>
+</header>
+
+<section class="card" aria-labelledby="connect">
+<h2 id="connect">1. Copy this address</h2>
+<div class="url"><code id="mcp">{{MCP_URL}}</code><button type="button" id="copy">Copy</button></div>
+{{ACCESS_NOTE}}
+<p class="note">This page loaded, so the server is awake. Connect in the next few minutes and the first answer comes back quickly.</p>
+</section>
+
+<section class="card" aria-labelledby="add">
+<h2 id="add">2. Add it to your assistant</h2>
+<details open>
+<summary>Claude (web, desktop or phone)</summary>
+<ol>
+<li>Settings → Connectors → <b>Add custom connector</b>.</li>
+<li>Name it <b>Career Copilot</b>, paste the address, leave the other fields empty.</li>
+<li>Click <b>Connect</b>. A Career Copilot page asks <b>Connect Career Copilot?</b> Click <b>Allow and sign in with GitHub</b>, then approve on GitHub.</li>
+<li>In a new chat, turn Career Copilot on from the tools menu.</li>
+</ol>
+</details>
+<details>
+<summary>ChatGPT</summary>
+<ol>
+<li>Settings → Apps &amp; Connectors → Advanced → turn on <b>Developer mode</b> (paid plans only).</li>
+<li><b>Create</b>: name <b>Career Copilot</b>, paste the address, authentication <b>OAuth</b>.</li>
+<li>Sign in with GitHub when asked, then pick it from the <b>+</b> menu in a chat.</li>
+</ol>
+</details>
+<details>
+<summary>Claude Code, Cursor, VS Code and others</summary>
+<p>Add it as an HTTP MCP server with the address above. For Claude Code: <code>claude mcp add --transport http career-copilot {{MCP_URL}}</code>, then run <code>/mcp</code> to sign in.</p>
+</details>
+<p class="note">You need a free GitHub account to sign in. Career Copilot only sees your public GitHub name and never asks for a password.</p>
+</section>
+
+<section class="card" aria-labelledby="say">
+<h2 id="say">3. Say one of these</h2>
+<ul class="say">
+<li>I don't know what I want</li>
+<li>I just lost my job</li>
+<li>Here's my resume</li>
+<li>Let me describe my work</li>
+<li>I know my target role</li>
+<li>I have an interview coming up</li>
+</ul>
+<p class="note">It asks one question at a time and gives you something useful within five. "Not sure" and "skip" are always fine answers.</p>
+</section>
+
+<div class="grid">
+<section class="card" aria-labelledby="promise">
+<h2 id="promise">What it promises</h2>
+<ul>{{PROMISES}}</ul>
+</section>
+<section class="card" aria-labelledby="fair">
+<h2 id="fair">Fair use</h2>
+<p>Free, with limits so one account can't slow it down for everyone: {{PER_MINUTE}} requests a minute and {{PER_DAY}} a day per person. A normal session uses well under a hundred.</p>
+<p class="note">This is a demo server. It can take up to a minute to wake after a quiet spell.</p>
+</section>
+</div>
+
+<footer>
+<a href="/privacy">Privacy</a>
+<a href="/terms">Terms</a>
+<a href="/data-handling">What's stored (machine-readable)</a>
+<span>Delete everything any time: say "delete my data".</span>
+</footer>
+</main>
+<script>
+document.getElementById("copy").addEventListener("click", function () {
+  var b = this, text = document.getElementById("mcp").textContent;
+  function done(ok) { b.textContent = ok ? "Copied" : "Select and copy"; setTimeout(function () { b.textContent = "Copy"; }, 2000); }
+  if (navigator.clipboard) { navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); }); }
+  else {
+    var r = document.createRange(); r.selectNodeContents(document.getElementById("mcp"));
+    var s = getSelection(); s.removeAllRanges(); s.addRange(r); done(false);
+  }
+});
+</script>
+</body>
+</html>

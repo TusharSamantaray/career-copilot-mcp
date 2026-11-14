@@ -21,7 +21,9 @@ Pick the way that fits you.
 
 ### A. Use it in claude.ai, ChatGPT or on your phone
 
-1. Copy the connector address:
+1. Open the try-it page, https://career-copilot-cg2k.onrender.com/ ,
+   which has a copy button and these steps. Or copy the connector
+   address here:
    ```
    https://career-copilot-cg2k.onrender.com/mcp
    ```

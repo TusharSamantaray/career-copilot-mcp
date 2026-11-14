@@ -40,7 +40,7 @@ from fastmcp.server.middleware import Middleware, MiddlewareContext
 from loguru import logger
 from mcp.types import LATEST_PROTOCOL_VERSION
 from starlette.requests import Request
-from starlette.responses import JSONResponse
+from starlette.responses import HTMLResponse, JSONResponse
 
 from copilot import ats
 from copilot import autopilot
@@ -72,6 +72,7 @@ from copilot import store
 from copilot import tailor
 from copilot import timeline
 from copilot import watch
+from copilot import welcome
 from copilot.knowledge.money import (DISCLAIMER, ECONOMY_GUIDES, INVEST_GUIDES,
                              LAYOFF_PLAYBOOK)
 from copilot.limits import Limits
@@ -459,6 +460,36 @@ async def health(request: Request) -> JSONResponse:
                          "insights": insights.location(),
                          "limits": None if STDIO else LIMITS.summary(),
                          "tool_count": len(tools)})
+
+
+@mcp.custom_route("/", methods=["GET"])
+async def home_page(request: Request) -> HTMLResponse:
+    """Unauthenticated "Try Career Copilot" page: the connector address
+    to copy, how to add it to Claude or ChatGPT, what to say first, the
+    promises and the fair-use limits. The link the owner shares."""
+    page = welcome.home(f"{PUBLIC_URL.rstrip('/')}/mcp",
+                        bool(OAUTH and ALLOWED_GITHUB),
+                        LIMITS.per_minute, LIMITS.per_day)
+    return HTMLResponse(page, headers=welcome.HEADERS)
+
+
+@mcp.custom_route("/privacy", methods=["GET"])
+async def privacy_page(request: Request) -> HTMLResponse:
+    """The privacy notice, readable without access to the repository."""
+    return _doc_page("privacy")
+
+
+@mcp.custom_route("/terms", methods=["GET"])
+async def terms_page(request: Request) -> HTMLResponse:
+    """The terms, readable without access to the repository."""
+    return _doc_page("terms")
+
+
+def _doc_page(name):
+    page = welcome.document(name)
+    if page is None:
+        return HTMLResponse("Not found", status_code=404)
+    return HTMLResponse(page, headers=welcome.HEADERS)
 
 
 @mcp.custom_route("/data-handling", methods=["GET"])

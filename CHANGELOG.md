@@ -13,6 +13,17 @@ Every Added or Changed line has a **Try it:** line.
   green.
 
 ### Changed
+- The server's own address is now a "Try Career Copilot" page you can
+  share (B-076). It has the connector address with a copy button, setup
+  steps for Claude, ChatGPT and code editors, six things to say first,
+  what Career Copilot promises, and the fair-use limits. If sign-in is
+  invite-only, it says so and tells people to send their GitHub
+  username. The privacy notice and terms now open from the server at
+  `/privacy` and `/terms`, so people without access to the private
+  repository can read them.
+  **Try it:** open `https://career-copilot-cg2k.onrender.com/` on your
+  phone. Tap Copy and paste it somewhere: you should get the address
+  ending in `/mcp`. Then tap Privacy and Terms at the bottom.
 - Getting-started steps match what new people now see: the "Connect
   Career Copilot?" page, and that the first connect can take up to a
   minute while the free server wakes (B-075). The owner's runbook explains

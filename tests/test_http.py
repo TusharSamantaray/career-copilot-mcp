@@ -314,6 +314,19 @@ def run():
         assert all({"what", "where", "kept_for", "who_can_read"}
                    <= set(row) for row in handling["stored"])
         print("data-handling statement readable before sign-in: OK")
+        home = httpx.get(f"{BASE}/")
+        assert home.status_code == 200, home.status_code
+        assert f"{BASE}/mcp" in home.text or "/mcp</code>" in home.text
+        assert "I don't know what I want" in home.text
+        assert "60 requests a minute" in home.text
+        assert "{{" not in home.text, "unfilled placeholder"
+        assert home.headers["x-frame-options"] == "DENY"
+        for path, words in (("/privacy", "What we keep"),
+                            ("/terms", "<h1>")):
+            page = httpx.get(f"{BASE}{path}")
+            assert page.status_code == 200 and words in page.text, path
+            assert "github.com/TusharSamantaray" not in page.text                 or "blob/main" not in page.text, "link into the repo"
+        print("try-it page, privacy and terms readable without sign-in: OK")
         asyncio.run(main())
         asyncio.run(flood())
         log = os.path.join(TEST_DIR, "logs", "mcp_server.log")

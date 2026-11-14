@@ -4,6 +4,22 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-14 | v0.3.0-dev
+**Asked:** Make it usable and demo ready, like a free trial to share.
+**Did:** New `copilot/welcome.py` and `welcome.html`: a try-it page at
+`/` (address with copy button, setup per assistant, starter phrases,
+promises, live limits, invite-only notice when the list is on), and
+`/privacy` and `/terms` rendered from the docs with a small Markdown
+reader. No outside scripts or fonts; never framed or cached. The share
+link in OWNER.md, README and CONNECT is now the home page.
+**Files:** `copilot/welcome.py`, `copilot/welcome.html`, `app.py`,
+`tests/test_http.py`, docs.
+**Tests:** 9 suites passed, validation all 8 cases pass (new: front_door), simulation passed.
+**Try it:** open the server's address on a phone; tap Copy, Privacy,
+Terms.
+**Open:** ground_rules links and PRIVACY.md's contact link still point
+at the private repo (B-077, needs the owner's OK).
+
+### 2026-11-14 | v0.3.0-dev
 **Asked:** Bring onboarding docs up to date, no gaps.
 **Did:** README quick start and CONNECT troubleshooting now show the
 Allow page and the real cold-start wait. OWNER.md: "Keep it awake"

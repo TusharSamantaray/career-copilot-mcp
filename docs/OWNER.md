@@ -9,7 +9,8 @@ The values are in Render → career-copilot → Environment.
 |---|---|
 | Code | https://github.com/TusharSamantaray/career-copilot-mcp (pushes to `main` deploy on their own) |
 | Hosted server | https://career-copilot-cg2k.onrender.com, Render free plan |
-| Connector address (share this) | `https://career-copilot-cg2k.onrender.com/mcp` |
+| Try-it page (share this link) | https://career-copilot-cg2k.onrender.com/ : the address to copy, setup for Claude and ChatGPT, what to say first, privacy and terms |
+| Connector address | `https://career-copilot-cg2k.onrender.com/mcp` |
 | Sign-in | GitHub OAuth app "Career Copilot", callback `/auth/callback` |
 | Health check | https://career-copilot-cg2k.onrender.com/health |
 | Keep-awake | GitHub Action `keep-awake.yml` (repo variable `HEALTH_URL`, also the abuse alarm), plus a free uptime pinger: see "Keep it awake" |
@@ -123,8 +124,10 @@ connecting.
 > Hi! I'd love your help testing Career Copilot, a career coach that
 > plugs into your AI assistant (Claude, ChatGPT and others).
 >
-> 1. In your assistant, add a custom connector with this address:
->    `https://career-copilot-cg2k.onrender.com/mcp`
+> 1. Open https://career-copilot-cg2k.onrender.com/ and follow the
+>    three steps there (copy the address, add it to your assistant, say
+>    one sentence). The connector address is
+>    `https://career-copilot-cg2k.onrender.com/mcp`.
 > 2. When you connect, click **Allow and sign in with GitHub**. It
 >    only reads your public GitHub profile (username and id), to keep
 >    your data separate from everyone else's. No API key, no password.
@@ -133,8 +136,9 @@ connecting.
 >
 > Want to check it first? `https://career-copilot-cg2k.onrender.com/health`
 > shows the version, the sign-in method (`github-oauth`), and whether
-> it's invite-only. The source code is private for now; ask me if you'd
-> like read access, and I can send the privacy notice. The free server
+> it's invite-only. The privacy notice and terms are at `/privacy` and
+> `/terms` on the same server. The source code is private for now; ask
+> me if you'd like read access. The free server
 > sleeps when idle, so the first connect can take up to a minute.
 >
 > If something breaks, tell me what you said and what you saw.

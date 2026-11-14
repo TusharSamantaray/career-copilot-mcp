@@ -24,11 +24,21 @@
   holes. Neither reaches us today (we don't use its OAuth proxy or its
   Windows install command), so the Security check ignores them until
   then. Needs code changes and a full test pass. From: B-073.
+- B-077 [P1, owner] ground_rules still links to docs/PRIVACY.md and
+  TERMS.md on GitHub, which 404s for anyone not invited while the repo is
+  private, and PRIVACY.md's contact link points at the private issues
+  page. Point them at the server's `/privacy` and `/terms` and give a
+  contact route that works? Changes conduct.py and PRIVACY.md, so it needs
+  the owner's OK and a new TERMS_VERSION. From: B-076.
 - B-071 [P2, owner] Mention the 10-minute sign-in cookie (random value,
   nothing about the person) in docs/PRIVACY.md? Needs a new
   TERMS_VERSION, so it waits for the next privacy change. From: B-070.
 
 ## Done
+- B-076 Demo-ready front door: a try-it page at the server's address
+  (copy button, setup for Claude and ChatGPT, first words, promises,
+  fair use), and the privacy notice and terms served by the server.
+  From: owner, 2026-11-14 ("demo ready, a free trial I can share").
 - B-075 Onboarding docs: the Allow page, the first-connect wait, a free
   uptime pinger (GitHub's schedule runs hours late), and the steps to open
   sign-in. From: owner, 2026-11-14, GitHub #24 and #25.
