@@ -3,6 +3,24 @@
 What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
+### 2026-11-13 | v0.3.0-dev
+**Asked:** Fix the open authentication issue (GitHub #17: a first-time
+tester got invalid_token on first connect).
+**Did:** Found that the live server sends that exact message to any
+request with no token (an app's normal first call), because FastMCP
+rewords every 401 as "token invalid, expired or no longer recognized".
+So the tester most likely never finished sign-in. Our own 401 now says
+"Not signed in yet" or "This sign-in is no longer valid", each with the
+fix; protocol unchanged. The invite-only page names the username to send
+the owner. Logs say which case, without tokens or names.
+**Files:** `copilot/signin.py`, `app.py`, `tests/test_oauth.py`,
+`docs/CONNECT.md`.
+**Tests:** see commit.
+**Try it:** open the server's /mcp address in a browser: "Not signed in
+yet".
+**Open:** the tester retries; if it still fails, the Render log line
+"sign-in needed: token rejected" vs "no token sent" says which case.
+
 ### 2026-11-09 | v0.3.0-dev
 **Asked:** The last build failed; check what's wrong.
 **Did:** CI on the latest commit passed; the failure was the scheduled

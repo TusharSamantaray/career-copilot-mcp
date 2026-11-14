@@ -16,6 +16,7 @@ then thrown away. Changing the key signs everyone out.
 import base64
 import hashlib
 import hmac
+import html
 import json
 import logging
 import secrets
@@ -33,8 +34,25 @@ from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.routing import Route
 
 from fastmcp.server.auth import AccessToken, OAuthProvider
+from fastmcp.server.auth.middleware import RequireAuthMiddleware
+from mcp.server.auth.middleware.bearer_auth import AuthenticatedUser
+from mcp.server.auth.middleware.bearer_auth import \
+    RequireAuthMiddleware as SDKRequireAuth
 
 SCOPE = "read:user"
+# What a 401 says. The protocol stays as the MCP spec expects (401,
+# error="invalid_token", resource_metadata so the app starts sign-in);
+# only the words change, so a person sees what actually happened.
+NOT_SIGNED_IN = (
+    "[AUTH_REQUIRED] Not signed in yet. Your assistant should now open a "
+    "Sign in with GitHub page. If it did and showed an error (for example "
+    "invite-only), fix that first: ask the owner to add the GitHub "
+    "username it named. Then remove Career Copilot from your assistant, "
+    "add it again, and sign in.")
+SIGN_IN_EXPIRED = (
+    "[AUTH_REQUIRED] This sign-in is no longer valid (it expired, or the "
+    "server's sign-in settings changed). Remove Career Copilot from your "
+    "assistant, add it again, and sign in with GitHub.")
 STATE_SECONDS = 600
 CODE_SECONDS = 300
 ACCESS_SECONDS = 30 * 24 * 3600
@@ -54,6 +72,32 @@ class _Code(AuthorizationCode):
 
 class _Refresh(RefreshToken):
     login: str = ""
+
+
+class SignInRequired(RequireAuthMiddleware):
+    """FastMCP's 401 says "the provided bearer token is invalid" even when
+    no token was sent, which is every app's normal first request. Tell
+    the two cases apart, in words and in the log (never the token)."""
+
+    async def __call__(self, scope, receive, send):
+        if isinstance(scope.get("user"), AuthenticatedUser):
+            return await super().__call__(scope, receive, send)
+        sent = any(k.lower() == b"authorization" and
+                   v[:7].lower() == b"bearer "
+                   for k, v in scope.get("headers", []))
+        log.info("sign-in needed: %s", "token rejected" if sent
+                 else "no token sent")
+        # The SDK's response shape, without FastMCP's rewording.
+        await SDKRequireAuth._send_auth_error(
+            self, send, 401, "invalid_token",
+            SIGN_IN_EXPIRED if sent else NOT_SIGNED_IN)
+
+
+def use_clear_messages():
+    """FastMCP builds its routes with the class named in fastmcp.server.http;
+    point that name at ours before the app is built."""
+    import fastmcp.server.http as http
+    http.RequireAuthMiddleware = SignInRequired
 
 
 def _page(title, text, status):
@@ -183,8 +227,13 @@ class StatelessGitHubProvider(OAuthProvider):
                          "the sign-in. Please try Connect again.", 400)
         login = str(user.get("login", ""))
         if self.allowed and login.lower() not in self.allowed:
-            return _page("Invite only", "This Career Copilot is invite-only. "
-                         "Ask its owner to add your GitHub username.", 403)
+            log.info("sign-in refused: not on the invite list")
+            safe = html.escape(login)
+            return _page("Invite only", "This Career Copilot is invite-only, "
+                         f"and you signed in to GitHub as <b>{safe}</b>. Send "
+                         "that username to the owner and ask them to add it. "
+                         "Then remove Career Copilot from your assistant, add "
+                         "it again, and sign in.", 403)
         our_code = self._seal("code", {
             "sub": str(user["id"]), "login": login, "cid": state["cid"],
             "uri": state["uri"], "exp_uri": state["exp_uri"],

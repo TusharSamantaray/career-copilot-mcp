@@ -322,7 +322,8 @@ def make_auth():
     anyone out (see copilot/signin.py)."""
     if not OAUTH:
         return None
-    from copilot.signin import StatelessGitHubProvider
+    from copilot.signin import StatelessGitHubProvider, use_clear_messages
+    use_clear_messages()
     return StatelessGitHubProvider(
         client_id=GITHUB_ID, client_secret=GITHUB_SECRET,
         base_url=PUBLIC_URL,

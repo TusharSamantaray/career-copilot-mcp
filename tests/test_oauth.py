@@ -159,18 +159,33 @@ def first_run():
     print("/health says GitHub sign-in, invite-only, no names: OK")
     anon = httpx.post(f"{BASE}/mcp", json=INIT, headers=MCP_HEADERS)
     assert anon.status_code == 401
-    assert "resource_metadata" in anon.headers.get("www-authenticate", "")
+    challenge = anon.headers.get("www-authenticate", "")
+    # Apps start sign-in from these two; they must not change (GitHub #17).
+    assert "resource_metadata" in challenge
+    assert 'error="invalid_token"' in challenge
+    # A first request has no token: say so, don't call it invalid.
+    said = anon.json()["error_description"]
+    assert said.startswith("[AUTH_REQUIRED] Not signed in yet"), said
+    assert "invalid, expired" not in challenge + said
+    print("first request without a token says 'not signed in yet': OK")
     for bad in ({"Authorization": "Bearer key-old-style"},
                 {"Authorization": "Bearer not-a-token"}):
-        assert httpx.post(f"{BASE}/mcp", json=INIT, headers={
-            **MCP_HEADERS, **bad}).status_code == 401
+        refused = httpx.post(f"{BASE}/mcp", json=INIT, headers={
+            **MCP_HEADERS, **bad})
+        assert refused.status_code == 401
+        said = refused.json()["error_description"]
+        assert "no longer valid" in said and "add it again" in said, said
+        assert "not-a-token" not in said
     assert httpx.post(f"{BASE}/mcp?key=key-old-style", json=INIT,
                       headers=MCP_HEADERS).status_code == 401
     print("no sign-in, old keys, URL keys and junk tokens refused: OK")
 
     _, _, denied = sign_in("stranger-code")
     assert denied.status_code == 403 and "invite-only" in denied.text
-    print("GitHub user not on the invite list is turned away: OK")
+    # They see which username to send the owner (GitHub #17).
+    assert "<b>not-invited</b>" in denied.text, denied.text
+    print("GitHub user not on the invite list is turned away, told which "
+          "username to send: OK")
 
     _, _, garbled = sign_in("garbled-code")
     assert garbled.status_code == 502, garbled.status_code

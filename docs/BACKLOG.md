@@ -22,6 +22,10 @@
   owner, 2026-11-09.
 
 ## Done
+- B-069 First-connect `invalid_token` (GitHub #17): truthful 401 wording
+  (not signed in yet vs sign-in no longer valid), invite-only page names
+  the username, log says which case. Waiting on the tester to confirm.
+  From: GitHub issue.
 - B-068 Weekly improver failed with no secrets set; now skips with a
   notice, retries a sleeping server, and its gate runs every suite.
   From: owner, 2026-11-09.

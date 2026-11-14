@@ -6,6 +6,16 @@ Every Added or Changed line has a **Try it:** line.
 ## [Unreleased]
 
 ### Fixed
+- Signing in for the first time no longer shows a scary "invalid_token"
+  error that blames a token you never had (B-069, GitHub #17). If your
+  assistant reaches Career Copilot before you've finished signing in, it
+  now says "Not signed in yet" and what to do. A sign-in that really has
+  expired says so and tells you to remove and re-add the connector. If
+  you're not on the invite list, the page shows the GitHub username you
+  signed in as, so you can send the owner the right name.
+  **Try it:** in a browser, open
+  `https://career-copilot-cg2k.onrender.com/mcp`. It should say "Not
+  signed in yet", not "invalid, expired, or no longer recognized".
 - The weekly "Improve knowledge" job no longer fails on GitHub while it
   isn't set up (B-068). Without its three secrets it now skips with a
   note saying which to add. Once set up, it waits for the sleeping server
