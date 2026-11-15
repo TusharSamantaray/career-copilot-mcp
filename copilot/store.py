@@ -110,6 +110,13 @@ class SQLiteBackend:
         return [n[:-3] for n in os.listdir(DATA_DIR)
                 if n.endswith(".db") and not n.startswith("_")]
 
+    def storage_mb(self):
+        if not os.path.isdir(DATA_DIR):
+            return 0.0
+        return sum(os.path.getsize(os.path.join(DATA_DIR, n))
+                   for n in os.listdir(DATA_DIR)
+                   if n.endswith(".db")) / 1e6
+
     def get_key(self, user_id):
         with self._keys() as conn:
             row = conn.execute("SELECT wrapped FROM keys WHERE user=?",
@@ -198,6 +205,11 @@ class PostgresBackend:
         with self._conn() as conn:
             return [r[0] for r in conn.execute(
                 "SELECT DISTINCT user_id FROM cc_records").fetchall()]
+
+    def storage_mb(self):
+        with self._conn() as conn:
+            return conn.execute("SELECT pg_database_size(current_database())"
+                                ).fetchone()[0] / 1e6
 
     def get_key(self, user_id):
         with self._conn() as conn:

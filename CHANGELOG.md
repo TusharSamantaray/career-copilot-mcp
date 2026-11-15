@@ -5,6 +5,18 @@ Every Added or Changed line has a **Try it:** line.
 
 ## [Unreleased]
 
+### Added
+- The free trial now looks after itself so it never needs paying for
+  (B-082). It runs on free hosting, so on a very busy day it first
+  stops taking new people (those already in carry on), and if the
+  whole day's budget is used it pauses until midnight UTC. Either way
+  the person gets a short, plain note instead of an error, nothing
+  is lost, and exporting or deleting data still works. The try-it
+  page shows the trial status at the top.
+  **Try it:** open `https://career-copilot-cg2k.onrender.com/`: under
+  the address it should say "Trial status: Open". Open `/health`:
+  the `trial` part shows today's counts, never who.
+
 ### Knowledge
 - A message template for replying to a hiring post (GitHub #36).
   **Try it:** "Draft a reply to this hiring post" gives a short

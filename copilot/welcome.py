@@ -29,9 +29,19 @@ PROMISES = [
 ]
 
 
-def home(mcp_url, invite_only, per_minute, per_day):
+STATUS = {
+    "open": ("ok", "Open: room for new people today."),
+    "new_paused": ("warn", "Not taking new people right now, so it stays "
+                   "fast for those already in. Check back later."),
+    "full_today": ("warn", "Full for today: the free servers' daily budget "
+                   "is used. It reopens at midnight UTC. Nothing is lost."),
+}
+
+
+def home(mcp_url, invite_only, per_minute, per_day, status="open"):
     """The try-it page, filled in for this server."""
     url = html.escape(mcp_url)
+    tone, words = STATUS.get(status, STATUS["open"])
     access = ("<p class='warn'>Invite-only for now. Send your GitHub "
               "username to the person who shared this link, and they'll "
               "add you.</p>" if invite_only else
@@ -42,6 +52,8 @@ def home(mcp_url, invite_only, per_minute, per_day):
         "MCP_URL": url, "ACCESS_NOTE": access,
         "PROMISES": "".join(f"<li>{html.escape(p)}</li>" for p in PROMISES),
         "PER_MINUTE": str(per_minute), "PER_DAY": f"{per_day:,}",
+        "STATUS": f"<p class='status {tone}'>Trial status: "
+                  f"{html.escape(words)}</p>",
     }.items():
         page = page.replace("{{" + key + "}}", value)
     return page

@@ -4,6 +4,29 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-14 | v0.3.0-dev
+**Asked:** Make sure people can use the trial; no payment; throttle
+when the free tier runs out and show it as information.
+**Did:** New `copilot/capacity.py`: server-wide calls per day, new
+people per day, people in total and database size, all in memory
+with hashed ids. Over a cap, the middleware returns a normal tool
+result `[TRIAL_FULL] ...` with a plain note (not an error), so
+assistants relay it and don't retry. People already in keep going
+unless the day is used up. data_export, data_delete and data_mirror
+always run. Storage is checked at most every 10 minutes, and only on
+tool calls, so the home page and /health never wake the database.
+Status on the try-it page and in /health; Keep awake alarms; OWNER
+runbook section. New error code TRIAL_FULL.
+**Files:** `copilot/capacity.py`, `app.py`, `copilot/store.py`,
+`copilot/welcome.py`, `copilot/welcome.html`, `copilot/errors.py`,
+`.github/workflows/keep-awake.yml`, `tests/test_http.py`,
+`validation/cases/trial_capacity.py`, `docs/OWNER.md`.
+**Tests:** see the commit; all suites, validation (new:
+trial_capacity 8/8) and the simulation pass.
+**Try it:** the home page says "Trial status: Open".
+**Open:** opening sign-in to everyone is still the owner's switch in
+Render (#25). Not a privacy change: no new data is kept.
+
+### 2026-11-14 | v0.3.0-dev
 **Asked:** GitHub #36 outreach_from_post, with a per-message user
 override for the visa deadline check (explicit consent recorded).
 **Did:** New `copilot/drill.py` and tool outreach_from_post: parse

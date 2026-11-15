@@ -37,6 +37,7 @@ from pydantic import ValidationError
 from fastmcp.server.dependencies import (get_access_token, get_http_headers,
                                          get_http_request)
 from fastmcp.server.middleware import Middleware, MiddlewareContext
+from fastmcp.tools.tool import ToolResult
 from loguru import logger
 from mcp.types import LATEST_PROTOCOL_VERSION
 from starlette.requests import Request
@@ -44,6 +45,7 @@ from starlette.responses import HTMLResponse, JSONResponse
 
 from copilot import ats
 from copilot import autopilot
+from copilot import capacity as trial
 from copilot import careers
 from copilot import coach
 from copilot import company as company_kit
@@ -244,6 +246,23 @@ def current_user() -> str:
 
 
 LIMITS = Limits()
+TRIAL = trial.Capacity(people=store.BACKEND.users,
+                       storage_mb=store.BACKEND.storage_mb)
+
+
+def trial_full(kind, name, user):
+    """Free-trial capacity (copilot/capacity.py). Returns the plain note
+    to give instead of running the call, or None. Logged once per reason
+    per day, without who."""
+    if STDIO:
+        return None
+    over = TRIAL.check(user, name if kind == "tool" else "")
+    if not over:
+        return None
+    reason, note, first = over
+    if first:
+        logger.warning(f"trial full: {reason}")
+    return note
 
 
 def check_limits(kind, name, user, error_cls):
@@ -288,6 +307,16 @@ class AuthAndAudit(Middleware):
             raise error_cls(str(exc)) from None
         user = current_user()
         check_limits(kind, name, user, error_cls)
+        note = trial_full(kind, name, user)
+        if note:
+            if kind != "tool":
+                raise error_cls(errors.message("TRIAL_FULL", note))
+            info = {"trial_full": True, "note": note,
+                    "say": "Tell them this plainly, in one or two lines. "
+                           "It's not an error and nothing was lost. Don't "
+                           "retry today."}
+            return ToolResult(content=errors.message("TRIAL_FULL", note),
+                              structured_content=info)
         logger.info(f"{kind} call: {name} user={user} "
                     f"args={mask_args(args)}")
         start = time.perf_counter()
@@ -467,6 +496,7 @@ async def health(request: Request) -> JSONResponse:
                          "invite_only": bool(OAUTH and ALLOWED_GITHUB),
                          "insights": insights.location(),
                          "limits": None if STDIO else LIMITS.summary(),
+                         "trial": None if STDIO else TRIAL.summary(),
                          "tool_count": len(tools)})
 
 
@@ -477,7 +507,8 @@ async def home_page(request: Request) -> HTMLResponse:
     promises and the fair-use limits. The link the owner shares."""
     page = welcome.home(f"{PUBLIC_URL.rstrip('/')}/mcp",
                         bool(OAUTH and ALLOWED_GITHUB),
-                        LIMITS.per_minute, LIMITS.per_day)
+                        LIMITS.per_minute, LIMITS.per_day,
+                        TRIAL.status())
     return HTMLResponse(page, headers=welcome.HEADERS)
 
 

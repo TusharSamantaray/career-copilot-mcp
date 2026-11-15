@@ -59,6 +59,12 @@
   results), and a one-pager where every line cites a source and no
   number is invented. Print-ready HTML, saved as PDF from the browser.
   From: owner, GitHub #34 and #35.
+- B-082 Free-trial capacity: the server limits itself inside the free
+  plans (calls a day for everyone, new people a day, people in total,
+  database size). When full it gives a plain note, not an error; people
+  already in carry on unless the day is used up; export and delete
+  always work; the try-it page and /health show the status; the Keep
+  awake run alarms. No payment anywhere. From: owner, 2026-11-14.
 - B-076 Demo-ready front door: a try-it page at the server's address
   (copy button, setup for Claude and ChatGPT, first words, promises,
   fair use), and the privacy notice and terms served by the server.

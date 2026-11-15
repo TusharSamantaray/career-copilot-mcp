@@ -39,6 +39,12 @@ CODES = {
         "This account used today's fair-use quota.", False,
         "It resets at midnight UTC. Your data is safe. If you need more, "
         "tell the owner with report_issue."),
+    "TRIAL_FULL": (
+        "The free trial is at capacity: today's shared budget is used, or "
+        "it isn't taking new people for now.", False,
+        "Not an error and nothing was lost. Come back after midnight UTC, "
+        "or ask the person who shared the link. Exporting and deleting "
+        "your data still work."),
     "INTERNAL_ERROR": (
         "Something failed on the server. It was logged with a reference.",
         True, "Try once more after a few seconds. If it fails again, report "

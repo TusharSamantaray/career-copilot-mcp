@@ -178,6 +178,23 @@ Score: 10/10
 | nothing overwritten (4 versions kept) | 4 | 4 | pass |
 | proof ends with the final resume | yes | yes | pass |
 
+## Free trial stays inside free hosting, and says so plainly when full (B-082)
+
+Before: Nothing capped the server as a whole: a busy day could use up the free database's storage or monthly compute, and people would see failures instead of an explanation.
+
+Score: 8/8
+
+| Measure | Expected | Measured | |
+|---|---|---|---|
+| a new person past today's cap gets a plain note | yes | yes | pass |
+| people already in carry on | None | None | pass |
+| a used-up day says when it reopens | yes | yes | pass |
+| export and delete still work when full | None -> None | None -> None | pass |
+| status counts never name anyone | no | no | pass |
+| reopens after midnight UTC | None | None | pass |
+| try-it page shows the trial status | yes | yes | pass |
+| payment or upgrade asked of visitors | no | no | pass |
+
 ## Ground rules as disclosure, with a machine-readable data statement (B-043)
 
 Before: Ground rules mixed terms with orders to the assistant ('ask if that's OK', 'never block'), and data handling was only prose.

@@ -30,6 +30,19 @@ jobs:
           out = limits.get("people_out_for_today", 0)
           slowed = limits.get("people_limited_today", 0)
           print(f"fair use today: {slowed} slowed down, {out} out of quota")
+          trial = json.load(open("health.json")).get("trial") or {}
+          print(f"trial: {trial.get('status')}, "
+                f"{trial.get('calls_today')}/{trial.get('daily_calls')} calls, "
+                f"{trial.get('people')}/{trial.get('max_people')} people, "
+                f"{trial.get('storage_mb')}/{trial.get('storage_cap_mb')} MB")
+          if trial.get("status") == "full_today":
+              print("::error::The free trial used today's budget and paused "
+                    "until midnight UTC. docs/OWNER.md, 'Free-trial "
+                    "capacity'.")
+              raise SystemExit(1)
+          if trial.get("status") == "new_paused":
+              print("::warning::The free trial isn't taking new people. "
+                    "docs/OWNER.md, 'Free-trial capacity'.")
           if out >= 1 or slowed >= 3:
               print("::error::Unusual use: check the Render log for "
                     "'limit reached' (hashed ids only). docs/OWNER.md, "

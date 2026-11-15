@@ -30,6 +30,7 @@ The values are in Render → career-copilot → Environment.
 | `CAREER_COPILOT_API_KEY` | Old fallback, unused while sign-in is on. Safe to delete |
 | `CAREER_COPILOT_INSIGHTS_SALT`, `CAREER_COPILOT_ADMIN_KEY` | Anonymous usage counts and the `/insights` page |
 | `CAREER_COPILOT_RATE_PER_MINUTE`, `CAREER_COPILOT_DAILY_QUOTA` | Fair-use limits per person: 60 calls a minute and 1,500 a day unless set. `0` turns one off |
+| `CAREER_COPILOT_TRIAL_DAILY_CALLS`, `_NEW_PER_DAY`, `_MAX_PEOPLE`, `_STORAGE_MB` | Free-trial capacity for the whole server: 20,000 calls a day, 30 new people a day, 300 people, 400 MB unless set. See "Free-trial capacity" |
 | `CAREER_COPILOT_INSIGHTS_STORE` | Not set (or `file`): anonymous counts are wiped on every restart, so the weekly improver sees little. `database`: kept in Neon for 400 days. Your call (B-050); `/health` shows which |
 
 ## Everyday tasks
@@ -78,8 +79,9 @@ once, your account):
    every 5 minutes (cron-job.org can do every 10; under 15 is enough).
 3. Next day, open `/health` cold: it should answer in a second or two.
 
-Keep the GitHub Action anyway: it carries the abuse alarm. If pinging
-isn't enough, Render's Starter plan (about $7 a month) never sleeps.
+Keep the GitHub Action anyway: it carries the abuse alarm and the
+trial-capacity alarm. Everything stays on free plans: no card, no
+upgrade. A cold start of up to a minute is the price of free.
 
 ## Open sign-in to everyone (GitHub #25)
 
@@ -114,6 +116,38 @@ use", and GitHub emails you):
 
 Counts reset when the server restarts, so a restart also clears the
 alarm.
+
+## Free-trial capacity (B-082)
+
+The trial runs on Render's free web service and Neon's free Postgres,
+and nothing is ever paid for. So the server limits itself before the
+free plans run out:
+
+| Limit | Default | Setting in Render |
+|---|---|---|
+| Calls per day, everyone together | 20,000 | `CAREER_COPILOT_TRIAL_DAILY_CALLS` |
+| New people per day | 30 | `CAREER_COPILOT_TRIAL_NEW_PER_DAY` |
+| People in total | 300 | `CAREER_COPILOT_TRIAL_MAX_PEOPLE` |
+| Database size before new people pause | 400 MB (Neon free is 512 MB) | `CAREER_COPILOT_TRIAL_STORAGE_MB` |
+
+`0` turns a limit off. What people see:
+
+- **New people paused** (a people cap or the storage line): people
+  already in carry on. A newcomer's assistant gets a plain note, "The
+  free trial isn't taking new people right now", and nothing is saved
+  about them. The try-it page says "Not taking new people right now".
+- **Full for today** (the day's calls are used): everyone gets "The free
+  trial is full for today... It reopens at midnight UTC. Nothing is
+  lost." The page says the same.
+- In both cases exporting and deleting data still work. It's a note,
+  not an error, so assistants don't retry in a loop.
+
+Where to look: `/health` → `trial` shows the counts (never who). The
+Keep awake run warns when new people are paused, and fails (GitHub
+emails you) when the day is full. Render → Logs, search `trial full`.
+
+If you see it often: raise a limit only while Neon's dashboard (Usage)
+shows room. Counts reset at midnight UTC and on a restart.
 
 ## Message to send a tester
 

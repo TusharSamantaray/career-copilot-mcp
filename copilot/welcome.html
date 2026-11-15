@@ -22,6 +22,7 @@ p{margin:0}
 button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:.65rem 1rem;background:var(--accent);color:var(--accent-fg);cursor:pointer}
 .note{font-size:.92rem;color:var(--muted)}
 .warn{background:var(--warn-bg);color:var(--warn);border-radius:10px;padding:.7rem .9rem;font-size:.95rem}
+.status.ok{background:var(--soft);color:var(--accent);border-radius:10px;padding:.7rem .9rem;font-size:.95rem;font-weight:600}
 ol,ul{margin:0;padding-left:1.25rem;display:grid;gap:.35rem}
 details{border-top:1px solid var(--line);padding-top:.7rem}
 details:first-of-type{border-top:0;padding-top:0}
@@ -46,6 +47,7 @@ a{color:var(--accent)}
 <h2 id="connect">1. Copy this address</h2>
 <div class="url"><code id="mcp">{{MCP_URL}}</code><button type="button" id="copy">Copy</button></div>
 {{ACCESS_NOTE}}
+{{STATUS}}
 <p class="note">This page loaded, so the server is awake. Connect in the next few minutes and the first answer comes back quickly.</p>
 </section>
 
@@ -96,6 +98,7 @@ a{color:var(--accent)}
 <section class="card" aria-labelledby="fair">
 <h2 id="fair">Fair use</h2>
 <p>Free, with limits so one account can't slow it down for everyone: {{PER_MINUTE}} requests a minute and {{PER_DAY}} a day per person. A normal session uses well under a hundred.</p>
+<p>It runs entirely on free hosting, so nobody pays and there's nothing to sign up for. On a very busy day it may stop taking new people, or pause until midnight UTC; it tells you so plainly, and nothing you saved is lost.</p>
 <p class="note">This is a demo server. It can take up to a minute to wake after a quiet spell.</p>
 </section>
 </div>

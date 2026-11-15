@@ -10,6 +10,7 @@ import httpx
 from fastmcp import Client
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from copilot.capacity import Capacity  # noqa: E402
 from copilot.limits import Limits  # noqa: E402
 from fastmcp.client.transports import StreamableHttpTransport
 
@@ -262,6 +263,112 @@ def limits_logic():
     print("limits: per minute, per day, per person, reset at midnight: OK")
 
 
+def capacity_logic():
+    """Free-trial capacity with a fake clock: a full day pauses everyone
+    politely, a full house pauses only new people, data export always
+    works, and it all reopens at midnight UTC."""
+    now = [9 * 86400 + 7200.0]                  # 02:00 UTC
+    cap = Capacity(people=lambda: ["old"], storage_mb=lambda: 10.0,
+                   daily_calls=6, new_per_day=1, max_people=3,
+                   storage_cap=100, clock=lambda: now[0])
+    assert cap.check("old") is None and cap.status() == "open"
+    assert cap.check("new1") is None, "first new person today gets in"
+    reason, note, first = cap.check("new2")
+    assert reason == "new_today" and first and "Nothing was saved" in note
+    assert cap.check("old") is None and cap.check("new1") is None,         "people already in carry on"
+    assert cap.status() == "new_paused"
+    assert cap.check("old") is None and cap.check("old") is None
+    reason, note, _ = cap.check("old")          # 6 calls used: full today
+    assert reason == "day" and "midnight UTC" in note and "22 hours" in note
+    assert cap.check("new1", "data_export") is None, "export always works"
+    assert cap.check("old", "data_delete") is None, "delete always works"
+    s = cap.summary()
+    assert s["status"] == "full_today" and s["calls_today"] == 6 and         s["people"] == 2 and s["turned_away_today"] == 1, s
+    assert "old" not in str(s) and "new1" not in str(s), "never who"
+    now[0] += 23 * 3600                         # past midnight
+    assert cap.check("old") is None and cap.check("new2") is None
+    full = Capacity(people=lambda: ["a", "b"], storage_mb=lambda: 1.0,
+                    max_people=2, clock=lambda: now[0])
+    assert full.check("c")[0] == "people" and full.check("a") is None
+    disk = Capacity(people=lambda: [], storage_mb=lambda: 450.0,
+                    storage_cap=400, clock=lambda: now[0])
+    assert disk.check("c")[0] == "storage"
+
+    def asleep():
+        raise OSError("database asleep")
+    sleepy = Capacity(people=asleep, storage_mb=asleep, clock=lambda: now[0])
+    assert sleepy.check("x") is None, "a sleeping database never locks out"
+    off = Capacity(daily_calls=0, new_per_day=0, max_people=0,
+                   storage_cap=0, clock=lambda: now[0])
+    assert all(off.check(str(i)) is None for i in range(50)), "0 = off"
+    print("trial capacity: day budget, new-people caps, storage, export "
+          "always works, reopens at midnight: OK")
+
+
+def trial_full_server():
+    """A real server capped at one person: the second person gets a
+    calm note, not an error, and the home page says so."""
+    port = PORT + 1
+    base = f"http://127.0.0.1:{port}"
+    folder = TEST_DIR + "_trial"
+    shutil.rmtree(folder, ignore_errors=True)
+    os.makedirs(folder)
+    env = {**os.environ, "PORT": str(port), "HOST": "127.0.0.1",
+           "CAREER_COPILOT_API_KEY": "key-first-test,key-second-test",
+           "CAREER_COPILOT_TRIAL_MAX_PEOPLE": "1",
+           "COPILOT_DATA_DIR": folder,
+           "CAREER_COPILOT_LOG_DIR": os.path.join(folder, "logs")}
+    for name in ("DATABASE_URL", "CAREER_COPILOT_MASTER_KEY"):
+        env.pop(name, None)
+    server = subprocess.Popen([sys.executable, "app.py"], env=env,
+                              stdout=subprocess.DEVNULL,
+                              stderr=subprocess.DEVNULL)
+
+    def at(key):
+        return Client(StreamableHttpTransport(
+            f"{base}/mcp", headers={"Authorization": f"Bearer {key}"}))
+
+    async def talk():
+        async with at("key-first-test") as first:
+            await first.call_tool("ground_rules", {"accept": True})
+            await first.call_tool("profile_get", {})
+        async with at("key-second-test") as second:
+            result = await second.call_tool("journey_state", {})
+            assert not result.is_error, "a full trial is not an error"
+            text = result.content[0].text
+            assert text.startswith("[TRIAL_FULL]"), text
+            assert "isn't taking new people" in text, text
+            gone = await second.call_tool("data_delete", {"confirm": True})
+            assert not str(gone.content[0].text).startswith("[TRIAL_FULL]")
+        async with at("key-first-test") as first:
+            again = await first.call_tool("profile_get", {})
+            assert not again.content[0].text.startswith("[TRIAL_FULL]")
+    try:
+        for _ in range(60):
+            try:
+                if httpx.get(f"{base}/health").status_code == 200:
+                    break
+            except httpx.TransportError:
+                time.sleep(0.25)
+        else:
+            raise RuntimeError("trial server did not start")
+        assert "Trial status: Open" in httpx.get(f"{base}/").text
+        asyncio.run(talk())
+        trial = httpx.get(f"{base}/health").json()["trial"]
+        assert trial["status"] == "new_paused" and             trial["turned_away_today"] == 1, trial
+        assert "Not taking new people" in httpx.get(f"{base}/").text
+        with open(os.path.join(folder, "logs", "mcp_server.log"),
+                  encoding="utf-8") as handle:
+            log = handle.read()
+        assert log.count("trial full: people") == 1, "logged once, no ids"
+    finally:
+        server.terminate()
+        server.wait(timeout=10)
+        shutil.rmtree(folder, ignore_errors=True)
+    print("a full trial tells the next person plainly, current people "
+          "carry on, deleting still works, the page shows it: OK")
+
+
 async def flood():
     """One account sends calls in a loop: it's slowed down with a clear
     code, everyone else carries on, and the owner can see it happened."""
@@ -285,6 +392,8 @@ async def flood():
 
 def run():
     limits_logic()
+    capacity_logic()
+    trial_full_server()
     shutil.rmtree(TEST_DIR, ignore_errors=True)
     env = {**os.environ, "PORT": str(PORT), "HOST": "127.0.0.1",
            "CAREER_COPILOT_API_KEY": ",".join(KEYS),
