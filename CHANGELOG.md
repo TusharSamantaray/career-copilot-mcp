@@ -5,6 +5,14 @@ Every Added or Changed line has a **Try it:** line.
 
 ## [Unreleased]
 
+### Changed
+- The try-it page and setup guides now put Muse first, marked
+  "Recommended: tested most", since that's where Career Copilot has
+  been tried the most. Claude, ChatGPT and code editors are still
+  listed below it.
+  **Try it:** open the server's home page: step 2 opens on Muse, with
+  a green "Recommended" label.
+
 ### Added
 - The free trial now looks after itself so it never needs paying for
   (B-082). It runs on free hosting, so on a very busy day it first

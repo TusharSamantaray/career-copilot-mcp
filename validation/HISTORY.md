@@ -20,3 +20,4 @@ commit behind each row.
 | 2026-11-14 | 0.3.0 | hiring_posts | B-079 | 5/5 |
 | 2026-11-14 | 0.3.0 | outreach_drill | B-080 | 7/7 |
 | 2026-11-14 | 0.3.0 | trial_capacity | B-082 | 8/8 |
+| 2026-11-14 | 0.3.0 | front_door | B-076 | 11/11 |

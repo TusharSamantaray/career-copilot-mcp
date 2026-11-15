@@ -50,6 +50,15 @@ GitHub username.
 Only click Allow right after you clicked Connect yourself. If someone
 sends you a Career Copilot or GitHub sign-in link, close it.
 
+## Muse (recommended)
+
+The owner tests in Muse most, so it's the best-tested way in. Add a
+custom connector with the hosted URL and sign in with GitHub when
+asked. Muse's own browser can open job pages and company sites for
+you, which helps company research and job search. Other assistants
+work too; if something behaves differently there, report it with
+report_issue.
+
 ## Claude.ai (web and mobile)
 
 1. Settings → Connectors → **Add custom connector**.
@@ -66,10 +75,6 @@ Settings → Apps & Connectors → Advanced → turn on **Developer mode**. Then
 authentication **OAuth**. Sign in with GitHub when asked. In a chat, pick
 it from the **+** menu → Developer mode. Developer mode needs a paid plan.
 
-## Muse
-
-Muse connects like claude.ai: add a custom connector with the same URL and
-sign in with GitHub.
 
 ## Claude Code
 

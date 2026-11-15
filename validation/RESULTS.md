@@ -26,12 +26,13 @@ Score: 11/11
 
 Before: The server's address showed 'Not Found', and the privacy notice and terms lived only in the private repository.
 
-Score: 10/10
+Score: 11/11
 
 | Measure | Expected | Measured | |
 |---|---|---|---|
 | connector address shown to copy | yes | yes | pass |
-| assistants with setup steps (Claude, ChatGPT, editors) | 3 | 3 | pass |
+| assistants with setup steps (Muse, Claude, ChatGPT, editors) | 4 | 4 | pass |
+| first and open option is Muse, marked recommended | yes | yes | pass |
 | starter phrases offered (the spec's six ways in) | 6 | 6 | pass |
 | unfilled placeholders | 0 | 0 | pass |
 | invite-only told plainly only when it's on | yes -> no | yes -> no | pass |

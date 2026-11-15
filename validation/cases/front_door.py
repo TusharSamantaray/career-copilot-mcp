@@ -15,8 +15,11 @@ def run(user, measure):
     invite_page = welcome.home("https://demo.example/mcp", True, 60, 1500)
     measure("connector address shown to copy",
             "https://demo.example/mcp</code>" in open_page, True)
-    measure("assistants with setup steps (Claude, ChatGPT, editors)",
-            len(re.findall(r"<summary>", open_page)), 3)
+    measure("assistants with setup steps (Muse, Claude, ChatGPT, editors)",
+            len(re.findall(r"<summary>", open_page)), 4)
+    first = open_page.split("<summary>")[1]
+    measure("first and open option is Muse, marked recommended",
+            first.startswith("Muse") and "Recommended" in first, True)
     say = open_page.split('class="say">')[1].split("</ul>")[0]
     measure("starter phrases offered (the spec's six ways in)",
             say.count("<li>"), 6)

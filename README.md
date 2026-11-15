@@ -30,12 +30,13 @@ Pick the way that fits you.
    This is the demo server. It's invite-only, so ask the owner to add your
    GitHub username, or host your own copy (option C).
 2. Add it to your assistant:
+   - **Muse (recommended, tested most):** add a custom connector with
+     the address.
    - **claude.ai:** Settings → Connectors → **Add custom connector**. Name
      it `Career Copilot`, paste the address and leave the OAuth fields
      empty.
    - **ChatGPT:** Settings → Apps & Connectors → Advanced → **Developer
      mode** → Create. Paste the address and choose **OAuth**.
-   - **Muse:** add a custom connector with the same address.
 3. Click **Connect**. A Career Copilot page asks "Connect Career
    Copilot?": click **Allow and sign in with GitHub**, then approve on
    GitHub. That keeps your data private to you. Career Copilot never sees

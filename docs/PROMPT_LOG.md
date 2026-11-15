@@ -4,6 +4,18 @@ What the owner asked, what was done, and how to check it.
 Newest first. Never include secrets or personal details.
 
 ### 2026-11-14 | v0.3.0-dev
+**Asked:** Make Muse the preferred assistant; it's where the owner
+tested most.
+**Did:** Muse is first and open on the try-it page with a Recommended
+label, and first in CONNECT.md and the README. Others stay listed.
+**Files:** `copilot/welcome.html`, `docs/CONNECT.md`, `README.md`,
+`validation/cases/front_door.py`.
+**Tests:** all suites, validation and simulation pass.
+**Try it:** home page, step 2 opens on Muse.
+**Open:** Muse's exact menu names aren't written down; the steps stay
+generic until the owner confirms them.
+
+### 2026-11-14 | v0.3.0-dev
 **Asked:** Make sure people can use the trial; no payment; throttle
 when the free tier runs out and show it as information.
 **Did:** New `copilot/capacity.py`: server-wide calls per day, new

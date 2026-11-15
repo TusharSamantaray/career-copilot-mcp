@@ -28,6 +28,7 @@ details{border-top:1px solid var(--line);padding-top:.7rem}
 details:first-of-type{border-top:0;padding-top:0}
 summary{cursor:pointer;font-weight:600}
 details>ol,details>p{margin-top:.6rem}
+.pick{display:inline-block;margin-left:.4rem;font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);background:var(--soft);border-radius:999px;padding:.1rem .5rem;vertical-align:middle}
 .say{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;padding:0}
 .say li{background:var(--soft);border-radius:999px;padding:.35rem .85rem;font-size:.95rem}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:1rem}
@@ -54,6 +55,14 @@ a{color:var(--accent)}
 <section class="card" aria-labelledby="add">
 <h2 id="add">2. Add it to your assistant</h2>
 <details open>
+<summary>Muse <span class="pick">Recommended: tested most</span></summary>
+<ol>
+<li>Add a custom connector and paste the address.</li>
+<li>When asked, click <b>Allow and sign in with GitHub</b>, then approve on GitHub.</li>
+<li>Start a chat with Career Copilot turned on. Muse can also open job pages in its browser for you, which makes company research and job search work best.</li>
+</ol>
+</details>
+<details>
 <summary>Claude (web, desktop or phone)</summary>
 <ol>
 <li>Settings → Connectors → <b>Add custom connector</b>.</li>
