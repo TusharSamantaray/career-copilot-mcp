@@ -24,7 +24,7 @@ jobs:
       ADMIN_KEY: ${{ secrets.INSIGHTS_ADMIN_KEY }}
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: env.INSIGHTS_URL != ''
       - name: Fetch anonymous insights (last 7 days)
         if: env.INSIGHTS_URL != ''
