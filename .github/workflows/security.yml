@@ -22,8 +22,8 @@ jobs:
     name: Known holes in libraries (pip-audit)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
       - run: uv export --frozen --no-hashes --no-dev --format requirements-txt > req.txt
       # Each ignore says why it can't reach Career Copilot. Remove the
       # line once the fix is in (B-072 tracks the FastMCP 3 upgrade).
@@ -43,8 +43,8 @@ jobs:
     name: Risky code and simple bugs (bandit, ruff)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
       - name: Security lint, medium severity and up
         run: uvx bandit@1.8.0 -r app.py copilot -ll
       - name: Bugs a test might miss (undefined names, unused loops)
@@ -54,7 +54,7 @@ jobs:
     name: Secrets in git history (gitleaks)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Install gitleaks 8.21.2 (checksum verified)
